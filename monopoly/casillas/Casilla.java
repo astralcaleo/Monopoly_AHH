@@ -1,8 +1,16 @@
-package monopoly;
+package monopoly.casillas;
 
 import partida.*;
+import partida.avatares.Avatar;
+
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import monopoly.Menu;
+import monopoly.Tablero;
+import monopoly.Valor;
+import monopoly.cartas.Carta;
+import monopoly.edificios.Edificio;
 
 public class Casilla {
 

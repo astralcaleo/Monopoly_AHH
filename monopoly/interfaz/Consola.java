@@ -1,4 +1,4 @@
-package monopoly;
+package monopoly.interfaz;
 
 public interface Consola{
 

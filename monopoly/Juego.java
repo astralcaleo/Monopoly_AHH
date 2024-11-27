@@ -3,6 +3,8 @@ package juego;
 import tablero.Casilla;
 import interfaz.Comando;
 import interfaz.Consola;
+import monopoly.interfaz.ConsolaNormal;
+
 import java.util.ArrayList;
 import java.util.List;
 

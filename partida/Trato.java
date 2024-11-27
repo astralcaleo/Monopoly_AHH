@@ -1,6 +1,4 @@
-package monopoly;
-
-import partida.*;
+package partida;
 
 public class Trato {
     private String ID;

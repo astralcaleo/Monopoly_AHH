@@ -1,7 +1,11 @@
-package monopoly;
+package monopoly.edificios;
 
 import partida.*;
 import java.util.ArrayList;
+
+import monopoly.Valor;
+import monopoly.casillas.Casilla;
+import monopoly.casillas.Grupo;
 
 public class Edificio {
     
