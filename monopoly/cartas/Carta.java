@@ -1,4 +1,4 @@
-package monopoly;
+package monopoly.cartas;
 
 import java.util.ArrayList;
 

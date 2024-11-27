@@ -1,7 +1,9 @@
-package monopoly;
+package monopoly.casillas;
 
 import partida.*;
 import java.util.ArrayList;
+
+import monopoly.Valor;
 
 
 class Grupo {

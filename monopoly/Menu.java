@@ -11,7 +11,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import partida.*;
+import partida.avatares.Avatar;
+
 import java.util.Scanner;
+
+import monopoly.casillas.Casilla;
+import monopoly.casillas.Grupo;
+import monopoly.edificios.Edificio;
 
 public class Menu {
 

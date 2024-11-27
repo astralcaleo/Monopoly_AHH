@@ -1,4 +1,4 @@
-package monopoly;
+package monopoly.interfaz;
 import partida.*;
 
 public interface Comando {
