@@ -31,7 +31,7 @@ public class Trato {
         StringBuilder sb = new StringBuilder();
         sb.append("{\n");
         sb.append("id: ").append(this.ID).append("\n");
-        sb.append("jugadorPropone: ").append(this.propositor).append(",\n");
+        sb.append("jugadorPropone: ").append(this.propositor.getNombre()).append(",\n");
         sb.append("trato: cambiar (").append(this.oferta + "," + this.demanda + ")").append("\n");
         sb.append("}\n");
         return sb.toString();

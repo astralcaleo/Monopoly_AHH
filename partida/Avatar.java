@@ -14,22 +14,24 @@ public abstract class Avatar {
     protected int turnosBloqueados;
     protected String tipo; // Tipo de avatar (por ejemplo, "pelota" o "coche")
     protected int tiradasDobles;
+    protected Juego juego;
 
     // Constructor vacío
     public Avatar() {}
 
     // Constructor principal
-    public Avatar(String tipo,Jugador jugador, Casilla lugar, ArrayList<Avatar> avCreados) {
+    public Avatar(String tipo,Jugador jugador, Casilla lugar, ArrayList<Avatar> avCreados,Juego juego) {
         this.tipo=tipo;
         this.jugador = jugador;
         this.lugar = lugar;
         this.movAvanzado = false;
         this.turnosBloqueados = 0;
         this.tiradasDobles=0;
+        this.juego=juego;
         generarId(avCreados);
     }
 
-    public abstract void mover(int dado1, int dado2, Tablero tablero);
+    public abstract void mover(int dado1, int dado2, Tablero tablero, Jugador banca);
 
     public void moverAvatar(ArrayList<ArrayList<Casilla>> casillas, int valorTirada) {
         this.lugar.eliminarAvatar(this);
@@ -146,6 +148,10 @@ public abstract class Avatar {
 
     public int getTiradasDobles() {
         return this.tiradasDobles;
+    }
+
+    public Juego getJuego(){
+        return this.juego;
     }
 
     //SETTERS
