@@ -1,6 +1,5 @@
 package monopoly;
 
-
 import partida.*;
 import partida.avatares.Avatar;
 
