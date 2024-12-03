@@ -1,10 +1,3 @@
-/*MODIFICACIONES PENDIENTES
- * - Movimientos avanzados
- * - Estadísticas juego / jugador
- * - Mandar a la cárcel si saca 3 dados dobles
- * - POR DETERMINAR
- */
-
 package monopoly;
 
 import java.util.ArrayList;
@@ -15,7 +8,6 @@ import partida.avatares.Avatar;
 
 import java.util.Scanner;
 
-import monopoly.casillas.CasillaX;
 import monopoly.casillas.Grupo;
 import monopoly.edificios.Edificio;
 

@@ -16,12 +16,11 @@ public class Solar extends Propiedad {
     private ArrayList<Integer> numEdificios;    // Cantidad de edificios (0: casas, 1: hoteles, 2: piscinas, 3: pistas deporte)
 
     // Constructor
-    public Solar(String nombre, int posicion, float valorInicial, Grupo grupo) {
+    public Solar(String nombre, int posicion, float valorInicial) {
         super(nombre, posicion, valorInicial);       // Llama al constructor de la clase padre Propiedad
         this.valor = super.getValor();
         this.propietario = super.getPropietario();
         this.alquiler = super.getAlquiler();
-        this.grupo = grupo;
         this.edificios = new ArrayList<Edificio>();
         this.numEdificios = new ArrayList<Integer>();
         for (int i = 0; i < 4; i++) {this.numEdificios.add(0);}
@@ -29,6 +28,7 @@ public class Solar extends Propiedad {
 
     // Getters y Setters
     public Grupo getGrupo() {return grupo;}
+    public void setGrupo(Grupo grupo) {this.grupo = grupo;}
 
     // Métodos de Solar
     // Método para añadir valor a una casilla
