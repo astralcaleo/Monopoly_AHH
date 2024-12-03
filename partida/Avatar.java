@@ -4,7 +4,7 @@ import monopoly.*;
 
 import java.util.ArrayList;
 
-public class Avatar {
+public abstract class Avatar {
 
     protected String id; // Identificador: una letra generada aleatoriamente.
     protected Jugador jugador; // Jugador al que pertenece este avatar.
@@ -28,6 +28,8 @@ public class Avatar {
         this.tiradasDobles=0;
         generarId(avCreados);
     }
+
+    public abstract void mover(int dado1, int dado2, Tablero tablero);
 
     public void moverAvatar(ArrayList<ArrayList<Casilla>> casillas, int valorTirada) {
         this.lugar.eliminarAvatar(this);

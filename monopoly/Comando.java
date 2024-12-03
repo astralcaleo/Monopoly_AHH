@@ -28,6 +28,7 @@ public interface Comando {
     public void verTablero();
     public void trato(String jugador,String inter1, String inter2);
     public void trato(String jugador,String inter1, String inter2, String inter3,String inter4);
+    public void tratos();
     public void aceptarTrato(String idtrato);
     public void eliminarTrato(String idtrato);
     public void lanzarDados(int valor1, int valor2);

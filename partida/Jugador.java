@@ -31,7 +31,17 @@ public class Jugador {
      */
     public Jugador(String nombre, String tipoAvatar, Casilla inicio, ArrayList<Avatar> avCreados) {
         this.nombre = nombre;
-        this.avatar = new Avatar(tipoAvatar, this, inicio, avCreados);
+        if (tipoAvatar.equals("coche")) {
+            this.avatar = new Coche(this, inicio, avCreados);
+        } else if (tipoAvatar.equals("pelota")) {
+            this.avatar = new Pelota(this, inicio, avCreados);
+        } else if (tipoAvatar.equals("esfinge")) {
+            this.avatar = new Esfinge(this, inicio, avCreados);
+        } else if (tipoAvatar.equals("sombrero")) {
+            this.avatar = new Sombrero(this, inicio, avCreados);
+        } else {
+            throw new IllegalArgumentException("Tipo de avatar no reconocido: " + tipoAvatar);
+        }
         avCreados.add(this.avatar);
 
         this.fortuna = Valor.FORTUNA_INICIAL;

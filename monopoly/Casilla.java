@@ -124,7 +124,7 @@ public class Casilla {
                         actual.getEstadisticas().set(2, actual.getEstadisticas().get(2) + this.impuesto);
                         
                         this.duenho.sumarFortuna(this.impuesto);
-                        this.duenho.getEstadisticas().set(3, this.duenho.getEstadisticas().get(3) + this.impuesto);
+                        /this.duenho.getEstadisticas().set(3, this.duenho.getEstadisticas().get(3) + this.impuesto);
                         
                         System.out.println("El jugador " + actual.getNombre() + " paga " + this.impuesto + "€ al jugador " + this.duenho.getNombre());
                         this.rentabilidad += this.impuesto;

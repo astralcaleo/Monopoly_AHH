@@ -26,7 +26,7 @@ public class Juego implements Comando {
     private ArrayList<Edificio> lista_edificios;
     private int doblesContador = 0;
     private ArrayList<ArrayList<Trato>> tratos;
-    private final ConsolaNormal consola;
+    public static ConsolaNormal consola;
     private Menu menu;
 
     public Juego(ConsolaNormal consola, Menu menu) {
@@ -197,7 +197,9 @@ public class Juego implements Comando {
         } 
         else if(partes.length == 3 && partes[0].equals("trucar")){
             if(!this.jugadores.get(this.turno).getAvatar().getmovAvanzado()) lanzarDados(Integer.parseInt(partes[1]), Integer.parseInt(partes[2]));
-            else lanzarDadosEsp(Integer.parseInt(partes[1]), Integer.parseInt(partes[2]));
+            else{
+                this.jugadores.get(this.turno).getAvatar().mover(Integer.parseInt(partes[1]), Integer.parseInt(partes[2]),tablero);
+                }
         } else if(partes[0].equals("exit")){
             System.exit(0);
         } else{
@@ -293,8 +295,8 @@ public class Juego implements Comando {
 
     /*Método para cambiar de modo de lanzamiento (normal o avanzado) */
     public void cambiarModo(){
-        if(this.jugadores.get(this.turno).getAvatar().getmovAvanzado()){
-            System.out.println("A partir de ahora el avatar" + this.jugadores.get(this.turno).getAvatar() + ", de tipo" + this.jugadores.get(this.turno).getAvatar().getTipo() + ", se moverá en modo avanzado.");
+        if(!this.jugadores.get(this.turno).getAvatar().getmovAvanzado()){
+            System.out.println("A partir de ahora el avatar " + this.jugadores.get(this.turno).getAvatar().getID() + ", de tipo " + this.jugadores.get(this.turno).getAvatar().getTipo() + ", se moverá en modo avanzado.");
         } else{System.out.println("A partir de ahora el avatar " + this.jugadores.get(this.turno).getAvatar().getID() + ", de tipo " + this.jugadores.get(this.turno).getAvatar().getTipo() + ", se moverá en modo normal.");}
         this.jugadores.get(this.turno).getAvatar().setmovAvanzado(this.jugadores.get(this.turno));
     }
@@ -1265,6 +1267,10 @@ public class Juego implements Comando {
                     }
         }}
     }
+    }
+
+    public void tratos(){
+        consola.imprimir(tratos.toString());
     }
 
     public void eliminarTrato(String idtrato){

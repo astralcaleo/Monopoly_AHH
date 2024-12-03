@@ -10,6 +10,8 @@ public class Esfinge extends Avatar {
         super("esfinge",jugador, lugar, avCreados);
     }
 
-    
+    public void mover(int dado1, int dado2, Tablero tablero){
+        
+    }
 
 }

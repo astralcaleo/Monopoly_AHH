@@ -10,4 +10,8 @@ public class Sombrero extends Avatar {
         super("sombrero",jugador, lugar, avCreados);
     }
 
+    public void mover(int dado1, int dado2, Tablero tablero){
+        
+    }
+
 }

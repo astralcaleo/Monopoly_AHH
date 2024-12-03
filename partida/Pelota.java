@@ -10,7 +10,7 @@ public class Pelota extends Avatar {
         super("pelota",jugador, lugar, avCreados);
     }
 
-    public void moverPelota(int dado1, int dado2, Tablero tablero) {
+    public void mover(int dado1, int dado2, Tablero tablero) {
         int desplazamiento = dado1 + dado2;
         int posicionActual = this.getLugar().getPosicion();
     

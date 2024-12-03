@@ -9,7 +9,7 @@ public class Coche extends Avatar {
     public Coche(Jugador jugador, Casilla lugar, ArrayList<Avatar> avCreados) {
         super("coche",jugador, lugar, avCreados);
     }
-    public void moverCoche(int dado1, int dado2, Tablero tablero) {
+    public void mover(int dado1, int dado2, Tablero tablero) {
         int desplazamiento = dado1 + dado2;
     
         if (desplazamiento > 4) {
