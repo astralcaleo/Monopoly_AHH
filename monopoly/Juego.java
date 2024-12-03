@@ -1,5 +1,9 @@
 package monopoly;
 
+import monopoly.casillas.CasillaX;
+import monopoly.interfaz.Comando;
+import monopoly.interfaz.Consola;
+import monopoly.interfaz.ConsolaNormal;
 import partida.*;
 
 import java.util.ArrayList;

@@ -1,12 +1,3 @@
-/*MODIFICACIONES PENDIENTES
- * - Movimientos avanzados
- * - Estadísticas juego / jugador
- * - Mandar a la cárcel si saca 3 dados dobles
- * - POR DETERMINAR
- */
-
- // scanner cerrar ???????
-
 package monopoly;
 
 import java.util.ArrayList;

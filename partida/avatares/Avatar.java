@@ -1,7 +1,7 @@
 package partida.avatares;
 
 import monopoly.*;
-import monopoly.casillas.Casilla;
+import monopoly.casillas.CasillaX;
 import partida.Jugador;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ public abstract class Avatar {
     protected String id; // Identificador: una letra generada aleatoriamente.
     protected Jugador jugador; // Jugador al que pertenece este avatar.
     protected Jugador banca;
-    protected Casilla lugar; // Casilla donde se encuentra el avatar.
+    protected CasillaX lugar; // Casilla donde se encuentra el avatar.
     protected boolean movAvanzado; // Tipo de movimiento (true = avanzado; false = normal)
     protected int turnosBloqueados;
     protected String tipo; // Tipo de avatar (por ejemplo, "pelota" o "coche")
@@ -44,9 +44,9 @@ public abstract class Avatar {
         } 
 
         // Determinar la nueva casilla
-        Casilla nCasilla = null;
-        for (ArrayList<Casilla> l : casillas) {
-            for (Casilla i : l) {
+        CasillaX nCasilla = null;
+        for (ArrayList<CasillaX> l : casillas) {
+            for (CasillaX i : l) {
                 if (i.getPosicion() == nuevaPosicion) {
                     nCasilla = i;
                     break;
@@ -59,12 +59,12 @@ public abstract class Avatar {
         nCasilla.anhadirAvatar(this);
     }
 
-    public void moverAvatar(ArrayList<ArrayList<Casilla>> casillas, String cDestino) {
+    public void moverAvatar(ArrayList<ArrayList<CasillaX>> casillas, String cDestino) {
         this.lugar.eliminarAvatar(this);
 
-        Casilla nCasilla = null;
-        for (ArrayList<Casilla> l : casillas) {
-            for (Casilla i : l) {
+        CasillaX nCasilla = null;
+        for (ArrayList<CasillaX> l : casillas) {
+            for (CasillaX i : l) {
                 if (i.getNombre().equals(cDestino) && i.getPosicion() < this.lugar.getPosicion()) {
                     this.jugador.sumarFortuna(Valor.SUMA_VUELTA);
                 }
@@ -135,7 +135,7 @@ public abstract class Avatar {
     }
 
     /*Método para obtener la casilla en la que se encuentra el avatar*/
-    public Casilla getLugar(){
+    public CasillaX getLugar(){
         return this.lugar;
     }
 
@@ -173,7 +173,7 @@ public abstract class Avatar {
     }
 
     /*Método para modificar la casilla en la que se encuentra el avatar*/
-    public void setLugar(Casilla lugar) {
+    public void setLugar(CasillaX lugar) {
         this.lugar = lugar;
     }
 

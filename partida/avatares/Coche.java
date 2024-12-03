@@ -1,7 +1,7 @@
 package partida.avatares;
 
 import monopoly.*;
-import monopoly.casillas.Casilla;
+import monopoly.casillas.CasillaX;
 import partida.Jugador;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ public class Coche extends Avatar {
             int desplazamiento = dado1 + dado2;
             int posicionActual = this.getLugar().getPosicion();
             int nuevaPosicion = (posicionActual + desplazamiento) % 40;
-            Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
+            CasillaX destino = tablero.encontrar_casilla(nuevaPosicion);
     
             getJuego().getConsola().imprimir("El avatar " + this.getID() + " avanza " + desplazamiento + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     
@@ -104,7 +104,7 @@ public class Coche extends Avatar {
         int desplazamiento = dado1 + dado2;
         int posicionActual = this.getLugar().getPosicion();
         int nuevaPosicion = ((posicionActual - desplazamiento) % 40 + 40) % 40;
-        Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
+        CasillaX destino = tablero.encontrar_casilla(nuevaPosicion);
     
         getJuego().getConsola().imprimir("El avatar " + this.getID() + " retrocede " + desplazamiento + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     
