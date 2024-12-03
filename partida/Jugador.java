@@ -32,9 +32,19 @@ public class Jugador {
     * avatares creados (usado para dos propósitos: evitar que dos jugadores tengan el mismo nombre y
     * que dos avatares tengan mismo ID). Desde este constructor también se crea el avatar.
      */
-    public Jugador(String nombre, String tipoAvatar, Casilla inicio, ArrayList<Avatar> avCreados) {
+    public Jugador(String nombre, String tipoAvatar, Casilla inicio, ArrayList<Avatar> avCreados, Juego juego) {
         this.nombre = nombre;
-        this.avatar = new Avatar(tipoAvatar, this, inicio, avCreados);
+        if (tipoAvatar.equals("coche")) {
+            this.avatar = new Coche(this, inicio, avCreados, juego);
+        } else if (tipoAvatar.equals("pelota")) {
+            this.avatar = new Pelota(this, inicio, avCreados, juego);
+        } else if (tipoAvatar.equals("esfinge")) {
+            this.avatar = new Esfinge(this, inicio, avCreados, juego);
+        } else if (tipoAvatar.equals("sombrero")) {
+            this.avatar = new Sombrero(this, inicio, avCreados, juego);
+        } else {
+            throw new IllegalArgumentException("Tipo de avatar no reconocido: " + tipoAvatar);
+        }
         avCreados.add(this.avatar);
 
         this.fortuna = Valor.FORTUNA_INICIAL;

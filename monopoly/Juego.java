@@ -1,7 +1,6 @@
 package monopoly;
 
 import partida.*;
-import partida.avatares.Avatar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,12 +39,11 @@ public class Juego implements Comando {
     private ArrayList<Edificio> lista_edificios;
     private int doblesContador = 0;
     private ArrayList<ArrayList<Trato>> tratos;
-    public static ConsolaNormal consola;
     private Menu menu;
+    private static ConsolaNormal consola = new ConsolaNormal();
 
-    public Juego(ConsolaNormal consola, Menu menu) {
+    public Juego(Menu menu) {
         this.menu = menu;
-        this.consola = consola;
         this.jugadores = new ArrayList<Jugador>();
         this.lanzamientostotales = new ArrayList<Integer>();
         this.vueltastotales = new ArrayList<Integer>();
@@ -67,7 +65,7 @@ public class Juego implements Comando {
         if (this.jugadores.size()<6){
             Casilla inicio = this.tablero.encontrar_casilla(0);
             inicio.setPosicion(0);
-            Jugador nJugador = new Jugador(nombre, tipo, inicio, avatares);
+            Jugador nJugador = new Jugador(nombre, tipo, inicio, avatares, this);
             this.jugadores.add(nJugador);
             this.lanzamientostotales.add(0);
             this.vueltastotales.add(0);
@@ -75,9 +73,9 @@ public class Juego implements Comando {
             for (int i = 0; i < 40; i++) {
                 this.tablero.encontrar_casilla(i).getCaidas().add(0);
             }
-            consola.imprimir("nombre: " + nJugador.getNombre() + ",\navatar: " + nJugador.getAvatar().getID());
+            Juego.consola.imprimir("nombre: " + nJugador.getNombre() + ",\navatar: " + nJugador.getAvatar().getID());
         } else {
-            consola.imprimir("Número máximo de jugadores alcanzado. No se pueden crear jugadores nuevos.");
+            Juego.consola.imprimir("Número máximo de jugadores alcanzado. No se pueden crear jugadores nuevos.");
         }
     }
 
@@ -92,8 +90,8 @@ public class Juego implements Comando {
                 acabarTurno();
                 break;
             }
-            System.out.println(menu.toString());
-            comando = this.scanner.nextLine();
+            getConsola().imprimir(menu.toString());
+            comando = consola.leer("Introduce comando: ");
             while(comando.isEmpty()){comando=this.scanner.nextLine();}
             analizarComando(comando);
             if(!this.fin){break;}
@@ -125,7 +123,7 @@ public class Juego implements Comando {
     /*Método que interpreta el comando introducido y toma la accion correspondiente.
     * Parámetro: cadena de caracteres (el comando).
     */
-    private void analizarComando(String comando) {
+    public void analizarComando(String comando) {
         ArrayList<String> edificios = new ArrayList<>(Arrays.asList("casa", "hotel", "piscina", "pista"));
         String[] partes = comando.split(" ");
         if(partes[0].equals("jugador")){
@@ -272,12 +270,16 @@ public class Juego implements Comando {
             trato(parts[1],parts[3],parts[4],parts[5], parts[6]);
         } else if(partes.length == 2 && partes[0].equals("aceptar")){
             aceptarTrato(partes[1]);
-        } 
+        } else if(partes.length == 1 && partes[0].equals("tratos")){
+            tratos();
+        } else if(partes.length == 2 && partes[0].equals("eliminar")){
+            eliminarTrato(partes[1]);
+        }
         else if(partes.length == 3 && partes[0].equals("trucar")){
-            
             if(!this.jugadores.get(this.turno).getAvatar().getmovAvanzado()) lanzarDados(Integer.parseInt(partes[1]), Integer.parseInt(partes[2]));
             else{
-                this.jugadores.get(this.turno).getAvatar().mover(Integer.parseInt(partes[1]), Integer.parseInt(partes[2]),tablero);
+                this.jugadores.get(this.turno).getAvatar().mover(Integer.parseInt(partes[1]), Integer.parseInt(partes[2]),tablero,banca);
+                this.tirado=true;
                 }
         } else if(partes[0].equals("exit")){
             System.exit(0);
@@ -1352,16 +1354,20 @@ public class Juego implements Comando {
     }
 
     public void tratos(){
-        consola.imprimir(tratos.toString());
-    }
-
-    public void eliminarTrato(String idtrato){
-        for(Trato trato : tratos.get(this.turno)){
-            if(trato.getPropositor().equals(this.jugadores.get(this.turno))){
-                if(trato.getID().equals(idtrato)) tratos.get(this.turno).remove(trato);
-            }
+        for(Trato t: tratos.get(this.turno)){
+            consola.imprimir(t.toString());
         }
     }
+
+    public void eliminarTrato(String idtrato) {
+        for (ArrayList<Trato> lista : tratos) {
+            lista.removeIf(trato -> 
+                trato.getPropositor().equals(this.jugadores.get(this.turno)) 
+                && trato.getID().equals(idtrato)
+            );
+        }
+    }
+    
 
     public ArrayList<Jugador> getJugadores() {
         return jugadores;

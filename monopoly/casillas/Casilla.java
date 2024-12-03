@@ -245,7 +245,7 @@ public class Casilla {
         } return true; // Para otros tipos de casillas que no implican pago
     }
     
-    public boolean cajaComunidad(Menu menu, Jugador actual, Jugador banca){
+    public boolean cajaComunidad(Juego juego, Jugador actual, Jugador banca){
         int numero = 0;
         while (numero < 1 || numero > 6) {
             System.out.println(actual.getNombre() + ", elige una carta entre 1 y 6:");
@@ -268,23 +268,23 @@ public class Casilla {
                 return false;
             } else{
                 actual.sumarGastos(500000f);
-                menu.getTablero().encontrar_casilla("Parking").sumarValor(500000f);
+                juego.getTablero().encontrar_casilla("Parking").sumarValor(500000f);
                 actual.getEstadisticas().set(1, actual.getEstadisticas().get(1) + 500000);
             }
         
         } else if(cartaSeleccionada.getNombre().equals("caja2")){
             System.out.println("El jugador " + actual.getNombre() + " se dirige a la cárcel.");
-            actual.encarcelar(menu.getTablero().getPosiciones());
-            menu.getTablero().encontrar_casilla(actual.getAvatar().getLugar().getNombre()).eliminarAvatar(menu.getAvatares().get(menu.getTurno()));
-            menu.getTablero().encontrar_casilla("Cárcel").anhadirAvatar(menu.getAvatares().get(menu.getTurno()));
-            actual.getAvatar().setLugar(menu.getTablero().encontrar_casilla("Cárcel"));
-            menu.getTablero().encontrar_casilla("Cárcel").getCaidas().set(menu.getTurno(), menu.getTablero().encontrar_casilla("Cárcel").getCaidas().get(menu.getTurno())+1);
+            actual.encarcelar(juego.getTablero().getPosiciones());
+            juego.getTablero().encontrar_casilla(actual.getAvatar().getLugar().getNombre()).eliminarAvatar(juego.getAvatares().get(juego.getTurno()));
+            juego.getTablero().encontrar_casilla("Cárcel").anhadirAvatar(juego.getAvatares().get(juego.getTurno()));
+            actual.getAvatar().setLugar(juego.getTablero().encontrar_casilla("Cárcel"));
+            juego.getTablero().encontrar_casilla("Cárcel").getCaidas().set(juego.getTurno(), juego.getTablero().encontrar_casilla("Cárcel").getCaidas().get(juego.getTurno())+1);
             actual.getEstadisticas().set(6, actual.getEstadisticas().get(6) + 1f);
         
         } else if(cartaSeleccionada.getNombre().equals("caja3")){
-            actual.getAvatar().moverAvatar(menu.getTablero().getPosiciones(),"Salida");
-            menu.getTablero().encontrar_casilla("Salida").getCaidas().set(menu.getTurno(), menu.getTablero().encontrar_casilla("Salida").getCaidas().get(menu.getTurno())+1);
-            actual.getAvatar().setLugar(menu.getTablero().encontrar_casilla("Salida"));
+            actual.getAvatar().moverAvatar(juego.getTablero().getPosiciones(),"Salida");
+            juego.getTablero().encontrar_casilla("Salida").getCaidas().set(juego.getTurno(), juego.getTablero().encontrar_casilla("Salida").getCaidas().get(juego.getTurno())+1);
+            actual.getAvatar().setLugar(juego.getTablero().encontrar_casilla("Salida"));
             actual.sumarFortuna(Valor.SUMA_VUELTA);
             actual.getEstadisticas().set(4, actual.getEstadisticas().get(4) + Valor.SUMA_VUELTA);
         
@@ -299,17 +299,17 @@ public class Casilla {
                 return false;
             } else{
                 actual.sumarGastos(1000000f);
-                menu.getTablero().encontrar_casilla("Parking").sumarValor(1000000f);
+                juego.getTablero().encontrar_casilla("Parking").sumarValor(1000000f);
                 actual.getEstadisticas().set(1, actual.getEstadisticas().get(1) + 1000000f);
             }
         
         } else if(cartaSeleccionada.getNombre().equals("caja6")){
-            if(actual.getFortuna() < 200000*(menu.getJugadores().size())){ 
+            if(actual.getFortuna() < 200000*(juego.getJugadores().size())){ 
                 System.out.println("El jugador " + actual.getNombre() + " no puede pagar la deuda.");
                 System.out.println("El jugador debe o bien hipotecar o bien declararse en bancarrota.");
                 return false;
             } else{
-                for(Jugador jugador : menu.getJugadores()){
+                for(Jugador jugador : juego.getJugadores()){
                     if(!jugador.getNombre().equals(actual.getNombre())){
                         actual.sumarGastos(200000);
                         jugador.sumarFortuna(200000);

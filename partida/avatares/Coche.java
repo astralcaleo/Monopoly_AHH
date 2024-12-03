@@ -8,22 +8,23 @@ import java.util.ArrayList;
 
 public class Coche extends Avatar {
 
-    public Coche(Jugador jugador, Casilla lugar, ArrayList<Avatar> avCreados) {
-        super("coche",jugador, lugar, avCreados);
+    public Coche(Jugador jugador, Casilla lugar, ArrayList<Avatar> avCreados, Juego juego) {
+        super("coche",jugador, lugar, avCreados, juego);
     }
-    public void moverCoche(int dado1, int dado2, Tablero tablero) {
+    public void mover(int dado1, int dado2, Tablero tablero, Jugador banca) {
         int desplazamiento = dado1 + dado2;
     
         if (desplazamiento > 4) {
             // Avanza y realiza tiradas adicionales según las normas
-            avanzarCoche(dado1, dado2, tablero);
+            avanzarCoche(dado1, dado2, tablero,banca);
         } else {
             // Retrocede y aplica la penalización de 2 turnos
-            retrocederCoche(dado1,dado2, tablero);
+            retrocederCoche(dado1,dado2, tablero,banca);
         }
     }
     
-    private void avanzarCoche(int dado1, int dado2, Tablero tablero) {
+    private void avanzarCoche(int dado1, int dado2, Tablero tablero, Jugador banca) {
+        boolean compraRealizada = false;
         int tiradasExtra = 0;
         boolean ultimaTirada = false;
     
@@ -33,7 +34,7 @@ public class Coche extends Avatar {
             int nuevaPosicion = (posicionActual + desplazamiento) % 40;
             Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
     
-            System.out.println("El avatar " + this.getID() + " avanza " + desplazamiento + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
+            getJuego().getConsola().imprimir("El avatar " + this.getID() + " avanza " + desplazamiento + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     
             // Mover el avatar a la nueva posición
             this.moverAvatar(tablero.getPosiciones(), desplazamiento);
@@ -41,14 +42,41 @@ public class Coche extends Avatar {
     
             // Evaluar la casilla
             destino.evaluarCasilla(this.getJugador(), banca, desplazamiento);
+
+            if((this.getLugar().getTipo().equals("Solar") || this.getLugar().getTipo().equals("Transporte") || this.getLugar().getTipo().equals("Servicio")) && !compraRealizada) {
+                getJuego().verTablero();
+                System.out.println("\ncontinuar ");
+                System.out.println("comprar " + this.getLugar().getNombre());
+                System.out.println("hipotecar " + this.getLugar().getNombre());
+                System.out.println("deshipotecar " + this.getLugar().getNombre());
+                System.out.println("edificar \"TIPOEDIFICIO\"");
+                System.out.println("vender \"TIPOEDIFICIO\"" + this.getLugar().getNombre() + " \"CANTIDAD\"\n");
     
+                String comando = getJuego().getConsola().leer("Introduce comando:");
+                String[] partes = comando.split(" ");
+                while (comando.isEmpty()) {comando = getJuego().getConsola().leer(" ");}
+                getJuego().analizarComando(comando);
+                if(partes[0].equals("comprar")) compraRealizada = true;
+    
+            } else if(this.getLugar().getTipo().equals("Solar")){
+                getJuego().verTablero();
+                System.out.println("\ncontinuar ");
+                System.out.println("hipotecar " + this.getLugar().getNombre());
+                System.out.println("deshipotecar " + this.getLugar().getNombre());
+                System.out.println("edificar \"TIPOEDIFICIO\"");
+                System.out.println("vender \"TIPOEDIFICIO\"" + this.getLugar().getNombre() + " \"CANTIDAD\"\n");
+                String comando = getJuego().getConsola().leer("Introduce comando:");
+                while (comando.isEmpty()) {comando = getJuego().getConsola().leer(" ");}
+                getJuego().analizarComando(comando);
+            }
+
             // Comprobar si es la última tirada o si debe continuar
             if (tiradasExtra == 3 || desplazamiento <= 4) {
                 ultimaTirada = true;
     
                 // En la última tirada, evaluar dados dobles
                 if (dado1 == dado2) {
-                    System.out.println("Dado doble en la última tirada, el avatar " + this.getID() + " puede lanzar una tirada extra.");
+                    getJuego().getConsola().imprimir("Dado doble en la última tirada, el avatar " + this.getID() + " puede lanzar una tirada extra.");
                     // Generar una tirada adicional si aplica
                     int[] nuevosDados = lanzarDados(); // Método para lanzar los dados
                     dado1 = nuevosDados[0];
@@ -57,7 +85,7 @@ public class Coche extends Avatar {
     
                     // Comprobar si los nuevos dados son dobles (solo se permite una tirada extra)
                     if (dado1 == dado2) {
-                        System.out.println("En la tirada extra, se obtuvieron dados dobles nuevamente, pero no se permite continuar lanzando.");
+                        getJuego().getConsola().imprimir("En la tirada extra, se obtuvieron dados dobles nuevamente, pero no se permite continuar lanzando.");
                     }
                 }
                 break;
@@ -72,13 +100,13 @@ public class Coche extends Avatar {
         } while (!ultimaTirada && dado1 + dado2 > 4 && tiradasExtra < 4);
     }
     
-    private void retrocederCoche(int dado1, int dado2, Tablero tablero) {
+    private void retrocederCoche(int dado1, int dado2, Tablero tablero, Jugador banca) {
         int desplazamiento = dado1 + dado2;
         int posicionActual = this.getLugar().getPosicion();
         int nuevaPosicion = ((posicionActual - desplazamiento) % 40 + 40) % 40;
         Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
     
-        System.out.println("El avatar " + this.getID() + " retrocede " + desplazamiento + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
+        getJuego().getConsola().imprimir("El avatar " + this.getID() + " retrocede " + desplazamiento + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     
         // Mover el avatar a la nueva posición
         this.moverAvatar(tablero.getPosiciones(), -desplazamiento);
@@ -89,18 +117,18 @@ public class Coche extends Avatar {
     
         // Penalización: establecer 2 turnos bloqueados
         this.setTurnosBloqueados(2);
-        System.out.println("El avatar " + this.getID() + " no podrá lanzar los dados durante los próximos 2 turnos.");
+        getJuego().getConsola().imprimir("El avatar " + this.getID() + " no podrá lanzar los dados durante los próximos 2 turnos.");
     
         // No se permite lanzamiento adicional con dados dobles
         if (dado1 == dado2) {
-            System.out.println("Dados dobles durante el retroceso, pero no se permite lanzar nuevamente.");
+            getJuego().getConsola().imprimir("Dados dobles durante el retroceso, pero no se permite lanzar nuevamente.");
         }
     }
     
     private int[] lanzarDados() {
-        Juego.consola.imprimir("Valor dados: ");
-        int dado1 = Juego.consola.leer();
-        int dado2 = Juego.consola.leer();
+        getJuego().getConsola().imprimir("Valor dados: ");
+        int dado1 = getJuego().getConsola().leer();
+        int dado2 = getJuego().getConsola().leer();
         return new int[]{dado1, dado2};
     }
     
