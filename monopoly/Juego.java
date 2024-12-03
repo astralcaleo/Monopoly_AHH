@@ -1,10 +1,24 @@
 package monopoly;
 
 import partida.*;
+import partida.avatares.Avatar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+
+import casillas.Casilla;
+import edificios.Edificio;
+import excepciones.JugadorException;
+import excepciones.JugadorNoExisteException;
+import excepciones.PropiedadException;
+import excepciones.PropiedadYaHipotecadaException;
+import interfaz.Comando;
+import interfaz.ConsolaNormal;
+import monopoly.PropiedadNoDisponibleException;
+import monopoly.PropiedadNoEdificableException;
+import monopoly.casillas.propiedades.Propiedad;
+import monopoly.excepciones.JuegoException;
 
 public class Juego implements Comando {
     //Atributos
@@ -130,7 +144,17 @@ public class Juego implements Comando {
             salirCarcel();
         } else if(partes[0].equals("describir") && partes.length >= 2){
             if(partes[1].equals("jugador") && partes.length == 3){
-                descJugador(partes);
+                try{
+                    descJugador(partes);
+                } catch (JugadorNoExisteException e) {
+                    System.out.println("Error: " + e.getMessage() + " El jugador no existe");
+                } catch (JugadorException e) {
+                    System.out.println("Error relacionado con el jugador: " + e.getMessage());
+                } catch (JuegoException e) {
+                    System.out.println("Error general del juego: " + e.getMessage());
+                } catch (Exception e) {
+                    System.out.println("Error inesperado: " + e.getMessage());
+                }
             } else if(partes[1].equals("avatar") && partes.length == 3){
                 descAvatar(partes[2]);
             } else if(partes.length == 2){
@@ -139,19 +163,73 @@ public class Juego implements Comando {
                 System.out.println("Comando inválido\n");
             }
         } else if(partes.length == 3 && partes[0].equals("estadisticas") && partes[1].equals("jugador")){
-            estadisticasjugador(partes[2]);
+            try{
+                estadisticasjugador(partes[2]);
+            } catch (JugadorNoExisteException e) {
+                System.out.println("Error: " + e.getMessage() + " El jugador no existe");
+            } catch (JugadorException e) {
+                System.out.println("Error relacionado con el jugador: " + e.getMessage());
+            } catch (JuegoException e) {
+                System.out.println("Error general del juego: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Error inesperado: " + e.getMessage());
+            }
         } else if(partes.length == 2 && partes[0].equals("listar") && partes[1].equals("enventa")){
             listarVenta();
         } else if(partes.length == 2 && partes[0].equals("comprar") && partes[1].equals(this.avatares.get(this.turno).getLugar().getNombre())){
-            comprar(this.avatares.get(this.turno).getLugar().getNombre());
+            try{
+                comprar(this.avatares.get(this.turno).getLugar().getNombre());
+            } catch (PropiedadNoDisponibleException e) {
+                System.out.println("Error: " + e.getMessage() + "La propiedad no está disponible para comprar");
+            } catch (PropiedadException e) {
+                System.out.println("Error relacionado con la propiedad: " + e.getMessage());
+            } catch (JuegoException e) {
+                System.out.println("Error general del juego: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Error inesperado: " + e.getMessage());
+            }
         } else if(partes.length == 2 && partes[0].equals("hipotecar") && partes[1].equals(this.avatares.get(this.turno).getLugar().getNombre())){
-            hipotecar(partes[1]);  
+            try{
+                hipotecar(partes[1]);
+            } catch (PropiedadNoDisponibleException e) {
+                System.out.println("Error: " + e.getMessage() + "La propiedad no está disponible para hipotecar");
+            } catch (PropiedadYaHipotecadaException e) {
+                System.out.println("Error: " + e.getMessage() + "La propiedad ya ha sido hipotecada");
+            }catch (PropiedadException e) {
+                System.out.println("Error relacionado con la propiedad: " + e.getMessage());
+            } catch (JuegoException e) {
+                System.out.println("Error general del juego: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Error inesperado: " + e.getMessage());
+            }
         } else if(partes.length == 2 && partes[0].equals("deshipotecar") && partes[1].equals(this.avatares.get(this.turno).getLugar().getNombre())){
-            deshipotecar(partes[1]);
+            try{
+                deshipotecar(partes[1]);
+            } catch (PropiedadNoDisponibleException e) {
+                System.out.println("Error: " + e.getMessage() + "La propiedad no está disponible para deshipotecar");
+            } catch (PropiedadException e) {
+                System.out.println("Error relacionado con la propiedad: " + e.getMessage());
+            } catch (JuegoException e) {
+                System.out.println("Error general del juego: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Error inesperado: " + e.getMessage());
+            }
         } else if(partes.length == 3 && partes[0].equals("declararse") && partes[1].equals("en") && partes[2].equals("bancarrota")){
             bancarrota(this.jugadores.get(this.turno), this.avatares.get(this.turno).getLugar().getDuenho());
         } else if(partes.length == 2 && partes[0].equals("edificar") && edificios.contains(partes[1])){
-            edificarCasilla(partes[1]);
+            try{
+                edificarCasilla(partes[1]);
+            } catch (PropiedadNoDisponibleException e) {
+                System.out.println("Error: " + e.getMessage() + "La propiedad no está disponible para edificar");
+            } catch (PropiedadNoEdificableException e) {
+                System.out.println("Error: " + e.getMessage() + "La propiedad no puede ser edificable");
+            } catch (PropiedadException e) {
+                System.out.println("Error relacionado con la propiedad: " + e.getMessage());
+            } catch (JuegoException e) {
+                System.out.println("Error general del juego: " + e.getMessage());
+            } catch (Exception e) {
+                System.out.println("Error inesperado: " + e.getMessage());
+            }
         } else if(partes.length >= 2 && partes[0].equals("listar") && partes[1].equals("edificios")){
             ArrayList<String> grupos = new ArrayList<String>(8);
             grupos.add("negro"); grupos.add("rojo"); grupos.add("verde"); grupos.add("amarillo");
@@ -196,6 +274,7 @@ public class Juego implements Comando {
             aceptarTrato(partes[1]);
         } 
         else if(partes.length == 3 && partes[0].equals("trucar")){
+            
             if(!this.jugadores.get(this.turno).getAvatar().getmovAvanzado()) lanzarDados(Integer.parseInt(partes[1]), Integer.parseInt(partes[2]));
             else{
                 this.jugadores.get(this.turno).getAvatar().mover(Integer.parseInt(partes[1]), Integer.parseInt(partes[2]),tablero);
@@ -230,7 +309,7 @@ public class Juego implements Comando {
         String nombreJugador = partes[2];
         Jugador i = buscarJugador(nombreJugador);
         if(i != null) consola.imprimir("{\n" + i.toString() + "}");
-        else System.out.println("El jugador " + nombreJugador + " no está en la partida.");
+        else consola.imprimir("El jugador " + nombreJugador + " no existe.");
     }
 
     /*Método que que muestra la información sobre un jugador.
@@ -715,14 +794,16 @@ public class Juego implements Comando {
         if (this.tablero.encontrar_casilla(nombre).getTipo().equals("Solar") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Servicio") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Transporte")){
             this.avatares.get(this.turno).getLugar().comprarCasilla(this.avatares.get(this.turno).getJugador(),banca);
         } else{
-            System.out.println("Esta casilla no se puede comprar.");
+            consola.imprimir("Al jugador no le pertenece esta propiedad");
         }
     }
 
     public void hipotecar(String nombre){
         if(this.tablero.encontrar_casilla(nombre).getTipo().equals("Solar") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Servicio") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Transporte")){
             this.avatares.get(this.turno).getLugar().hipotecarCasilla(this.jugadores.get(this.turno), banca);
-        } else{System.out.println("Esta casilla no se puede hipotecar");}
+        } else{
+            consola.imprimir("Al jugador no le pertenece esta propiedad");
+        }
     }
 
     public void deshipotecar(String nombre){
@@ -1091,7 +1172,8 @@ public class Juego implements Comando {
                 System.out.println(i.toStringestadisticas());
                 return;
             }
-        } System.out.println("El jugador " + nombre + " no está en la partida.");
+        } 
+        consola.imprimir("El jugador " + nombre + " no existe.");
     }
 
     public void infotratos(){
