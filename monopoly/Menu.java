@@ -15,7 +15,7 @@ import partida.avatares.Avatar;
 
 import java.util.Scanner;
 
-import monopoly.casillas.Casilla;
+import monopoly.casillas.CasillaX;
 import monopoly.casillas.Grupo;
 import monopoly.edificios.Edificio;
 
@@ -280,7 +280,7 @@ public class Menu {
     */
     private void crearJugador(String nombre, String tipo) {
         if (this.jugadores.size()<6){
-            Casilla inicio = this.tablero.encontrar_casilla(0);
+            CasillaX inicio = this.tablero.encontrar_casilla(0);
             inicio.setPosicion(0);
             Jugador nJugador = new Jugador(nombre, tipo, inicio, avatares);
             this.jugadores.add(nJugador);
@@ -366,7 +366,7 @@ public class Menu {
     * Parámetros: nombre de la casilla a describir.
     */
     private void descCasilla(String nombre) {
-        Casilla dCasilla = this.tablero.encontrar_casilla(nombre);
+        CasillaX dCasilla = this.tablero.encontrar_casilla(nombre);
         if(dCasilla!=null){
             System.out.print("\n" + dCasilla.toString() + "\nVeces que han caído en esta casilla: ");
             for (int i = 0; i < jugadores.size(); i++) {
@@ -725,8 +725,8 @@ public class Menu {
 
     private void bancarrota(Jugador solicitante, Jugador demandante){
         if(solicitante.equals((demandante))){demandante = this.banca;}
-        ArrayList<Casilla> propiedades = new ArrayList<>(solicitante.getPropiedades());
-        for (Casilla cas : propiedades) {
+        ArrayList<CasillaX> propiedades = new ArrayList<>(solicitante.getPropiedades());
+        for (CasillaX cas : propiedades) {
             ArrayList<Edificio> edificiosCopia = new ArrayList<>(cas.getLista_edificio());
             for (Edificio ed : edificiosCopia) {
                 cas.getLista_edificio().remove(ed); // Eliminar de la lista original
@@ -797,7 +797,7 @@ public class Menu {
 
     // Método que realiza las acciones asociadas al comando 'listar enventa'.
     private void listarVenta() {
-        ArrayList<Casilla> lista = new ArrayList<Casilla>();
+        ArrayList<CasillaX> lista = new ArrayList<CasillaX>();
 
         for(int i=0;i<40;i++){
             if(this.tablero.encontrar_casilla(i).getDuenho().equals(banca) && this.tablero.encontrar_casilla(i).getTipo().equals("Solar") || this.tablero.encontrar_casilla(i).getTipo().equals("Servicio") || this.tablero.encontrar_casilla(i).getTipo().equals("Transporte")){
@@ -810,7 +810,7 @@ public class Menu {
         }
         
         else{
-            for(Casilla cas : lista){
+            for(CasillaX cas : lista){
                 System.out.println(cas.getNombre() + "{");
                 System.out.println("Tipo: " + cas.getTipo());
                 if(cas.getTipo().equals("Solar")){
@@ -885,10 +885,10 @@ public class Menu {
         }
     
         Grupo grupoActual = this.tablero.getGrupos().get(key);
-        ArrayList<Casilla> casillasGrupo = grupoActual.getMiembros();
+        ArrayList<CasillaX> casillasGrupo = grupoActual.getMiembros();
         ArrayList<Integer> contadorEdificios = new ArrayList<>(Arrays.asList(0, 0, 0, 0)); 
     
-        for (Casilla casilla : casillasGrupo) {
+        for (CasillaX casilla : casillasGrupo) {
             System.out.println("{");
             System.out.println("propiedad: " + casilla.getNombre() + ",");
             contadorEdificios.set(0, contadorEdificios.get(0) + listarEdificiosPorTipo(casilla, "casa"));
@@ -919,7 +919,7 @@ public class Menu {
         }
     }
     
-    private int listarEdificiosPorTipo(Casilla casilla, String tipo) {
+    private int listarEdificiosPorTipo(CasillaX casilla, String tipo) {
         ArrayList<Edificio> edificios = new ArrayList<>();
         for (Edificio edificio : casilla.getLista_edificio()) {
             if (edificio.getTipo().equals(tipo)) {
@@ -964,12 +964,12 @@ public class Menu {
 
     private void casillaMasRentable(){
         float masRentable = this.tablero.encontrar_casilla(0).getRentabilidad();
-        for(ArrayList<Casilla> lado : this.tablero.getPosiciones()){
-            for(Casilla cas : lado){if(masRentable<cas.getRentabilidad()) masRentable = cas.getRentabilidad();}
+        for(ArrayList<CasillaX> lado : this.tablero.getPosiciones()){
+            for(CasillaX cas : lado){if(masRentable<cas.getRentabilidad()) masRentable = cas.getRentabilidad();}
         }
 
-        for(ArrayList<Casilla> lado : this.tablero.getPosiciones()){
-            for(Casilla cas : lado){if(masRentable==cas.getRentabilidad()) System.out.print(cas.getNombre() + ", ");}
+        for(ArrayList<CasillaX> lado : this.tablero.getPosiciones()){
+            for(CasillaX cas : lado){if(masRentable==cas.getRentabilidad()) System.out.print(cas.getNombre() + ", ");}
         }
         System.out.println();
     }
@@ -977,8 +977,8 @@ public class Menu {
     private void grupoMasRentable(){
         ArrayList<Float> masRentable = new ArrayList<Float>(8);
         for(int i=0;i<8;i++){masRentable.add(0f);}
-        for(ArrayList<Casilla> lado : this.tablero.getPosiciones()){
-            for(Casilla cas : lado){
+        for(ArrayList<CasillaX> lado : this.tablero.getPosiciones()){
+            for(CasillaX cas : lado){
                 if(cas.getTipo().equals("Solar")){
                     String color=cas.getColorGrupo();
                     switch(color){
@@ -1034,16 +1034,16 @@ public class Menu {
     private void casillaMasFrecuentada(){
         int maximo=0;
 
-        for(ArrayList<Casilla> lado : this.tablero.getPosiciones()){
-            for(Casilla cas : lado){
+        for(ArrayList<CasillaX> lado : this.tablero.getPosiciones()){
+            for(CasillaX cas : lado){
                 int suma = 0;
                 for (Integer num : cas.getCaidas()){suma += num;}
                 if(suma>maximo){maximo=suma;}
             }
         }
 
-        for(ArrayList<Casilla> lado : this.tablero.getPosiciones()){
-            for(Casilla cas : lado){
+        for(ArrayList<CasillaX> lado : this.tablero.getPosiciones()){
+            for(CasillaX cas : lado){
                 int suma = 0;
                 for (Integer num : cas.getCaidas()) suma += num;
                 if(suma==maximo){System.out.print(cas.getNombre() + ", ");}
@@ -1075,7 +1075,7 @@ public class Menu {
 
         for(int i=0;i<this.jugadores.size();i++){
             fortuna.set(i, fortuna.get(i) + this.jugadores.get(i).getFortuna());
-            for(Casilla cas : this.jugadores.get(i).getPropiedades()){
+            for(CasillaX cas : this.jugadores.get(i).getPropiedades()){
                 fortuna.set(i, fortuna.get(i) + cas.getvaloredificios() + cas.getValor());
             }
         }
@@ -1190,7 +1190,7 @@ public class Menu {
             if(oferta.length == 2){
                 
                 if(tratoaceptar.getPropositor().getFortuna()>=Integer.parseInt(oferta[1])){
-                    Casilla pro1 = this.tablero.encontrar_casilla(oferta[0]),pro2=this.tablero.encontrar_casilla(demanda[0]);
+                    CasillaX pro1 = this.tablero.encontrar_casilla(oferta[0]),pro2=this.tablero.encontrar_casilla(demanda[0]);
                     if(pro1.getHipotecada()){
                         System.out.println(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
                         respuesta = scanner.nextLine();}
@@ -1212,7 +1212,7 @@ public class Menu {
             }
             else if(demanda.length == 2){
                 if(tratoaceptar.getDestinatario().getFortuna()>=Integer.parseInt(demanda[1])){
-                    Casilla pro1 = this.tablero.encontrar_casilla(oferta[0]),pro2=this.tablero.encontrar_casilla(demanda[0]);
+                    CasillaX pro1 = this.tablero.encontrar_casilla(oferta[0]),pro2=this.tablero.encontrar_casilla(demanda[0]);
                     if(pro1.getHipotecada()){
                         System.out.println(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
                         respuesta = scanner.nextLine();}
@@ -1234,7 +1234,7 @@ public class Menu {
             else{
                 if(esNumerico(oferta[0])){
                     if(tratoaceptar.getPropositor().getFortuna()>=Integer.parseInt(oferta[0])){
-                        Casilla pro1 = this.tablero.encontrar_casilla(demanda[0]);
+                        CasillaX pro1 = this.tablero.encontrar_casilla(demanda[0]);
                         pro1.setDuenho(tratoaceptar.getPropositor());
                         tratoaceptar.getPropositor().anhadirPropiedad(pro1);
                         tratoaceptar.getDestinatario().eliminarPropiedad(pro1);
@@ -1248,7 +1248,7 @@ public class Menu {
                 else if(esNumerico(demanda[0])){
 
                     if(tratoaceptar.getDestinatario().getFortuna()>=Integer.parseInt(demanda[0])){
-                        Casilla pro1 = this.tablero.encontrar_casilla(oferta[0]);
+                        CasillaX pro1 = this.tablero.encontrar_casilla(oferta[0]);
                         if(pro1.getHipotecada()){
                             System.out.println(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
                             respuesta = scanner.nextLine();}
@@ -1264,7 +1264,7 @@ public class Menu {
                     else System.out.println("El trato no puede ser aceptado: " + tratoaceptar.getDestinatario().getNombre() + " no tiene " + demanda[0]+ " €");
                 }}
                 else{
-                    Casilla pro1 = this.tablero.encontrar_casilla(oferta[0]), pro2 = this.tablero.encontrar_casilla(demanda[0]);
+                    CasillaX pro1 = this.tablero.encontrar_casilla(oferta[0]), pro2 = this.tablero.encontrar_casilla(demanda[0]);
                     if(pro1.getHipotecada()){
                         System.out.println(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
                         respuesta = scanner.nextLine();}

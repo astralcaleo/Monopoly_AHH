@@ -1,14 +1,14 @@
 package partida.avatares;
 
 import monopoly.*;
-import monopoly.casillas.Casilla;
+import monopoly.casillas.CasillaX;
 import partida.Jugador;
 
 import java.util.ArrayList;
 
 public class Pelota extends Avatar {
 
-    public Pelota(Jugador jugador, Casilla lugar, ArrayList<Avatar> avCreados) {
+    public Pelota(Jugador jugador, CasillaX lugar, ArrayList<Avatar> avCreados) {
         super("pelota",jugador, lugar, avCreados);
     }
 
@@ -29,7 +29,7 @@ public class Pelota extends Avatar {
         int j = 1; // Movimiento inicial
         for (int i = 1; i <= desplazamiento; i += j) {
             int nuevaPosicion = ((posicionActual - j) % 40 + 40) % 40;
-            Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
+            CasillaX destino = tablero.encontrar_casilla(nuevaPosicion);
     
             System.out.println("El avatar " + this.getID() + " retrocede " + j + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     
@@ -46,7 +46,7 @@ public class Pelota extends Avatar {
         int j = 5; // Primer paso es a la 5ª casilla impar
         for (int i = 5; i <= desplazamiento; i += j) {
             int nuevaPosicion = (posicionActual + j) % 40;
-            Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
+            CasillaX destino = tablero.encontrar_casilla(nuevaPosicion);
     
             System.out.println("El avatar " + this.getID() + " avanza " + j + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     

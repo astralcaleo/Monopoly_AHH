@@ -1,8 +1,8 @@
-package juego;
+package monopoly;
 
-import tablero.Casilla;
-import interfaz.Comando;
-import interfaz.Consola;
+import monopoly.casillas.CasillaX;
+import monopoly.interfaz.Comando;
+import monopoly.interfaz.Consola;
 import monopoly.interfaz.ConsolaNormal;
 
 import java.util.ArrayList;
