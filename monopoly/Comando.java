@@ -10,7 +10,7 @@ public interface Comando {
     public void cambiarModo();
     public void acabarTurno();
     public void salirCarcel();
-    public void descJugador(String nombre);
+    public void descJugador(String[] nombre);
     public void descAvatar(String nombre);
     public void descCasilla(String nombre);
     public void estadisticasjugador(String nombre);
@@ -29,6 +29,7 @@ public interface Comando {
     public void trato(String jugador,String inter1, String inter2);
     public void trato(String jugador,String inter1, String inter2, String inter3,String inter4);
     public void aceptarTrato(String idtrato);
+    public void eliminarTrato(String idtrato);
     public void lanzarDados(int valor1, int valor2);
     public void lanzarDadosEsp(int valor1, int valor2);
 
