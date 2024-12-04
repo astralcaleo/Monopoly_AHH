@@ -18,11 +18,20 @@ public class Servicio extends Propiedad {
     }
 
     // Métodos heredados
+    // Método abstracto para calcular el alquiler de Transporte
+    @Override
+    public float alquiler(){
+        float factor = super.getValor()/200f;
+        alquiler = factor;
+        return alquiler;
+    }
+
     // Método abstracto para ejecutar acciones específicas de cada tipo de casilla
     @Override
     public boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu){
         if (!this.propietario.equals(tablero.getBanca()) && !this.propietario.equals(actual)) {
             if(!super.isHipotecada()){
+                this.alquiler = alquiler();
                 float factor = super.getValor()/200f;
                 Servicio imp1 = new Servicio("Serv1", 12, 0.75f*(Valor.SUMA_VUELTA), tablero.getBanca()); 
                 Servicio imp2 = new Servicio("Serv2", 28, 0.75f*(Valor.SUMA_VUELTA), tablero.getBanca());

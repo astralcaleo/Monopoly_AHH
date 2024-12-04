@@ -19,17 +19,25 @@ public class Transporte extends Propiedad {
     }
 
     // Métodos heredados
+    // Método abstracto para calcular el alquiler de Transporte
+    @Override
+    public float alquiler(){
+        float propio = 0f;
+        for(Casilla cas : this.propietario.getPropiedades()){
+            if(cas instanceof Transporte){
+                propio = propio + 0.25f;
+            }
+        } this.alquiler = Valor.SUMA_VUELTA * propio;
+        return alquiler;
+    }
+
     // Método abstracto para ejecutar acciones específicas de cada tipo de casilla
     @Override
     public boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu){
+        System.out.println(this.propietario.getNombre());
         if (!this.propietario.getNombre().equals("banca") && !this.propietario.equals(actual)) {
             if(!super.isHipotecada()){
-                float propio = 0f;
-                for(Casilla cas : this.propietario.getPropiedades()){
-                    if(cas instanceof Transporte){
-                        propio = propio + 0.25f;
-                    }
-                } alquiler = Valor.SUMA_VUELTA * propio;
+                this.alquiler = alquiler();
 
                 if (actual.getFortuna() < alquiler) {
                     System.out.println("El jugador " + actual.getNombre() + " no puede pagar la deuda.");

@@ -316,7 +316,14 @@ public class Solar extends Propiedad {
         return valoredificios;
     }
 
-     // Métodos heredados
+    // Métodos heredados
+    // Método abstracto para calcular el alquiler de Solar
+    @Override
+    public float alquiler(){
+        calcularAlquiler();
+        return this.alquiler;
+    }
+
     @Override
     public void hipotecar(Jugador solicitante) {
         if (propietario.equals(solicitante)) {
@@ -339,7 +346,7 @@ public class Solar extends Propiedad {
     public boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu){
         if (!this.propietario.equals(tablero.getBanca()) && !this.propietario.equals(actual)) {
             if (!super.isHipotecada()){
-                calcularAlquiler();
+                this.alquiler = alquiler();
                 
                 if (actual.getFortuna() < alquiler){
                     System.out.println("El jugador " + actual.getNombre() + " no puede pagar la deuda.");

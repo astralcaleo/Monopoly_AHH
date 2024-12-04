@@ -10,22 +10,23 @@ import partida.Jugador;
 
 public abstract class Propiedad extends Casilla {
     //Atributos
-    private float valor;               // Precio de venta la propiedad
-    private float valorInicial;        // Precio de venta al inicio de la partida la propiedad
-    private float alquiler;            // Dinero que se cobra como renta
-    private Jugador propietario;       // Nombre del propietario actual (null si no tiene)
-    private boolean hipotecada;        // Indica si la propiedad está hipotecada
-    private float hipoteca;            // Dinero que se recibe al hipotecar la propiedad
-    private float rentabilidad;        // Dinero que ha sido obtenido en esta casilla mediante cobro de alquileres
+    private float valor;                // Precio de venta la propiedad
+    private float valorInicial;         // Precio de venta al inicio de la partida la propiedad
+    private float alquiler;             // Dinero que se cobra como renta
+    private Jugador propietario;        // Nombre del propietario actual (null si no tiene)
+    private boolean hipotecada;         // Indica si la propiedad está hipotecada
+    private float hipoteca;             // Dinero que se recibe al hipotecar la propiedad
+    private float rentabilidad;         // Dinero que ha sido obtenido en esta casilla mediante cobro de alquileres
 
     // Constructor
     public Propiedad(String nombre, int posicion, float valor, Jugador propietario) {
         super(nombre, posicion);       // Llama al constructor de la clase base Casilla
         this.valorInicial = this.valor = valor;
         this.propietario = propietario;       // Inicialmente sin propietario
-        this.hipotecada = false;       // Inicialmente no hipotecada
+        this.hipotecada = false;              // Inicialmente no hipotecada
         this.hipoteca = (this.valorInicial)/2f;
         this.rentabilidad = 0f;
+        this.alquiler = 0f;
     }
 
     // Getters y Setters
@@ -61,12 +62,7 @@ public abstract class Propiedad extends Casilla {
     }
 
     // Devuelve el alquiler que se debe pagar si la casilla no está hipotecada
-    public float alquiler() {
-        if (hipotecada) {
-            System.out.println("La propiedad está hipotecada. No se cobra alquiler.");
-            return 0f;
-        } return alquiler;
-    }
+    public abstract float alquiler();
 
     // Realiza el proceso de compra de una propiedad
     public void comprar(Jugador solicitante, Jugador banca) throws Exception{

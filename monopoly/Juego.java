@@ -822,12 +822,13 @@ public class Juego implements Comando {
     /*Método que ejecuta todas las acciones realizadas con el comando 'comprar nombre_casilla'.
     * Parámetro: cadena de caracteres con el nombre de la casilla.
      */
-    public void comprar(String nombre) throws Exception{
-        if (this.tablero.encontrar_casilla(nombre) instanceof Propiedad){
-            Propiedad prop = (Propiedad) this.tablero.encontrar_casilla(nombre);
+    public void comprar(String nombre) throws Exception {
+        Casilla casilla = this.tablero.encontrar_casilla(nombre);
+        if (casilla instanceof Propiedad) {
+            Propiedad prop = (Propiedad) casilla;
             prop.comprar(this.avatares.get(this.turno).getJugador(), banca);
-        } else{
-            throw new PropiedadNoDisponibleException("Al jugador no le pertenece esta propiedad");
+        } else {
+            throw new PropiedadNoDisponibleException("La casilla no es una propiedad disponible para comprar.");
         }
     }
 
