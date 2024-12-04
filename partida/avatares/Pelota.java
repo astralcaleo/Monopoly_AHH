@@ -32,7 +32,7 @@ public class Pelota extends Avatar {
             int nuevaPosicion = ((posicionActual - j) % 40 + 40) % 40;
             Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
     
-            System.out.println("El avatar " + this.getID() + " retrocede " + j + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
+            Juego.consola.imprimir("El avatar " + this.getID() + " retrocede " + j + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     
             this.moverAvatar(tablero.getPosiciones(), (-j + 40) % 40);
             this.setLugar(destino);
@@ -49,7 +49,7 @@ public class Pelota extends Avatar {
             int nuevaPosicion = (posicionActual + j) % 40;
             Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
     
-            System.out.println("El avatar " + this.getID() + " avanza " + j + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
+            Juego.consola.imprimir("El avatar " + this.getID() + " avanza " + j + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     
             this.moverAvatar(tablero.getPosiciones(), j);
             this.setLugar(destino);
@@ -59,12 +59,12 @@ public class Pelota extends Avatar {
 
                 getJuego().verTablero();
                                 
-                System.out.println("\ncontinuar ");
-                System.out.println("comprar " + this.getLugar().getNombre());
-                System.out.println("hipotecar " + this.getLugar().getNombre());
-                System.out.println("deshipotecar " + this.getLugar().getNombre());
-                System.out.println("edificar \"TIPOEDIFICIO\"");
-                System.out.println("vender \"TIPOEDIFICIO\"" + this.getLugar().getNombre() + " \"CANTIDAD\"\n");
+                Juego.consola.imprimir("\ncontinuar ");
+                Juego.consola.imprimir("comprar " + this.getLugar().getNombre());
+                Juego.consola.imprimir("hipotecar " + this.getLugar().getNombre());
+                Juego.consola.imprimir("deshipotecar " + this.getLugar().getNombre());
+                Juego.consola.imprimir("edificar \"TIPOEDIFICIO\"");
+                Juego.consola.imprimir("vender \"TIPOEDIFICIO\"" + this.getLugar().getNombre() + " \"CANTIDAD\"\n");
 
                 String comando = Juego.consola.leer("Introduce comando:");
                 while (comando.isEmpty()) {comando = Juego.consola.leer(" ");}
