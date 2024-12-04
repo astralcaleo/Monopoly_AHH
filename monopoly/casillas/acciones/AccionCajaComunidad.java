@@ -1,7 +1,5 @@
 package monopoly.casillas.acciones;
 
-import java.util.Scanner;
-
 import monopoly.Tablero;
 import monopoly.interfaz.*;
 import monopoly.Juego;

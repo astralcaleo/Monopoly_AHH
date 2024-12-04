@@ -227,7 +227,11 @@ public class Juego implements Comando {
             }
         } else if(partes.length == 3 && partes[0].equals("declararse") && partes[1].equals("en") && partes[2].equals("bancarrota")){
             if(this.solvente) bancarrota(this.jugadores.get(this.turno), banca);
-            else bancarrota(this.jugadores.get(this.turno), this.avatares.get(this.turno).getLugar().getDuenho());
+            else if(this.avatares.get(this.turno).getLugar() instanceof Propiedad){
+                Propiedad prop = (Propiedad) this.avatares.get(this.turno).getLugar();
+                bancarrota(this.jugadores.get(this.turno), prop.getPropietario());
+            }
+            else bancarrota(this.jugadores.get(this.turno), banca);
         } else if(partes.length == 2 && partes[0].equals("edificar") && edificios.contains(partes[1])){
             try{
                 edificarCasilla(partes[1]);
@@ -820,24 +824,27 @@ public class Juego implements Comando {
     * Parámetro: cadena de caracteres con el nombre de la casilla.
      */
     public void comprar(String nombre) throws Exception{
-        if (this.tablero.encontrar_casilla(nombre).getTipo().equals("Solar") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Servicio") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Transporte")){
-            this.avatares.get(this.turno).getLugar().comprarCasilla(this.avatares.get(this.turno).getJugador(),banca);
+        if (this.tablero.encontrar_casilla(nombre) instanceof Propiedad){
+            Propiedad prop = (Propiedad) this.tablero.encontrar_casilla(nombre);
+            prop.comprar(this.avatares.get(this.turno).getJugador(), banca);
         } else{
             consola.imprimir("Al jugador no le pertenece esta propiedad");
         }
     }
 
     public void hipotecar(String nombre) throws Exception{
-        if(this.tablero.encontrar_casilla(nombre).getTipo().equals("Solar") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Servicio") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Transporte")){
-            this.avatares.get(this.turno).getLugar().hipotecarCasilla(this.jugadores.get(this.turno), banca);
+        if(this.tablero.encontrar_casilla(nombre) instanceof Propiedad){
+            Propiedad prop = (Propiedad) this.tablero.encontrar_casilla(nombre);
+            prop.hipotecar(this.jugadores.get(this.turno));
         } else{
             consola.imprimir("Al jugador no le pertenece esta propiedad");
         }
     }
 
     public void deshipotecar(String nombre) throws Exception{
-        if(this.tablero.encontrar_casilla(nombre).getTipo().equals("Solar") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Servicio") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Transporte")){
-            this.avatares.get(this.turno).getLugar().deshipotecarCasilla(this.jugadores.get(this.turno), banca);
+        if(this.tablero.encontrar_casilla(nombre) instanceof Propiedad){
+            Propiedad prop = (Propiedad) this.tablero.encontrar_casilla(nombre);
+            prop.deshipotecar(this.jugadores.get(this.turno));
         } else{System.out.println("Esta casilla no se puede deshipotecar");}
     }
 
@@ -947,15 +954,16 @@ public class Juego implements Comando {
     public void edificarCasilla(String edificio) throws Exception{
         if(!edificio.equals("casa") && !edificio.equals("hotel") && !edificio.equals("piscina") && !edificio.equals("pista")){System.out.println("Comando inválido\n");}
         else{
-            if(!avatares.get(this.turno).getLugar().getTipo().equals("Solar")){
+            Solar sol = (Solar) avatares.get(this.turno).getLugar();
+            if(!(avatares.get(this.turno).getLugar() instanceof Solar)){
                 throw new PropiedadNoEdificableException("Esta casilla no es edificable.");
-            } else if(!avatares.get(this.turno).getLugar().getDuenho().equals(jugadores.get(this.turno))){
+            } else if(!sol.getPropietario().equals(jugadores.get(this.turno))){
                 throw new PropiedadNoDisponibleException("El jugador " + jugadores.get(this.turno).getNombre() + " no puede edificar en esta casilla porque no es de su propiedad.");
-            } else if(avatares.get(this.turno).getLugar().getCaidas().get(this.turno)<=2 && !avatares.get(this.turno).getLugar().getGrupo().esDuenhoGrupo(avatares.get(this.turno).getJugador())){
+            } else if(sol.getCaidas().get(this.turno) <= 2 && !sol.getGrupo().esDuenhoGrupo(avatares.get(this.turno).getJugador())){
                 throw new PropiedadNoEdificableException("El jugador " + jugadores.get(this.turno).getNombre() + " no puede edificar en esta casilla todavía.");
-            } else if(avatares.get(this.turno).getLugar().getGrupo().esDuenhoGrupo(avatares.get(this.turno).getJugador())){
-                avatares.get(this.turno).getLugar().construirEdificio(edificio, jugadores.get(this.turno), banca, lista_edificios);
-            } else{avatares.get(this.turno).getLugar().construirEdificio(edificio, jugadores.get(this.turno), banca, lista_edificios);}
+            } else if(sol.getGrupo().esDuenhoGrupo(avatares.get(this.turno).getJugador())){
+                sol.construirEdificio(edificio, jugadores.get(this.turno), edificiosConstruidos);
+            } else{sol.construirEdificio(edificio, jugadores.get(this.turno), edificiosConstruidos);}
         }
     }
 
