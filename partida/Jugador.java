@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import monopoly.*;
 import monopoly.casillas.Casilla;
+import monopoly.casillas.propiedades.Propiedad;
 import monopoly.edificios.Edificio;
 import partida.avatares.*;
 
@@ -18,13 +19,13 @@ public class Jugador {
     private boolean enCarcel; //Será true si el jugador está en la carcel
     private int tiradasCarcel; //Cuando está en la carcel, contará las tiradas sin éxito que ha hecho allí para intentar salir (se usa para limitar el numero de intentos).
     private int vueltas; //Cuenta las vueltas dadas al tablero.
-    private ArrayList<Casilla> propiedades; //Propiedades que posee el jugador.
+    private ArrayList<Propiedad> propiedades; //Propiedades que posee el jugador.
     private ArrayList<Float> estadisticas; //Estadisticas del jugador.
     private ArrayList<Edificio> edificios; //Edificios construidos por el jugador
 
     //Constructor vacío. Se usará para crear la banca.
     public Jugador(){
-        this.propiedades = new ArrayList<Casilla>();
+        this.propiedades = new ArrayList<Propiedad>();
     }
 
     /*Constructor principal. Requiere parámetros:
@@ -52,7 +53,7 @@ public class Jugador {
         this.enCarcel = false;
         this.tiradasCarcel = 0;
         this.vueltas = 0;
-        this.propiedades = new ArrayList<Casilla>();
+        this.propiedades = new ArrayList<Propiedad>();
         this.edificios = new ArrayList<Edificio>();
         this.estadisticas = new ArrayList<Float>(7);
         for (int i = 0; i < 7; i++){this.estadisticas.add(0.0f);}
@@ -60,13 +61,13 @@ public class Jugador {
 
     //Otros métodos:
     //Método para añadir una propiedad al jugador. Como parámetro, la casilla a añadir.
-    public void anhadirPropiedad(Casilla casilla) {
-        this.propiedades.add(casilla);
+    public void anhadirPropiedad(Propiedad propiedad) {
+        this.propiedades.add(propiedad);
     }
 
     //Método para eliminar una propiedad del arraylist de propiedades de jugador.
-    public void eliminarPropiedad(Casilla casilla) {
-        this.propiedades.remove(casilla);
+    public void eliminarPropiedad(Propiedad propiedad) {
+        this.propiedades.remove(propiedad);
     }
 
     //Método para añadir fortuna a un jugador
@@ -111,7 +112,7 @@ public class Jugador {
         if (propiedades == null) {
             sb.append(" - ");
         } else {
-            for (Casilla i : propiedades) {
+            for (Propiedad i : propiedades) {
                 sb.append("").append(i.getNombre());
                 if(propiedades.indexOf(i) != (propiedades.size()-1)){
                     sb.append(", ");
@@ -198,7 +199,7 @@ public class Jugador {
     }
 
     /*Método para obtener la lista de propiedades del jugador*/
-    public ArrayList<Casilla> getPropiedades() {
+    public ArrayList<Propiedad> getPropiedades() {
         return this.propiedades;
     }
 
@@ -249,7 +250,7 @@ public class Jugador {
     }
 
     /*Método para modificar la lista de propiedades del jugador*/
-    public void setPropiedades(ArrayList<Casilla> propiedades) {
+    public void setPropiedades(ArrayList<Propiedad> propiedades) {
         this.propiedades = propiedades;
     }
 

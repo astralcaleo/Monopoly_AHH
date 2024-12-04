@@ -13,7 +13,6 @@ public class Sombrero extends Avatar {
     }
 
     public void mover(int dado1, int dado2, Tablero tablero, Jugador banca){
-        
     }
 
 }

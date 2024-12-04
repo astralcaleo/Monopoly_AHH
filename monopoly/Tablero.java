@@ -6,7 +6,11 @@ import partida.avatares.Avatar;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import monopoly.casillas.acciones.AccionCajaComunidad;
+import monopoly.casillas.acciones.AccionSuerte;
 import monopoly.casillas.*;
+import monopoly.casillas.propiedades.*;
+
 
 public class Tablero {
     //Atributos.
@@ -37,29 +41,28 @@ public class Tablero {
     private void insertarLadoSur() {
         ArrayList<Casilla> ladoSur = new ArrayList<Casilla>();
     
-        ladoSur.add(new Casilla("Salida", "Especial", 0, banca)); 
-        ladoSur.add(new Casilla("Caja", "Comunidad", 2, banca)); 
-        ladoSur.add(new Casilla("Imp1", 4, Valor.SUMA_VUELTA/2f, banca)); 
-        ladoSur.add(new Casilla("Trans1", "Transporte", 5, Valor.SUMA_VUELTA, banca));
-        ladoSur.add(new Casilla("Suerte", "Suerte", 7, banca)); 
+        ladoSur.add(new Especial("Salida", 0));
+        ladoSur.add(new AccionCajaComunidad("Caja", 2)); 
+        ladoSur.add(new Impuesto("Imp1", 4, Valor.SUMA_VUELTA/2f)); 
+        ladoSur.add(new Transporte("Trans1", 5, Valor.SUMA_VUELTA));
+        ladoSur.add(new AccionSuerte("Suerte", 7)); 
         
-        Casilla solar1 = new Casilla("Solar1", "Solar", 1, 600000f, banca); 
-        Casilla solar2 = new Casilla("Solar2", "Solar", 3, 600000f, banca); 
+        Solar solar1 = new Solar("Solar1", 1, 600000f); 
+        Solar solar2 = new Solar("Solar2", 3, 600000f); 
         Grupo grupoNegro = new Grupo(solar1, solar2, Valor.BLACK);
         this.grupos.put(Valor.BLACK, grupoNegro);
         solar1.setGrupo(grupoNegro);
         solar2.setGrupo(grupoNegro);
 
 
-        Casilla solar3 = new Casilla("Solar3", "Solar", 6, 520000f, banca); 
-        Casilla solar4 = new Casilla("Solar4", "Solar", 8, 520000f, banca); 
-        Casilla solar5 = new Casilla("Solar5", "Solar", 9, 520000f, banca); 
+        Solar solar3 = new Solar("Solar3", 6, 520000f); 
+        Solar solar4 = new Solar("Solar4", 8, 520000f); 
+        Solar solar5 = new Solar("Solar5", 9, 520000f); 
         Grupo grupoCian = new Grupo(solar3, solar4, solar5, Valor.CYAN);
         this.grupos.put(Valor.CYAN, grupoCian);
         solar3.setGrupo(grupoCian);
         solar4.setGrupo(grupoCian);
         solar5.setGrupo(grupoCian);
-
 
         ladoSur.add(solar1);
         ladoSur.add(solar2);
@@ -74,15 +77,14 @@ public class Tablero {
     private void insertarLadoOeste() {
         ArrayList<Casilla> ladoOeste = new ArrayList<Casilla>();
     
-        ladoOeste.add(new Casilla("Cárcel", "Especial", 10, banca)); 
-        ladoOeste.add(new Casilla("Serv1", "Servicio", 12, 0.75f*(Valor.SUMA_VUELTA), banca)); 
-        ladoOeste.add(new Casilla("Trans2", "Transporte", 15, Valor.SUMA_VUELTA, banca)); 
-        ladoOeste.add(new Casilla("Caja", "Comunidad", 17, banca));
-        
+        ladoOeste.add(new Especial("Cárcel", 10)); 
+        ladoOeste.add(new Servicio("Serv1", 12, 0.75f*(Valor.SUMA_VUELTA))); 
+        ladoOeste.add(new Transporte("Trans2", 15, Valor.SUMA_VUELTA)); 
+        ladoOeste.add(new AccionCajaComunidad("Caja", 17));
 
-        Casilla solar6 = new Casilla("Solar6", "Solar", 11, 680000f, banca); 
-        Casilla solar7 = new Casilla("Solar7", "Solar", 13, 680000f, banca); 
-        Casilla solar8 = new Casilla("Solar8", "Solar", 14, 680000f, banca); 
+        Solar solar6 = new Solar("Solar6", 11, 680000f); 
+        Solar solar7 = new Solar("Solar7", 13, 680000f); 
+        Solar solar8 = new Solar("Solar8", 14, 680000f); 
         Grupo grupoRosa = new Grupo(solar6, solar7, solar8, Valor.PURPLE);
         this.grupos.put(Valor.PURPLE, grupoRosa);
         solar6.setGrupo(grupoRosa);
@@ -90,16 +92,14 @@ public class Tablero {
         solar8.setGrupo(grupoRosa);
 
 
-
-        Casilla solar9 = new Casilla("Solar9", "Solar", 16, 885000f, banca); 
-        Casilla solar10 = new Casilla("Solar10", "Solar", 18, 885000f, banca);
-        Casilla solar11 = new Casilla("Solar11", "Solar", 19, 885000f, banca);
+        Solar solar9 = new Solar("Solar9", 16, 885000f); 
+        Solar solar10 = new Solar("Solar10", 18, 885000f);
+        Solar solar11 = new Solar("Solar11", 19, 885000f);
         Grupo grupoAmarillo = new Grupo(solar9, solar10, solar11, Valor.YELLOW);
         this.grupos.put(Valor.YELLOW, grupoAmarillo);
         solar9.setGrupo(grupoAmarillo);
         solar10.setGrupo(grupoAmarillo);
         solar11.setGrupo(grupoAmarillo);
-
 
         ladoOeste.add(solar6);
         ladoOeste.add(solar7);
@@ -115,26 +115,23 @@ public class Tablero {
     private void insertarLadoNorte() {
         ArrayList<Casilla> ladoNorte = new ArrayList<Casilla>();
     
-        ladoNorte.add(new Casilla("Parking", "Especial", 20, banca)); 
-        ladoNorte.add(new Casilla("Suerte", "Suerte", 22, banca));
-        ladoNorte.add(new Casilla("Trans3", "Transporte", 25, Valor.SUMA_VUELTA, banca)); 
-        ladoNorte.add(new Casilla("Serv2", "Servicio", 28, 0.75f*(Valor.SUMA_VUELTA), banca)); 
+        ladoNorte.add(new Especial("Parking", 20)); 
+        ladoNorte.add(new AccionSuerte("Suerte", 22));
+        ladoNorte.add(new Transporte("Trans3", 25, Valor.SUMA_VUELTA)); 
+        ladoNorte.add(new Servicio("Serv2", 28, 0.75f*(Valor.SUMA_VUELTA))); 
 
-
-        Casilla solar12 = new Casilla("Solar12", "Solar", 21, 1150000f, banca);
-        Casilla solar13 = new Casilla("Solar13", "Solar", 23, 1150000f, banca);
-        Casilla solar14 = new Casilla("Solar14", "Solar", 24, 1150000f, banca);
+        Solar solar12 = new Solar("Solar12", 21, 1150000f);
+        Solar solar13 = new Solar("Solar13", 23, 1150000f);
+        Solar solar14 = new Solar("Solar14", 24, 1150000f);
         Grupo grupoRojo = new Grupo(solar12, solar13, solar14, Valor.RED);
         this.grupos.put(Valor.RED, grupoRojo);
         solar12.setGrupo(grupoRojo);
         solar13.setGrupo(grupoRojo);
         solar14.setGrupo(grupoRojo);
-
         
-        
-        Casilla solar15 = new Casilla("Solar15", "Solar", 26, 1500000f, banca);
-        Casilla solar16 = new Casilla("Solar16", "Solar", 27, 1500000f, banca);
-        Casilla solar17 = new Casilla("Solar17", "Solar", 29, 1500000f, banca);
+        Solar solar15 = new Solar("Solar15", 26, 1500000f);
+        Solar solar16 = new Solar("Solar16", 27, 1500000f);
+        Solar solar17 = new Solar("Solar17", 29, 1500000f);
         Grupo grupoBlanco = new Grupo(solar15, solar16, solar17, Valor.WHITE);
         this.grupos.put(Valor.WHITE, grupoBlanco);
         solar15.setGrupo(grupoBlanco);
@@ -155,15 +152,15 @@ public class Tablero {
     private void insertarLadoEste() {
         ArrayList<Casilla> ladoEste = new ArrayList<Casilla>();
     
-        ladoEste.add(new Casilla("IrCarcel", "Especial", 30, banca));  
-        ladoEste.add(new Casilla("Caja", "Comunidad", 33, banca)); 
-        ladoEste.add(new Casilla("Trans4", "Transporte", 35, Valor.SUMA_VUELTA, banca)); 
-        ladoEste.add(new Casilla("Suerte", "Suerte", 36, banca)); 
-        ladoEste.add(new Casilla("Imp2", 38, Valor.SUMA_VUELTA, banca));
+        ladoEste.add(new Especial("IrCarcel", 30));  
+        ladoEste.add(new AccionCajaComunidad("Caja", 33)); 
+        ladoEste.add(new Transporte("Trans4", 35, Valor.SUMA_VUELTA)); 
+        ladoEste.add(new AccionSuerte("Suerte", 36)); 
+        ladoEste.add(new Impuesto("Imp2", 38, Valor.SUMA_VUELTA));
 
-        Casilla solar18 = new Casilla("Solar18", "Solar", 31, 1950000f, banca);
-        Casilla solar19 = new Casilla("Solar19", "Solar", 32, 1950000f, banca);
-        Casilla solar20 = new Casilla("Solar20", "Solar", 34, 1950000f, banca);
+        Solar solar18 = new Solar("Solar18", 31, 1950000f);
+        Solar solar19 = new Solar("Solar19", 32, 1950000f);
+        Solar solar20 = new Solar("Solar20", 34, 1950000f);
         Grupo grupoVerde = new Grupo(solar18, solar19, solar20, Valor.GREEN);
         this.grupos.put(Valor.GREEN, grupoVerde);
         solar18.setGrupo(grupoVerde);
@@ -171,9 +168,8 @@ public class Tablero {
         solar20.setGrupo(grupoVerde);
 
 
-
-        Casilla solar21 = new Casilla("Solar21", "Solar", 37, 3850000f, banca);
-        Casilla solar22 = new Casilla("Solar22", "Solar", 39, 3850000f, banca);
+        Solar solar21 = new Solar("Solar21", 37, 3850000f);
+        Solar solar22 = new Solar("Solar22", 39, 3850000f);
         Grupo grupoAzul = new Grupo(solar21, solar22, Valor.BLUE);
         this.grupos.put(Valor.BLUE, grupoAzul);
         solar21.setGrupo(grupoAzul);
@@ -215,17 +211,19 @@ public class Tablero {
         output.append(System.lineSeparator());
         for(int pos=20;pos<=30;pos++){
             Casilla cas = this.encontrar_casilla(pos);
-            Grupo grup = cas.getGrupo();
+            Grupo grup;
+            if(cas instanceof Solar){
+                Solar solar = (Solar) cas;
+                grup = solar.getGrupo();
+            } else{grup = null;}
+            
             String color = grup != null ? grup.getColor() : "Sin Grupo";
             switch (color) {
-
                 case Valor.WHITE:
                     output.append("| " + Valor.WHITE + cas.getNombre() + Valor.RESET + espacios(cas));
                     if (!cas.getAvatares().isEmpty()) {
                         output.append("&");
-                        for (Avatar avatar : cas.getAvatares() ) {
-                            output.append(avatar.getID());
-                        }
+                        for (Avatar avatar : cas.getAvatares()){output.append(avatar.getID());}
                     }
                     break;
 
@@ -233,9 +231,7 @@ public class Tablero {
                     output.append("| " + Valor.RED + cas.getNombre()+ Valor.RESET+espacios(cas));
                     if (!cas.getAvatares().isEmpty()) {
                         output.append("&");
-                        for (Avatar avatar : cas.getAvatares() ) {
-                            output.append(avatar.getID());
-                        }
+                        for (Avatar avatar : cas.getAvatares()) {output.append(avatar.getID());}
                     }
                     break;
 
@@ -243,9 +239,7 @@ public class Tablero {
                     output.append("| "+ cas.getNombre()+ espacios(cas));
                     if (!cas.getAvatares().isEmpty()) {
                         output.append("&");
-                        for (Avatar avatar : cas.getAvatares() ) {
-                            output.append(avatar.getID());
-                        }
+                        for (Avatar avatar : cas.getAvatares()) {output.append(avatar.getID());}
                     }
             }
             
@@ -262,8 +256,16 @@ public class Tablero {
                 Casilla cas1 = encontrar_casilla(pos1);
                 Casilla cas2 = encontrar_casilla(pos2);
                 
-                Grupo grup1 = cas1.getGrupo();
-                Grupo grup2 = cas2.getGrupo();
+                Grupo grup1, grup2;
+                if(cas1 instanceof Solar){
+                    Solar solar = (Solar) cas1;
+                    grup1 = solar.getGrupo();
+                } else{grup1 = null;}
+                
+                if(cas2 instanceof Solar){
+                    Solar solar = (Solar) cas2;
+                    grup2 = solar.getGrupo();
+                } else{grup2 = null;}
 
                 String color1 = grup1 != null ? grup1.getColor() : "Sin Grupo";
                 String color2 = grup2 != null ? grup2.getColor() : "Sin Grupo";
@@ -358,7 +360,11 @@ public class Tablero {
         output.append(System.lineSeparator());
         for(int pos=10;pos>=0;pos--){
             Casilla cas = this.encontrar_casilla(pos);
-            Grupo grup = cas.getGrupo();
+            Grupo grup;
+            if(cas instanceof Solar){
+                Solar solar = (Solar) cas;
+                grup = solar.getGrupo();
+            } else{grup = null;}
             String color = grup != null ? grup.getColor() : "Sin Grupo";
                 switch (color) {
                     case Valor.CYAN:

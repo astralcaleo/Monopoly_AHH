@@ -2,6 +2,7 @@ package partida.avatares;
 
 import monopoly.*;
 import monopoly.casillas.Casilla;
+import monopoly.casillas.propiedades.Propiedad;
 import partida.Jugador;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public class Pelota extends Avatar {
     
             this.moverAvatar(tablero.getPosiciones(), (-j + 40) % 40);
             this.setLugar(destino);
-            destino.evaluarCasilla(this.getJugador(), banca, desplazamiento);
+            destino.evaluarCasilla(this.getJugador(), desplazamiento, tablero, juego.getTurno(), juego);
     
             // Alternar entre pasos de 1 o 2 casillas
             j = (desplazamiento - i == 1) ? 1 : 2;
@@ -52,11 +53,9 @@ public class Pelota extends Avatar {
     
             this.moverAvatar(tablero.getPosiciones(), j);
             this.setLugar(destino);
-            destino.evaluarCasilla(this.getJugador(), banca, desplazamiento);
+            destino.evaluarCasilla(this.getJugador(), desplazamiento, tablero, juego.getTurno(), juego);
 
-            if ((this.getLugar().getTipo().equals("Solar") ||
-                this.getLugar().getTipo().equals("Transporte") ||
-                this.getLugar().getTipo().equals("Servicio"))) {
+            if ((this.getLugar() instanceof Propiedad)) {
 
                 getJuego().verTablero();
                                 

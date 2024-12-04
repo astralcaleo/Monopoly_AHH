@@ -3,115 +3,62 @@ package monopoly.edificios;
 import partida.*;
 import java.util.ArrayList;
 
-import monopoly.Valor;
-import monopoly.casillas.Casilla;
 import monopoly.casillas.Grupo;
+import monopoly.casillas.propiedades.Solar;
 
-public class Edificio {
+public abstract class Edificio {
+    // Atributos
+    private String ID;              // Identificador único que diferencia los edificios contruídos
+    private Jugador propietario;    // Jugador al que le pertenece el edificio
+    private Solar ubicacion;        // Solar en el que se construye el edificio
+    private Grupo grupo;            // Grupo al que pertenece el solar donde se ha construído el edificio
+    private int cantidad = 1;       // Número de edificios de un tipo y un grupo (se usa para la generación del ID)
+    private float coste;            // Precio de construcción de cada edificio
     
-    //Atributos:
-    private String ID;
-    private String tipo;
-    private Jugador duenho;
-    private Casilla ubicacion;
-    private Grupo grupo;
-    private int cantidad = 1;
-    private float coste;
-    
-    //Constructores:
-    public Edificio() {
-    }//Parámetros vacíos
-    
-    public Edificio(String tipo, Jugador duenho, Casilla ubicacion, ArrayList<Edificio> listaEdificios) {
-        this.tipo = tipo;
-        this.duenho = duenho;
+    // Constructor
+    public Edificio(Jugador propietario, Solar ubicacion, ArrayList<Edificio> edificiosConstruidos) {
+        this.propietario = propietario;
         this.ubicacion = ubicacion;
         this.grupo = ubicacion.getGrupo();
-        generarId(listaEdificios);
-        calcularCoste();
+        generarId(edificiosConstruidos);
     }
 
-    private void generarId(ArrayList<Edificio> listaEdificios) {
+    // Getters y Setters
+    public String getID() {return ID;}
+    public Grupo getGrupo() {return grupo;}
+    public int getCantidad() {return cantidad;}
+    public Solar getUbicacion() {return ubicacion;}
+    public void setCoste(float coste) {this.coste = coste;}
+
+    // Métodos de Edificio
+    // Método para generar el identificar único de cada edificio
+    private void generarId(ArrayList<Edificio> edificiosConstruidos) {
         int num = 0;
         StringBuilder sb = new StringBuilder();
-        if(!listaEdificios.isEmpty()){
-            for(Edificio ed : listaEdificios){
-                if(ed.grupo.equals(this.grupo) && ed.tipo.equals(this.tipo)){this.cantidad=ed.cantidad+1; num=1;}
+        String tipo = this.getClass().getSimpleName().toLowerCase();
+    
+        if (!edificiosConstruidos.isEmpty()) {
+            for (Edificio ed : edificiosConstruidos) {
+                if (ed.getGrupo().equals(this.grupo) && ed.getClass().equals(this.getClass())) {
+                    this.cantidad = ed.getCantidad() + 1;
+                    num = 1;
+                }
             }
-        }if(num==0){this.cantidad = 1;}
-        
-        sb.append(this.tipo).append("-").append(this.colorGrupo()).append(this.cantidad);
+        } if (num == 0) {this.cantidad = 1;}
+    
+        sb.append(tipo).append("-").append(grupo.colorGrupo()).append(cantidad);
         this.ID = sb.toString();
-    }
-
-    private void calcularCoste(){
-        if(this.tipo.equals("casa") || this.tipo.equals("hotel"))
-            {this.coste = this.ubicacion.getValor_inicial()*0.6f;}
-        else if(this.tipo.equals("piscina"))
-            {this.coste = this.ubicacion.getValor_inicial()*0.4f;}
-        else {this.coste = this.ubicacion.getValor_inicial()*1.25f;}
-    }
-
-    private String colorGrupo(){
-        switch (this.grupo.getColor()) {
-            case Valor.BLACK:
-                return "negro";
-            case Valor.RED:
-                return "rojo";
-            case Valor.GREEN:
-                return "verde";
-            case Valor.YELLOW:
-                return "amarillo";
-            case Valor.BLUE:
-                return "azul";
-            case Valor.PURPLE:
-                return "rosa";
-            case Valor.CYAN:
-                return "cian";
-            case Valor.WHITE:
-                return "blanco";
-            default:
-                return "La casilla no pertenece a ningún grupo.";
-        }
-
     }
 
     //Para imprimir la información del avatar, modificamos el método toString().
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("id: ").append(this.ID).append(",\n");
-        sb.append("propietario: ").append(this.duenho.getNombre()).append(",\n");
-        sb.append("casilla: ").append(this.ubicacion.getNombre()).append(",\n");
-        sb.append("grupo: ").append(this.colorGrupo()).append(",\n");
-        sb.append("coste: ").append(this.coste);
+        sb.append("ID: ").append(this.ID).append("\n\n");
+        sb.append("\tPropietario: ").append(propietario.getNombre()).append("\n");
+        sb.append("\tCasilla: ").append(ubicacion.getNombre()).append("\n");
+        sb.append("\tGrupo: ").append(grupo.colorGrupo()).append("\n");
+        sb.append("\tCoste: ").append(coste);
         return sb.toString();
     }
-
-    //GETTERS
-
-    public int getCantidad() {
-        return cantidad;
-    }
-
-    public Jugador getDuenho() {
-        return duenho;
-    }
-
-    public Grupo getGrupo() {
-        return grupo;
-    }
-
-    public String getID() {
-        return ID;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public Casilla getUbicacion() {
-        return ubicacion;
-    }
-
 }
