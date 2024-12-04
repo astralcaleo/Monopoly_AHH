@@ -27,6 +27,7 @@ public class Impuesto extends Casilla {
             return false; 
         } else {
             actual.sumarGastos(this.impuesto);
+            actual.getEstadisticas().set(1, actual.getEstadisticas().get(1) + this.impuesto);
             System.out.println("El jugador " + actual.getNombre() + " paga " + this.impuesto + "€ en impuestos a la banca.");
             return true;
         }

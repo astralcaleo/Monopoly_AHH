@@ -37,7 +37,10 @@ public class Transporte extends Propiedad {
                     return false; 
                 } else {
                     actual.sumarGastos(alquiler);
+                    actual.getEstadisticas().set(2, actual.getEstadisticas().get(2) + alquiler);
+
                     this.propietario.sumarFortuna(alquiler);
+                    this.propietario.getEstadisticas().set(3, this.propietario.getEstadisticas().get(3) + alquiler);
 
                     System.out.println("El jugador " + actual.getNombre() + " paga " + alquiler + "€ al jugador " + this.propietario.getNombre());
                     super.setRentabilidad(super.getRentabilidad() + alquiler);

@@ -70,6 +70,7 @@ public abstract class Propiedad extends Casilla {
         if (estaDisponible()) {
             if (solicitante.getFortuna() >= this.valor) {
                 solicitante.sumarGastos(this.valor);
+                solicitante.getEstadisticas().set(0, solicitante.getEstadisticas().get(0) + this.valor);
                 this.propietario = solicitante;
                 solicitante.anhadirPropiedad(this);
                 banca.sumarFortuna(this.valor);
