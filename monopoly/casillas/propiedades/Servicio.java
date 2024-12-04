@@ -33,8 +33,8 @@ public class Servicio extends Propiedad {
                 } else{alquiler = factor;}
                 
                 if (actual.getFortuna() < alquiler) {
-                    System.out.println("El jugador " + actual.getNombre() + " no puede pagar la deuda.");
-                    System.out.println("El jugador debe o bien hipotecar o bien declararse en bancarrota.");
+                    Juego.consola.imprimir("El jugador " + actual.getNombre() + " no puede pagar la deuda.");
+                    Juego.consola.imprimir("El jugador debe o bien hipotecar o bien declararse en bancarrota.");
                     return false; 
                 } else {
                     actual.sumarGastos(alquiler);
@@ -43,10 +43,10 @@ public class Servicio extends Propiedad {
                     this.propietario.sumarFortuna(alquiler);
                     this.propietario.getEstadisticas().set(3, this.propietario.getEstadisticas().get(3) + alquiler);
 
-                    System.out.println("El jugador " + actual.getNombre() + " paga " + alquiler + "€ al jugador " + this.propietario.getNombre());
+                    Juego.consola.imprimir("El jugador " + actual.getNombre() + " paga " + alquiler + "€ al jugador " + this.propietario.getNombre());
                     super.setRentabilidad(super.getRentabilidad() + alquiler);
                 }
-            } else {System.out.println("La casilla de servicio se encuentra hipotecada. No se cobrarán alquileres.");}
+            } else {Juego.consola.imprimir("La casilla de servicio se encuentra hipotecada. No se cobrarán alquileres.");}
         } return true;
     }
 
