@@ -8,7 +8,7 @@ import partida.Jugador;
 public class Servicio extends Propiedad {
     //Atributos
     private float alquiler;            // Dinero que se cobra como renta
-    private Jugador propietario;       // Nombre del propietario actual (null si no tiene)
+    private Jugador propietario;       // Nombre del propietario actual (null si no tiene aka banca)
 
     // Constructor
     public Servicio(String nombre, int posicion, float valor, Jugador propietario) {
