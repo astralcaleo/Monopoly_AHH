@@ -3,6 +3,8 @@ package monopoly;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import partida.*;
+
 public class Menu {
 
     private Juego juego;

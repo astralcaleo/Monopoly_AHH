@@ -1,5 +1,7 @@
 package monopoly.casillas;
 
+import monopoly.Tablero;
+import monopoly.Juego;
 import monopoly.Valor;
 import partida.Jugador;
 import partida.avatares.Avatar;
@@ -20,12 +22,14 @@ public class Especial extends Casilla {
     // Métodos heredados
     // Método abstracto para ejecutar acciones específicas de cada tipo de casilla
     @Override
-    public boolean evaluarCasilla(Jugador actual, int tirada){
+    public boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu){
         if (super.getNombre().equals("IrCarcel")){
             System.out.println("El jugador " + actual.getNombre() + " se dirige a la cárcel.");
             actual.setEncarcelado(true);
+            actual.getEstadisticas().set(6, actual.getEstadisticas().get(6) + 1f);
         } else if (super.getNombre().equals("Parking")){
             actual.sumarFortuna(bote);
+            actual.getEstadisticas().set(5, actual.getEstadisticas().get(5) + bote);
             System.out.println("El jugador " + actual.getNombre() + " recibe un bote de " + bote + "€.");
             bote = 0;
         } return true;

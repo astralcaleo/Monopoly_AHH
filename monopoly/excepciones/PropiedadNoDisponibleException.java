@@ -1,4 +1,4 @@
-package monopoly;
+package monopoly.excepciones;
 
 public class PropiedadNoDisponibleException extends PropiedadException {
     public PropiedadNoDisponibleException(String mensaje) {

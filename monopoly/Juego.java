@@ -1,27 +1,17 @@
 package monopoly;
 
-import monopoly.casillas.CasillaX;
+import monopoly.casillas.*;
+import monopoly.casillas.propiedades.*;
+import monopoly.edificios.*;
+import monopoly.excepciones.*;
 import monopoly.interfaz.Comando;
-import monopoly.interfaz.Consola;
 import monopoly.interfaz.ConsolaNormal;
+import partida.avatares.*;
 import partida.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-
-import casillas.Casilla;
-import edificios.Edificio;
-import excepciones.JugadorException;
-import excepciones.JugadorNoExisteException;
-import excepciones.PropiedadException;
-import excepciones.PropiedadYaHipotecadaException;
-import interfaz.Comando;
-import interfaz.ConsolaNormal;
-import monopoly.PropiedadNoDisponibleException;
-import monopoly.PropiedadNoEdificableException;
-import monopoly.casillas.propiedades.Propiedad;
-import monopoly.excepciones.JuegoException;
 
 public class Juego implements Comando {
     //Atributos
@@ -40,7 +30,7 @@ public class Juego implements Comando {
     private boolean fturno; //Booleano para comprobar si el jugador ha terminado o no.
     private boolean fin = true; //Booleano para comprobar si el juego ha terminado o no.
     private Scanner scanner; //Lectura de la línea de comandos
-    private ArrayList<Edificio> lista_edificios;
+    private ArrayList<Edificio> edificiosConstruidos;
     private int doblesContador = 0;
     private ArrayList<ArrayList<Trato>> tratos;
     private Menu menu;
@@ -55,7 +45,7 @@ public class Juego implements Comando {
         this.dado1 = new Dado();
         this.dado2 = new Dado();
         this.scanner = new Scanner(System.in);
-        this.lista_edificios = new ArrayList<Edificio>();
+        this.edificiosConstruidos = new ArrayList<Edificio>();
         this.tratos = new ArrayList<ArrayList<Trato>>();
         this.banca = new Jugador();
         this.banca.setNombre("banca");
@@ -68,7 +58,7 @@ public class Juego implements Comando {
    public void crearJugador(String nombre, String tipo) {
         if (this.jugadores.size()<6){
             Casilla inicio = this.tablero.encontrar_casilla(0);
-            inicio.setPosicion(0);
+            //inicio.setPosicion(0);
             Jugador nJugador = new Jugador(nombre, tipo, inicio, avatares, this);
             this.jugadores.add(nJugador);
             this.lanzamientostotales.add(0);
@@ -217,7 +207,11 @@ public class Juego implements Comando {
                 System.out.println("Error inesperado: " + e.getMessage());
             }
         } else if(partes.length == 3 && partes[0].equals("declararse") && partes[1].equals("en") && partes[2].equals("bancarrota")){
-            bancarrota(this.jugadores.get(this.turno), this.avatares.get(this.turno).getLugar().getDuenho());
+            if(this.avatares.get(this.turno).getLugar() instanceof Propiedad){
+                Propiedad prop = (Propiedad) this.avatares.get(this.turno).getLugar();
+                bancarrota(this.jugadores.get(this.turno), prop.getPropietario());
+            } else{bancarrota(this.jugadores.get(this.turno), banca);}
+            
         } else if(partes.length == 2 && partes[0].equals("edificar") && edificios.contains(partes[1])){
             try{
                 edificarCasilla(partes[1]);
@@ -407,20 +401,16 @@ public class Juego implements Comando {
                 this.jugadores.get(this.turno).getAvatar().moverAvatar(this.tablero.getPosiciones(), desp);
                 this.tablero.encontrar_casilla(destino).getCaidas().set(this.turno, this.tablero.encontrar_casilla(destino).getCaidas().get(this.turno)+1);
                 
-                this.solvente = this.tablero.encontrar_casilla(destino).evaluarCasilla(this.avatares.get(this.turno).getJugador(), banca, desp);
-
-                if(this.tablero.encontrar_casilla(destino).getComunidad()){
-                    this.solvente = this.tablero.encontrar_casilla(destino).cajaComunidad(this, this.avatares.get(this.turno).getJugador(), banca);
-                } else if(this.tablero.encontrar_casilla(destino).getSuerte()){
-                    this.solvente = this.tablero.encontrar_casilla(destino).casSuerte(this.tablero, this.avatares.get(this.turno).getJugador(), banca, this.turno);
-                }
+                this.solvente = this.tablero.encontrar_casilla(destino).evaluarCasilla(this.avatares.get(this.turno).getJugador(), desp, tablero, turno, this);
                 
                 if(this.fin){
                     if(this.tablero.encontrar_casilla(destino).getNombre().equals("IrCarcel") && this.jugadores.get(this.turno).getEncarcelado()){
                         this.jugadores.get(this.turno).encarcelar(this.tablero.getPosiciones());
                     }
-                    if(this.tablero.encontrar_casilla(destino).getTipo().equals("Impuesto")){
-                        this.tablero.encontrar_casilla("Parking").sumarValor(this.jugadores.get(this.turno).getAvatar().getLugar().getImpuesto());
+                    if(this.tablero.encontrar_casilla(destino) instanceof Impuesto){
+                        Impuesto imp = (Impuesto) this.jugadores.get(this.turno).getAvatar().getLugar();
+                        Especial parking = (Especial) this.tablero.encontrar_casilla("Parking");
+                        parking.sumarBote(imp.getImpuesto());
                     }
                 verTablero();
                 } else{ System.out.println("El jugador " + this.jugadores.get(this.turno).getNombre() + " está encarcelado. No se desplaza.");}
@@ -488,20 +478,16 @@ public class Juego implements Comando {
                 this.jugadores.get(this.turno).getAvatar().moverAvatar(this.tablero.getPosiciones(), desp);
                 this.tablero.encontrar_casilla(destino).getCaidas().set(this.turno, this.tablero.encontrar_casilla(destino).getCaidas().get(this.turno)+1);
                 
-                this.solvente = this.tablero.encontrar_casilla(destino).evaluarCasilla(this.avatares.get(this.turno).getJugador(), banca, desp);
-
-                if(this.tablero.encontrar_casilla(destino).getComunidad()){
-                    this.solvente = this.tablero.encontrar_casilla(destino).cajaComunidad(this, this.avatares.get(this.turno).getJugador(), banca);
-                } else if(this.tablero.encontrar_casilla(destino).getSuerte()){
-                    this.solvente = this.tablero.encontrar_casilla(destino).casSuerte(this.tablero, this.avatares.get(this.turno).getJugador(), banca, this.turno);
-                }
+                this.solvente = this.tablero.encontrar_casilla(destino).evaluarCasilla(this.avatares.get(this.turno).getJugador(), desp, tablero, turno, this);
                 
                 if(this.fin){
                     if(this.tablero.encontrar_casilla(destino).getNombre().equals("IrCarcel") && this.jugadores.get(this.turno).getEncarcelado()){
                         this.jugadores.get(this.turno).encarcelar(this.tablero.getPosiciones());
                     }
-                    if(this.tablero.encontrar_casilla(destino).getTipo().equals("Impuesto")){
-                        this.tablero.encontrar_casilla("Parking").sumarValor(this.jugadores.get(this.turno).getAvatar().getLugar().getImpuesto());
+                    if(this.tablero.encontrar_casilla(destino) instanceof Impuesto){
+                        Impuesto imp = (Impuesto) this.jugadores.get(this.turno).getAvatar().getLugar();
+                        Especial parking = (Especial) this.tablero.encontrar_casilla("Parking");
+                        parking.sumarBote(imp.getImpuesto());
                     }
                 verTablero();
                 } else{ System.out.println("El jugador " + this.jugadores.get(this.turno).getNombre() + " está encarcelado. No se desplaza.");}
@@ -569,9 +555,7 @@ public class Juego implements Comando {
                             this.lanzamientostotales.set(this.turno, this.lanzamientostotales.get(this.turno) + 1);
                         
                             actualizar(mov,origen,destino,oint,dint,d1,d2,((-j % 40) + 40) % 40);
-                            if ((this.avatares.get(this.turno).getLugar().getTipo().equals("Solar") ||
-                                this.avatares.get(this.turno).getLugar().getTipo().equals("Transporte") ||
-                                this.avatares.get(this.turno).getLugar().getTipo().equals("Servicio"))) {
+                            if (this.avatares.get(this.turno).getLugar() instanceof Propiedad) {
                                 
                                 System.out.println("continuar ");
                                 System.out.println("comprar " + this.avatares.get(this.turno).getLugar().getNombre());
@@ -602,9 +586,7 @@ public class Juego implements Comando {
                             this.lanzamientostotales.set(this.turno, this.lanzamientostotales.get(this.turno) + 1);
 
                             actualizar(mov,origen,destino,oint,dint,d1,d2,j);
-                            if ((this.avatares.get(this.turno).getLugar().getTipo().equals("Solar") ||
-                                this.avatares.get(this.turno).getLugar().getTipo().equals("Transporte") ||
-                                this.avatares.get(this.turno).getLugar().getTipo().equals("Servicio"))) {
+                            if (this.avatares.get(this.turno).getLugar() instanceof Propiedad) {
                                 
                                 System.out.println("continuar ");
                                 System.out.println("comprar " + this.avatares.get(this.turno).getLugar().getNombre());
@@ -677,7 +659,7 @@ public class Juego implements Comando {
                         
                                 actualizar(mov, origen, destino, oint, dint, d1, d2, desp);
                         
-                                if((this.avatares.get(this.turno).getLugar().getTipo().equals("Solar") || this.avatares.get(this.turno).getLugar().getTipo().equals("Transporte") || this.avatares.get(this.turno).getLugar().getTipo().equals("Servicio")) && !compraRealizada) {
+                                if((this.avatares.get(this.turno).getLugar() instanceof Propiedad) && !compraRealizada) {
                                     System.out.println("continuar ");
                                     System.out.println("comprar " + this.avatares.get(this.turno).getLugar().getNombre());
                                     System.out.println("hipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
@@ -691,7 +673,7 @@ public class Juego implements Comando {
                                     analizarComando(comando);
                                     if(partes[0].equals("comprar")) compraRealizada = true;
                         
-                                } else if(this.avatares.get(this.turno).getLugar().getTipo().equals("Solar")){
+                                } else if(this.avatares.get(this.turno).getLugar() instanceof Solar){
                                     System.out.println("continuar ");
                                     System.out.println("hipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
                                     System.out.println("deshipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
@@ -742,8 +724,11 @@ public class Juego implements Comando {
     // Método para aumentar el precio cada vez que todos los jugadores dan cuatro vueltas
     private void aumentaPrecio() {
         for(int i=0; i<40; i++){
-            if(this.tablero.encontrar_casilla(i).getDuenho().equals(banca) && this.tablero.encontrar_casilla(i).getTipo().equals("Solar")){
-                this.tablero.encontrar_casilla(i).setValor(this.tablero.encontrar_casilla(i).getValor()+0.05f*this.tablero.encontrar_casilla(i).getValor());
+            if(this.tablero.encontrar_casilla(i) instanceof Solar){
+                Solar sol = (Solar) this.tablero.encontrar_casilla(i);
+                if(sol.getPropietario().equals(null)){
+                    sol.sumarValor(0.05f * sol.getValor());
+                }
             }
         }
     }
@@ -756,20 +741,16 @@ public class Juego implements Comando {
         this.jugadores.get(this.turno).getAvatar().moverAvatar(this.tablero.getPosiciones(), desp);
         this.tablero.encontrar_casilla(destino).getCaidas().set(this.turno, this.tablero.encontrar_casilla(destino).getCaidas().get(this.turno)+1);
         
-        this.solvente = this.tablero.encontrar_casilla(destino).evaluarCasilla(this.avatares.get(this.turno).getJugador(), banca, desp);
-
-        if(this.tablero.encontrar_casilla(destino).getComunidad()){
-            this.solvente = this.tablero.encontrar_casilla(destino).cajaComunidad(this, this.avatares.get(this.turno).getJugador(), banca);
-        } else if(this.tablero.encontrar_casilla(destino).getSuerte()){
-            this.solvente = this.tablero.encontrar_casilla(destino).casSuerte(this.tablero, this.avatares.get(this.turno).getJugador(), banca, this.turno);
-        }
+        this.solvente = this.tablero.encontrar_casilla(destino).evaluarCasilla(this.avatares.get(this.turno).getJugador(), desp, tablero, turno, this);
         
         if(this.fin){
             if(this.tablero.encontrar_casilla(destino).getNombre().equals("IrCarcel") && this.jugadores.get(this.turno).getEncarcelado()){
                 this.jugadores.get(this.turno).encarcelar(this.tablero.getPosiciones());
             }
-            if(this.tablero.encontrar_casilla(destino).getTipo().equals("Impuesto")){
-                this.tablero.encontrar_casilla("Parking").sumarValor(this.jugadores.get(this.turno).getAvatar().getLugar().getImpuesto());
+            if(this.tablero.encontrar_casilla(destino) instanceof Impuesto){
+                Especial parking = (Especial) this.tablero.encontrar_casilla("Parking");
+                Impuesto imp = (Impuesto) this.jugadores.get(this.turno).getAvatar().getLugar();
+                parking.sumarBote(imp.getImpuesto());
             }
         verTablero();
         } else{ System.out.println("El jugador " + this.jugadores.get(this.turno).getNombre() + " está encarcelado. No se desplaza.");}
@@ -797,54 +778,55 @@ public class Juego implements Comando {
     * Parámetro: cadena de caracteres con el nombre de la casilla.
      */
     public void comprar(String nombre){
-        if (this.tablero.encontrar_casilla(nombre).getTipo().equals("Solar") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Servicio") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Transporte")){
-            this.avatares.get(this.turno).getLugar().comprarCasilla(this.avatares.get(this.turno).getJugador(),banca);
-        } else{
-            consola.imprimir("Al jugador no le pertenece esta propiedad");
-        }
+        if (this.tablero.encontrar_casilla(nombre) instanceof Propiedad){
+            Propiedad prop = (Propiedad) this.avatares.get(this.turno).getLugar();
+            prop.comprar(this.avatares.get(this.turno).getJugador(),banca);
+        } else{consola.imprimir("Al jugador no le pertenece esta propiedad");}
     }
 
     public void hipotecar(String nombre){
-        if(this.tablero.encontrar_casilla(nombre).getTipo().equals("Solar") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Servicio") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Transporte")){
-            this.avatares.get(this.turno).getLugar().hipotecarCasilla(this.jugadores.get(this.turno), banca);
-        } else{
-            consola.imprimir("Al jugador no le pertenece esta propiedad");
-        }
+        if(this.tablero.encontrar_casilla(nombre) instanceof Propiedad){
+            Propiedad prop = (Propiedad) this.avatares.get(this.turno).getLugar();
+            prop.hipotecar(this.jugadores.get(this.turno));
+        } else{consola.imprimir("Al jugador no le pertenece esta propiedad");}
     }
 
     public void deshipotecar(String nombre){
-        if(this.tablero.encontrar_casilla(nombre).getTipo().equals("Solar") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Servicio") || this.tablero.encontrar_casilla(nombre).getTipo().equals("Transporte")){
-            this.avatares.get(this.turno).getLugar().deshipotecarCasilla(this.jugadores.get(this.turno), banca);
+        if(this.tablero.encontrar_casilla(nombre) instanceof Propiedad){
+            Propiedad prop = (Propiedad) this.avatares.get(this.turno).getLugar();
+            prop.deshipotecar(this.jugadores.get(this.turno));
         } else{System.out.println("Esta casilla no se puede deshipotecar");}
     }
 
     public void bancarrota(Jugador solicitante, Jugador demandante){
         if(solicitante.equals((demandante))){demandante = this.banca;}
-        ArrayList<Casilla> propiedades = new ArrayList<>(solicitante.getPropiedades());
-        for (Casilla cas : propiedades) {
-            ArrayList<Edificio> edificiosCopia = new ArrayList<>(cas.getLista_edificio());
-            for (Edificio ed : edificiosCopia) {
-                cas.getLista_edificio().remove(ed); // Eliminar de la lista original
-            }
+        ArrayList<Propiedad> propiedades = new ArrayList<>(solicitante.getPropiedades());
+        for (Propiedad cas : propiedades) {
+            if(cas instanceof Solar){
+                Solar sol = (Solar) cas;
+                ArrayList<Edificio> edificiosCopia = new ArrayList<>(sol.getEdificios());
+                for (Edificio ed : edificiosCopia) {
+                    sol.getEdificios().remove(ed); // Eliminar de la lista original
+                }
 
-            for (int i = 0; i < cas.getEdificios().size(); i++) {
-                cas.getEdificios().set(i, 0);
-            }
-            for (int j = 0; j < cas.getGrupo().getEdificios().size(); j++) {
-                cas.getGrupo().getEdificios().set(j, 0);
-            }
+                for (int i = 0; i < sol.getNumEdificios().size(); i++) {
+                    sol.getNumEdificios().set(i, 0);
+                } for (int j = 0; j < sol.getGrupo().getEdificios().size(); j++){
+                    sol.getGrupo().getEdificios().set(j, 0);
+                }
 
-            ArrayList<Edificio> listaEdificiosCopia = new ArrayList<>(lista_edificios);
-            for (Edificio ed : listaEdificiosCopia) {
-                if (ed.getUbicacion().equals(cas)) {
-                    lista_edificios.remove(ed);
-                    solicitante.venderEdificio(ed);
+                ArrayList<Edificio> listaEdificiosCopia = new ArrayList<>(edificiosConstruidos);
+                for (Edificio ed : listaEdificiosCopia) {
+                    if (ed.getUbicacion().equals(sol)) {
+                        edificiosConstruidos.remove(ed);
+                        solicitante.venderEdificio(ed);
+                    }
                 }
             }
             
             solicitante.eliminarPropiedad(cas);
             demandante.anhadirPropiedad(cas);
-            cas.setDuenho(demandante);
+            cas.setPropietario(demandante);
         }
 
         float deuda = solicitante.getFortuna();
@@ -892,25 +874,27 @@ public class Juego implements Comando {
 
     // Método que realiza las acciones asociadas al comando 'listar enventa'.
     public void listarVenta() {
-        ArrayList<Casilla> lista = new ArrayList<Casilla>();
+        ArrayList<Propiedad> lista = new ArrayList<Propiedad>();
 
         for(int i=0;i<40;i++){
-            if(this.tablero.encontrar_casilla(i).getDuenho().equals(banca) && this.tablero.encontrar_casilla(i).getTipo().equals("Solar") || this.tablero.encontrar_casilla(i).getTipo().equals("Servicio") || this.tablero.encontrar_casilla(i).getTipo().equals("Transporte")){
-                lista.add(this.tablero.encontrar_casilla(i));
+            if(this.tablero.encontrar_casilla(i) instanceof Propiedad){
+                Propiedad prop = (Propiedad) this.tablero.encontrar_casilla(i);
+                if(prop.getPropietario().equals(null)){lista.add(prop);}
             }
         }
         
-        if(lista.size()==0){
-            System.out.print("No hay propiedades en venta");
-        }
+        if(lista.size()==0){System.out.print("No hay propiedades en venta");}
         
         else{
-            for(Casilla cas : lista){
+            for(Propiedad cas : lista){
                 System.out.println(cas.getNombre() + "{");
-                System.out.println("Tipo: " + cas.getTipo());
-                if(cas.getTipo().equals("Solar")){
-                    System.out.println("Grupo: " + cas.getColorGrupo());
-                }
+                if(cas instanceof Solar){
+                    Solar sol = (Solar) cas;
+                    System.out.println("Tipo: Solar");
+                    System.out.println("Grupo: " + sol.getGrupo().colorGrupo());
+                } else if(cas instanceof Servicio){System.out.println("Tipo: Servicio");
+                } else if(cas instanceof Transporte){System.out.println("Tipo: Transporte");}
+    
                 System.out.println("Valor: " + cas.getValor());
                 System.out.println((lista.indexOf(cas) == (lista.size()-1) ? "}\n" : "},\n"));
             }
@@ -920,30 +904,31 @@ public class Juego implements Comando {
     public void edificarCasilla(String edificio){
         if(!edificio.equals("casa") && !edificio.equals("hotel") && !edificio.equals("piscina") && !edificio.equals("pista")){System.out.println("Comando inválido\n");}
         else{
-            if(!avatares.get(this.turno).getLugar().getTipo().equals("Solar")){
+            Solar solar = (Solar) avatares.get(this.turno).getLugar();
+            if(!(avatares.get(this.turno).getLugar() instanceof Solar)){
                 System.out.println("Esta casilla no es edificable.");
-            } else if(!avatares.get(this.turno).getLugar().getDuenho().equals(jugadores.get(this.turno))){
+            } else if(!solar.getPropietario().equals(jugadores.get(this.turno))){
                 System.out.println("El jugador " + jugadores.get(this.turno).getNombre() + " no puede edificar en esta casilla porque no es de su propiedad.");
-            } else if(avatares.get(this.turno).getLugar().getCaidas().get(this.turno)<2 && !avatares.get(this.turno).getLugar().getGrupo().esDuenhoGrupo(avatares.get(this.turno).getJugador())){
+            } else if(solar.getCaidas().get(this.turno) < 2 && !solar.getGrupo().esDuenhoGrupo(avatares.get(this.turno).getJugador())){
                 System.out.println("El jugador " + jugadores.get(this.turno).getNombre() + " no puede edificar en esta casilla todavía.");
-            } else if(avatares.get(this.turno).getLugar().getGrupo().esDuenhoGrupo(avatares.get(this.turno).getJugador())){
-                avatares.get(this.turno).getLugar().construirEdificio(edificio, jugadores.get(this.turno), banca, lista_edificios);
-            } else{avatares.get(this.turno).getLugar().construirEdificio(edificio, jugadores.get(this.turno), banca, lista_edificios);}
+            } else if(solar.getGrupo().esDuenhoGrupo(avatares.get(this.turno).getJugador())){
+                solar.construirEdificio(edificio, jugadores.get(this.turno), edificiosConstruidos);
+            } else{solar.construirEdificio(edificio, jugadores.get(this.turno), edificiosConstruidos);}
         }
     }
 
     private void descEdificio(int numero) {
-        Edificio dEdificio = this.lista_edificios.get(numero);
+        Edificio dEdificio = this.edificiosConstruidos.get(numero);
         System.out.println(dEdificio.toString()); 
     }
 
     public void listarEdificios(){
-        if(this.lista_edificios.isEmpty()){System.out.println("No hay edificios construídos.\n");}
+        if(this.edificiosConstruidos.isEmpty()){System.out.println("No hay edificios construídos.\n");}
         else{
-        for(int i=0; i<this.lista_edificios.size(); i++){
+        for(int i=0; i<this.edificiosConstruidos.size(); i++){
             System.out.println("{");
             descEdificio(i);
-            System.out.println((i == (this.lista_edificios.size()-1) ? "}\n" : "},\n"));
+            System.out.println((i == (this.edificiosConstruidos.size()-1) ? "}\n" : "},\n"));
         }}
     }
 
@@ -980,17 +965,17 @@ public class Juego implements Comando {
         }
     
         Grupo grupoActual = this.tablero.getGrupos().get(key);
-        ArrayList<Casilla> casillasGrupo = grupoActual.getMiembros();
+        ArrayList<Solar> casillasGrupo = grupoActual.getMiembros();
         ArrayList<Integer> contadorEdificios = new ArrayList<>(Arrays.asList(0, 0, 0, 0)); 
     
-        for (Casilla casilla : casillasGrupo) {
+        for (Solar casilla : casillasGrupo) {
             System.out.println("{");
             System.out.println("propiedad: " + casilla.getNombre() + ",");
             contadorEdificios.set(0, contadorEdificios.get(0) + listarEdificiosPorTipo(casilla, "casa"));
             contadorEdificios.set(1, contadorEdificios.get(1) + listarEdificiosPorTipo(casilla, "hotel"));
             contadorEdificios.set(2, contadorEdificios.get(2) + listarEdificiosPorTipo(casilla, "piscina"));
             contadorEdificios.set(3, contadorEdificios.get(3) + listarEdificiosPorTipo(casilla, "pista de deporte"));
-            System.out.println("alquiler: " + casilla.getImpuesto());
+            System.out.println("alquiler: " + casilla.getAlquiler());
             System.out.println("}\n");
         }
     
@@ -1014,13 +999,33 @@ public class Juego implements Comando {
         }
     }
     
-    private int listarEdificiosPorTipo(Casilla casilla, String tipo) {
+    private int listarEdificiosPorTipo(Solar solar, String tipo) {
         ArrayList<Edificio> edificios = new ArrayList<>();
-        for (Edificio edificio : casilla.getLista_edificio()) {
-            if (edificio.getTipo().equals(tipo)) {
-                edificios.add(edificio);
-            }
+        switch (tipo) {
+            case "casa":
+                for (Edificio edificio : solar.getEdificios()) {
+                    if (edificio instanceof Casa) {edificios.add(edificio);}
+                } break;
+
+            case "hotel":
+                for (Edificio edificio : solar.getEdificios()) {
+                    if (edificio instanceof Hotel) {edificios.add(edificio);}
+                } break;
+
+            case "piscina":
+                for (Edificio edificio : solar.getEdificios()) {
+                    if (edificio instanceof Piscina) {edificios.add(edificio);}
+                } break;
+
+            case "pista":
+                for (Edificio edificio : solar.getEdificios()) {
+                    if (edificio instanceof PistaDeporte) {edificios.add(edificio);}
+                } break;
+        
+            default:
+                break;
         }
+        
         System.out.print(tipo + "s: " + (edificios.isEmpty() ? "-" : ""));
         for (Edificio edificio : edificios) {
             System.out.print("[" + edificio.getID() + "]");
@@ -1030,19 +1035,31 @@ public class Juego implements Comando {
     }
     
     public void venderEdificios(String tipoedificio, String nombre, String cantidad){
-        if(this.tablero.encontrar_casilla(nombre).getTipo().equals("Solar")){
-            this.avatares.get(this.turno).getLugar().venderEdificios(this.jugadores.get(this.turno),banca,tipoedificio,cantidad,lista_edificios);
+        if(this.tablero.encontrar_casilla(nombre) instanceof Solar){
+            Solar solar = (Solar) this.avatares.get(this.turno).getLugar();
+            solar.venderEdificios(this.jugadores.get(this.turno), tipoedificio, cantidad, edificiosConstruidos);
         } else{System.out.println("Esta casilla no puede tener edificios");}
     }
 
     private void casillaMasRentable(){
-        float masRentable = this.tablero.encontrar_casilla(0).getRentabilidad();
+        Propiedad prop = (Propiedad) this.tablero.encontrar_casilla(1);
+        float masRentable = prop.getRentabilidad();
         for(ArrayList<Casilla> lado : this.tablero.getPosiciones()){
-            for(Casilla cas : lado){if(masRentable<cas.getRentabilidad()) masRentable = cas.getRentabilidad();}
+            for(Casilla cas : lado){
+                if(cas instanceof Propiedad){
+                    prop = (Propiedad) cas;
+                    if(masRentable<prop.getRentabilidad()){masRentable = prop.getRentabilidad();}
+                }
+            }
         }
 
         for(ArrayList<Casilla> lado : this.tablero.getPosiciones()){
-            for(Casilla cas : lado){if(masRentable==cas.getRentabilidad()) System.out.print(cas.getNombre() + ", ");}
+            for(Casilla cas : lado){
+                if(cas instanceof Propiedad){
+                    prop = (Propiedad) cas;
+                    if(masRentable == prop.getRentabilidad()){System.out.print(cas.getNombre() + ", ");}
+                }
+            }
         }
         System.out.println();
     }
@@ -1052,32 +1069,33 @@ public class Juego implements Comando {
         for(int i=0;i<8;i++){masRentable.add(0f);}
         for(ArrayList<Casilla> lado : this.tablero.getPosiciones()){
             for(Casilla cas : lado){
-                if(cas.getTipo().equals("Solar")){
-                    String color=cas.getColorGrupo();
+                if(cas instanceof Solar){
+                    Solar sol = (Solar) cas;
+                    String color=sol.getGrupo().colorGrupo();
                     switch(color){
                         case "Negro":
-                        masRentable.set(0, masRentable.get(0) + cas.getRentabilidad()); 
+                        masRentable.set(0, masRentable.get(0) + sol.getRentabilidad()); 
                         break;
                         case "Rojo":
-                        masRentable.set(1, masRentable.get(1) + cas.getRentabilidad());
+                        masRentable.set(1, masRentable.get(1) + sol.getRentabilidad());
                         break;
                         case "Verde":
-                        masRentable.set(2, masRentable.get(2) + cas.getRentabilidad());
+                        masRentable.set(2, masRentable.get(2) + sol.getRentabilidad());
                         break;
                         case "Amarillo":
-                        masRentable.set(3, masRentable.get(3) + cas.getRentabilidad());
+                        masRentable.set(3, masRentable.get(3) + sol.getRentabilidad());
                         break;
                         case "Azul":
-                        masRentable.set(4, masRentable.get(4) + cas.getRentabilidad());
+                        masRentable.set(4, masRentable.get(4) + sol.getRentabilidad());
                         break;
                         case "Rosa":
-                        masRentable.set(5, masRentable.get(5) + cas.getRentabilidad());
+                        masRentable.set(5, masRentable.get(5) + sol.getRentabilidad());
                         break;
                         case "Cian":
-                        masRentable.set(6, masRentable.get(6) + cas.getRentabilidad());
+                        masRentable.set(6, masRentable.get(6) + sol.getRentabilidad());
                         break;
                         case "Blanco":
-                        masRentable.set(7, masRentable.get(7) + cas.getRentabilidad());
+                        masRentable.set(7, masRentable.get(7) + sol.getRentabilidad());
                         break;
                     }
                 }
@@ -1148,8 +1166,14 @@ public class Juego implements Comando {
 
         for(int i=0;i<this.jugadores.size();i++){
             fortuna.set(i, fortuna.get(i) + this.jugadores.get(i).getFortuna());
-            for(Casilla cas : this.jugadores.get(i).getPropiedades()){
-                fortuna.set(i, fortuna.get(i) + cas.getvaloredificios() + cas.getValor());
+            for(Propiedad cas : this.jugadores.get(i).getPropiedades()){
+                if(cas instanceof Propiedad){
+                    if(cas instanceof Solar){
+                        Solar solar = (Solar) cas;
+                        fortuna.set(i, fortuna.get(i) + solar.valorEdificios() + solar.getValor());
+                    } else{fortuna.set(i, fortuna.get(i) + cas.getValor());}
+                    
+                }
             }
         }
 
@@ -1205,8 +1229,9 @@ public class Juego implements Comando {
 
     public void trato(String jugador, String inter1, String inter2){
         Jugador jug=buscarJugador(jugador);
+        Propiedad prop1 = (Propiedad) this.tablero.encontrar_casilla(inter1), prop2 = (Propiedad) this.tablero.encontrar_casilla(inter2);
         if(esNumerico(inter1)){
-            if(this.tablero.encontrar_casilla(inter2).getDuenho().equals(jug)){
+            if(prop2.getPropietario().equals(jug)){
                 System.out.println(jugador + ", ¿te doy " + inter1 + "€ y tú me das " + inter2 + "?");
                 Trato trato = new Trato(this.jugadores.get(this.turno),jug,inter1,inter2);
                 tratos.get(this.jugadores.indexOf(jug)).add(trato);
@@ -1214,7 +1239,7 @@ public class Juego implements Comando {
             else System.out.println("No se puede proponer el trato: " + inter2 + " no pertenece a " + jugador);
         }
         else if(esNumerico(inter2)){
-            if(this.tablero.encontrar_casilla(inter1).getDuenho().equals(this.jugadores.get(this.turno))){
+            if(prop1.getPropietario().equals(this.jugadores.get(this.turno))){
                 System.out.println(jugador + ", ¿te doy " + inter1 + " y tú me das " + inter2 + " €?");
                 Trato trato = new Trato(this.jugadores.get(this.turno),jug,inter1,inter2);
                 tratos.get(this.jugadores.indexOf(jug)).add(trato);
@@ -1222,7 +1247,7 @@ public class Juego implements Comando {
             else System.out.println("No se puede proponer el trato: " + inter1 + " no pertenece a " + this.jugadores.get(this.turno).getNombre());
         }
         else{
-            if(this.tablero.encontrar_casilla(inter1).getDuenho().equals(this.jugadores.get(this.turno)) && this.tablero.encontrar_casilla(inter2).getDuenho().equals(jug)){
+            if(prop1.getPropietario().equals(this.jugadores.get(this.turno)) && prop2.getPropietario().equals(jug)){
                 System.out.println(jugador + ", ¿te doy " + inter1 + " y tú me das " + inter2 + "?");
                 Trato trato = new Trato(this.jugadores.get(this.turno),jug,inter1,inter2);
                 tratos.get(this.jugadores.indexOf(jug)).add(trato);
@@ -1234,15 +1259,17 @@ public class Juego implements Comando {
     
     public void trato(String jugador, String inter1, String inter2, String inter3, String inter4){
         Jugador jug = buscarJugador(jugador);
+        Propiedad prop1 = (Propiedad) this.tablero.encontrar_casilla(inter1), prop2 = (Propiedad) this.tablero.encontrar_casilla(inter2), prop4 = (Propiedad) this.tablero.encontrar_casilla(inter4);
         if(inter2.equals("y")){
-            if(this.tablero.encontrar_casilla(inter4).getDuenho().equals(jug) && this.tablero.encontrar_casilla(inter1).getDuenho().equals(this.jugadores.get(this.turno))){
+            
+            if(prop4.getPropietario().equals(jug) && prop1.getPropietario().equals(this.jugadores.get(this.turno))){
                 System.out.println(jugador + ", ¿te doy " + inter1 + " y " + inter3 + " € y tú me das " + inter4 + "?");
                 Trato trato = new Trato(this.jugadores.get(this.turno),jug,inter1 + " " + inter3,inter4);
                 tratos.get(this.jugadores.indexOf(jug)).add(trato);
             }
             else System.out.println("No se puede proponer el trato: Las dos propiedades deben pertenecer a ambos jugadores");}
         else {
-            if(this.tablero.encontrar_casilla(inter2).getDuenho().equals(jug) && this.tablero.encontrar_casilla(inter1).getDuenho().equals(this.jugadores.get(this.turno))){
+            if(prop2.getPropietario().equals(jug) && prop1.getPropietario().equals(this.jugadores.get(this.turno))){
                 System.out.println(jugador + ", ¿te doy " + inter1 + " y tú me das " + inter2 + " y " + inter4 + " €?");
                 Trato trato = new Trato(this.jugadores.get(this.turno),jug,inter1,inter2 + " "+ inter4);
                 tratos.get(this.jugadores.indexOf(jug)).add(trato);
@@ -1265,15 +1292,15 @@ public class Juego implements Comando {
             if(oferta.length == 2){
                 
                 if(tratoaceptar.getPropositor().getFortuna()>=Integer.parseInt(oferta[1])){
-                    Casilla pro1 = this.tablero.encontrar_casilla(oferta[0]),pro2=this.tablero.encontrar_casilla(demanda[0]);
-                    if(pro1.getHipotecada()){
+                    Propiedad pro1 = (Propiedad) this.tablero.encontrar_casilla(oferta[0]), pro2 = (Propiedad) this.tablero.encontrar_casilla(demanda[0]);
+                    if(pro1.isHipotecada()){
                         System.out.println(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
                         respuesta = scanner.nextLine();}
                     if(respuesta.equals("si")){
-                        pro1.setDuenho(tratoaceptar.getDestinatario());
+                        pro1.setPropietario(tratoaceptar.getDestinatario());
                         tratoaceptar.getDestinatario().anhadirPropiedad(pro1);
                         tratoaceptar.getPropositor().eliminarPropiedad(pro1);
-                        pro2.setDuenho(tratoaceptar.getPropositor());
+                        pro2.setPropietario(tratoaceptar.getPropositor());
                         tratoaceptar.getPropositor().anhadirPropiedad(pro2);
                         tratoaceptar.getDestinatario().eliminarPropiedad(pro2);
                         tratoaceptar.getPropositor().sumarGastos(Float.parseFloat(oferta[1]));
@@ -1287,15 +1314,15 @@ public class Juego implements Comando {
             }
             else if(demanda.length == 2){
                 if(tratoaceptar.getDestinatario().getFortuna()>=Integer.parseInt(demanda[1])){
-                    Casilla pro1 = this.tablero.encontrar_casilla(oferta[0]),pro2=this.tablero.encontrar_casilla(demanda[0]);
-                    if(pro1.getHipotecada()){
+                    Propiedad pro1 = (Propiedad) this.tablero.encontrar_casilla(oferta[0]),pro2 = (Propiedad) this.tablero.encontrar_casilla(demanda[0]);
+                    if(pro1.isHipotecada()){
                         System.out.println(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
                         respuesta = scanner.nextLine();}
                         if(respuesta.equals("si")){
-                            pro1.setDuenho(tratoaceptar.getDestinatario());
+                            pro1.setPropietario(tratoaceptar.getDestinatario());
                             tratoaceptar.getDestinatario().anhadirPropiedad(pro1);
                             tratoaceptar.getPropositor().eliminarPropiedad(pro1);
-                            pro2.setDuenho(tratoaceptar.getPropositor());
+                            pro2.setPropietario(tratoaceptar.getPropositor());
                             tratoaceptar.getPropositor().anhadirPropiedad(pro2);
                             tratoaceptar.getDestinatario().eliminarPropiedad(pro2);
                             tratoaceptar.getDestinatario().sumarGastos(Float.parseFloat(demanda[1]));
@@ -1309,8 +1336,8 @@ public class Juego implements Comando {
             else{
                 if(esNumerico(oferta[0])){
                     if(tratoaceptar.getPropositor().getFortuna()>=Integer.parseInt(oferta[0])){
-                        Casilla pro1 = this.tablero.encontrar_casilla(demanda[0]);
-                        pro1.setDuenho(tratoaceptar.getPropositor());
+                        Propiedad pro1 = (Propiedad) this.tablero.encontrar_casilla(demanda[0]);
+                        pro1.setPropietario(tratoaceptar.getPropositor());
                         tratoaceptar.getPropositor().anhadirPropiedad(pro1);
                         tratoaceptar.getDestinatario().eliminarPropiedad(pro1);
                         tratoaceptar.getPropositor().sumarGastos(Float.parseFloat(oferta[0]));
@@ -1323,12 +1350,12 @@ public class Juego implements Comando {
                 else if(esNumerico(demanda[0])){
 
                     if(tratoaceptar.getDestinatario().getFortuna()>=Integer.parseInt(demanda[0])){
-                        Casilla pro1 = this.tablero.encontrar_casilla(oferta[0]);
-                        if(pro1.getHipotecada()){
+                        Propiedad pro1 = (Propiedad) this.tablero.encontrar_casilla(oferta[0]);
+                        if(pro1.isHipotecada()){
                             System.out.println(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
                             respuesta = scanner.nextLine();}
                         if(respuesta.equals("si")){
-                            pro1.setDuenho(tratoaceptar.getDestinatario());
+                            pro1.setPropietario(tratoaceptar.getDestinatario());
                             tratoaceptar.getDestinatario().anhadirPropiedad(pro1);
                             tratoaceptar.getPropositor().eliminarPropiedad(pro1);
                             tratoaceptar.getDestinatario().sumarGastos(Float.parseFloat(demanda[0]));
@@ -1339,15 +1366,15 @@ public class Juego implements Comando {
                     else System.out.println("El trato no puede ser aceptado: " + tratoaceptar.getDestinatario().getNombre() + " no tiene " + demanda[0]+ " €");
                 }}
                 else{
-                    Casilla pro1 = this.tablero.encontrar_casilla(oferta[0]), pro2 = this.tablero.encontrar_casilla(demanda[0]);
-                    if(pro1.getHipotecada()){
+                    Propiedad pro1 = (Propiedad) this.tablero.encontrar_casilla(oferta[0]), pro2 = (Propiedad) this.tablero.encontrar_casilla(demanda[0]);
+                    if(pro1.isHipotecada()){
                         System.out.println(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
                         respuesta = scanner.nextLine();}
                     if(respuesta.equals("si")){
-                        pro1.setDuenho(tratoaceptar.getDestinatario());
+                        pro1.setPropietario(tratoaceptar.getDestinatario());
                         tratoaceptar.getDestinatario().anhadirPropiedad(pro1);
                         tratoaceptar.getPropositor().eliminarPropiedad(pro1);
-                        pro2.setDuenho(tratoaceptar.getPropositor());
+                        pro2.setPropietario(tratoaceptar.getPropositor());
                         tratoaceptar.getPropositor().anhadirPropiedad(pro2);
                         tratoaceptar.getDestinatario().eliminarPropiedad(pro2);
                         tratos.get(this.turno).remove(tratoaceptar);
@@ -1493,12 +1520,12 @@ public class Juego implements Comando {
         this.scanner = scanner;
     }
 
-    public ArrayList<Edificio> getLista_edificios() {
-        return lista_edificios;
+    public ArrayList<Edificio> getEdificiosConstruidos() {
+        return edificiosConstruidos;
     }
 
-    public void setLista_edificios(ArrayList<Edificio> lista_edificios) {
-        this.lista_edificios = lista_edificios;
+    public void setEdificiosConstruidos(ArrayList<Edificio> edificiosConstruidos) {
+        this.edificiosConstruidos = edificiosConstruidos;
     }
 
     public int getDoblesContador() {

@@ -3,6 +3,8 @@ package monopoly.casillas.propiedades;
 import java.util.ArrayList;
 
 import monopoly.edificios.*;
+import monopoly.Tablero;
+import monopoly.Juego;
 import monopoly.casillas.Grupo;
 import partida.Jugador;
 
@@ -16,12 +18,11 @@ public class Solar extends Propiedad {
     private ArrayList<Integer> numEdificios;    // Cantidad de edificios (0: casas, 1: hoteles, 2: piscinas, 3: pistas deporte)
 
     // Constructor
-    public Solar(String nombre, int posicion, float valorInicial, Grupo grupo) {
+    public Solar(String nombre, int posicion, float valorInicial) {
         super(nombre, posicion, valorInicial);       // Llama al constructor de la clase padre Propiedad
         this.valor = super.getValor();
         this.propietario = super.getPropietario();
         this.alquiler = super.getAlquiler();
-        this.grupo = grupo;
         this.edificios = new ArrayList<Edificio>();
         this.numEdificios = new ArrayList<Integer>();
         for (int i = 0; i < 4; i++) {this.numEdificios.add(0);}
@@ -29,6 +30,9 @@ public class Solar extends Propiedad {
 
     // Getters y Setters
     public Grupo getGrupo() {return grupo;}
+    public void setGrupo(Grupo grupo) {this.grupo = grupo;}
+    public ArrayList<Edificio> getEdificios() {return edificios;}
+    public ArrayList<Integer> getNumEdificios() {return numEdificios;}
 
     // Métodos de Solar
     // Método para añadir valor a una casilla
@@ -93,7 +97,7 @@ public class Solar extends Propiedad {
                             if (solicitante.getFortuna() >= precio) {
                                 ArrayList<Edificio> casasAEliminar = new ArrayList<>();
                                 for (Edificio casa : edificios) {
-                                    if (casa instanceof Casa) { // Verifica si el edificio es una instancia de Casa
+                                    if (casa instanceof Casa) { 
                                         casasAEliminar.add(casa);
                                         solicitante.venderEdificio(casa);
                                     }
@@ -300,6 +304,16 @@ public class Solar extends Propiedad {
         }
     } 
     
+    // Método para saber el valor total de los edificios
+    public float valorEdificios(){
+        float valoredificios = 0f;
+        valoredificios += numEdificios.get(0) * 0.6f * super.getValorInicial();
+        valoredificios += numEdificios.get(1) * 0.6f * super.getValorInicial();
+        valoredificios += numEdificios.get(2) * 0.4f * super.getValorInicial();
+        valoredificios += numEdificios.get(3) * 1.25f * super.getValorInicial();
+        return valoredificios;
+    }
+
      // Métodos heredados
     @Override
     public void hipotecar(Jugador solicitante) {
@@ -320,7 +334,7 @@ public class Solar extends Propiedad {
 
     // Método para ejecutar acciones específicas de cada tipo de casilla
     @Override
-    public boolean evaluarCasilla(Jugador actual, int tirada){
+    public boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu){
         if (!this.propietario.equals(null) && !this.propietario.equals(actual)) {
             if (!super.isHipotecada()){
                 calcularAlquiler();
@@ -331,8 +345,13 @@ public class Solar extends Propiedad {
                     return false; 
                 } else {
                     actual.sumarGastos(alquiler);
+                    actual.getEstadisticas().set(2, actual.getEstadisticas().get(2) + alquiler);
+
                     this.propietario.sumarFortuna(alquiler);
+                    this.propietario.getEstadisticas().set(3, this.propietario.getEstadisticas().get(3) + alquiler);
+
                     System.out.println("El jugador " + actual.getNombre() + " paga " + alquiler + "€ al jugador " + this.propietario.getNombre());
+                    super.setRentabilidad(super.getRentabilidad() + alquiler);
                 }
             } else{System.out.println("Este solar se encuentra hipotecado. No se cobrarán alquileres.");}
         } return true;

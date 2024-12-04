@@ -1,7 +1,8 @@
 package partida.avatares;
 
 import monopoly.*;
-import monopoly.casillas.CasillaX;
+import monopoly.casillas.Casilla;
+import monopoly.casillas.propiedades.Propiedad;
 import partida.Jugador;
 
 import java.util.ArrayList;
@@ -29,13 +30,13 @@ public class Pelota extends Avatar {
         int j = 1; // Movimiento inicial
         for (int i = 1; i <= desplazamiento; i += j) {
             int nuevaPosicion = ((posicionActual - j) % 40 + 40) % 40;
-            CasillaX destino = tablero.encontrar_casilla(nuevaPosicion);
+            Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
     
             System.out.println("El avatar " + this.getID() + " retrocede " + j + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     
             this.moverAvatar(tablero.getPosiciones(), (-j + 40) % 40);
             this.setLugar(destino);
-            destino.evaluarCasilla(this.getJugador(), banca, desplazamiento);
+            destino.evaluarCasilla(this.getJugador(), desplazamiento, tablero, juego.getTurno(), juego);
     
             // Alternar entre pasos de 1 o 2 casillas
             j = (desplazamiento - i == 1) ? 1 : 2;
@@ -46,17 +47,15 @@ public class Pelota extends Avatar {
         int j = 5; // Primer paso es a la 5ª casilla impar
         for (int i = 5; i <= desplazamiento; i += j) {
             int nuevaPosicion = (posicionActual + j) % 40;
-            CasillaX destino = tablero.encontrar_casilla(nuevaPosicion);
+            Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
     
             System.out.println("El avatar " + this.getID() + " avanza " + j + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     
             this.moverAvatar(tablero.getPosiciones(), j);
             this.setLugar(destino);
-            destino.evaluarCasilla(this.getJugador(), banca, desplazamiento);
+            destino.evaluarCasilla(this.getJugador(), desplazamiento, tablero, juego.getTurno(), juego);
 
-            if ((this.getLugar().getTipo().equals("Solar") ||
-                this.getLugar().getTipo().equals("Transporte") ||
-                this.getLugar().getTipo().equals("Servicio"))) {
+            if ((this.getLugar() instanceof Propiedad)) {
 
                 getJuego().verTablero();
                                 

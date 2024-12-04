@@ -1,5 +1,7 @@
 package monopoly.casillas.propiedades;
 
+import monopoly.Tablero;
+import monopoly.Juego;
 import monopoly.Valor;
 import monopoly.casillas.Casilla;
 import partida.Jugador;
@@ -19,7 +21,7 @@ public class Transporte extends Propiedad {
     // Métodos heredados
     // Método abstracto para ejecutar acciones específicas de cada tipo de casilla
     @Override
-    public boolean evaluarCasilla(Jugador actual, int tirada){
+    public boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu){
         if (!this.propietario.equals(null) && !this.propietario.equals(actual)) {
             if(!super.isHipotecada()){
                 float propio = 0f;
@@ -35,9 +37,13 @@ public class Transporte extends Propiedad {
                     return false; 
                 } else {
                     actual.sumarGastos(alquiler);
+                    actual.getEstadisticas().set(2, actual.getEstadisticas().get(2) + alquiler);
+
                     this.propietario.sumarFortuna(alquiler);
+                    this.propietario.getEstadisticas().set(3, this.propietario.getEstadisticas().get(3) + alquiler);
 
                     System.out.println("El jugador " + actual.getNombre() + " paga " + alquiler + "€ al jugador " + this.propietario.getNombre());
+                    super.setRentabilidad(super.getRentabilidad() + alquiler);
                 }
             } else{System.out.println("La casilla de transporte se encuentra hipotecada. No se cobrarán alquileres.");}
         } return true;

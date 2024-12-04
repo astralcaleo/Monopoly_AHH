@@ -24,9 +24,11 @@ public abstract class Edificio {
     }
 
     // Getters y Setters
+    public String getID() {return ID;}
     public Grupo getGrupo() {return grupo;}
     public int getCantidad() {return cantidad;}
     public Solar getUbicacion() {return ubicacion;}
+    public void setCoste(float coste) {this.coste = coste;}
 
     // Métodos de Edificio
     // Método para generar el identificar único de cada edificio

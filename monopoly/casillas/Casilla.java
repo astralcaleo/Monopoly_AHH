@@ -2,6 +2,8 @@ package monopoly.casillas;
 
 import java.util.ArrayList;
 
+import monopoly.Tablero;
+import monopoly.Juego;
 import partida.Jugador;
 import partida.avatares.Avatar;
 
@@ -51,7 +53,7 @@ public abstract class Casilla {
     public void sumarVisita(Avatar avatar) {this.caidas.set(avatares.indexOf(avatar), caidas.get(avatares.indexOf(avatar)) + 1);}
 
     // Método abstracto para ejecutar acciones específicas de cada tipo de casilla
-    public abstract boolean evaluarCasilla(Jugador actual, int tirada);
+    public abstract boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu);
 
     // Método abstracto para imprimir la información de cada tipo de casilla
     public abstract void infoCasilla();
