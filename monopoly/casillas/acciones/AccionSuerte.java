@@ -6,6 +6,7 @@ import monopoly.Juego;
 import monopoly.Tablero;
 import monopoly.cartas.Carta;
 import monopoly.cartas.CartaSuerte;
+import monopoly.interfaz.ConsolaNormal;
 import partida.Jugador;
 
 public class AccionSuerte extends Accion{
@@ -18,17 +19,8 @@ public class AccionSuerte extends Accion{
     // Método abstracto para ejecutar acciones específicas de cada tipo de casilla
     @Override
     public boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu){
-        int numero = 0;
-        Scanner scanner = new Scanner(System.in);
-        while (numero < 1 || numero > 6) {
-            System.out.println(actual.getNombre() + ", elige una carta entre 1 y 6: ");
-            if (scanner.hasNextInt()) {
-                numero = scanner.nextInt();
-            } else {
-                System.out.println("Entrada inválida. Debes ingresar un número entre 1 y 6.");
-                scanner.next();
-            }
-        } scanner.close();
+        ConsolaNormal consola = new ConsolaNormal();
+        int numero = consola.leerEnIntervalo(actual.getNombre() + ", elige una carta entre 1 y 6:", 1, 6);
         
         CartaSuerte carta = new CartaSuerte();
         Carta cartaSeleccionada = carta.barajarSuerte(numero);
