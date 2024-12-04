@@ -20,5 +20,5 @@ public abstract class Carta {
 
     // Métodos de Carta
     // Método abstracto que inicializa las barajas añadiendo las cartas correspondientes de Suerte y Comunidad
-    public abstract void inicializarCartas();
+    public abstract void accion();
 }
