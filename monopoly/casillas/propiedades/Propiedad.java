@@ -3,6 +3,9 @@ package monopoly.casillas.propiedades;
 import monopoly.Juego;
 import monopoly.Tablero;
 import monopoly.casillas.Casilla;
+import monopoly.excepciones.PropiedadNoDisponibleException;
+import monopoly.excepciones.PropiedadYaHipotecadaException;
+import monopoly.excepciones.SaldoInsuficienteException;
 import partida.Jugador;
 
 public abstract class Propiedad extends Casilla {
@@ -66,7 +69,7 @@ public abstract class Propiedad extends Casilla {
     }
 
     // Realiza el proceso de compra de una propiedad
-    public void comprar(Jugador solicitante, Jugador banca) {
+    public void comprar(Jugador solicitante, Jugador banca) throws Exception{
         if (estaDisponible()) {
             if (solicitante.getFortuna() >= this.valor) {
                 solicitante.sumarGastos(this.valor);
@@ -75,23 +78,23 @@ public abstract class Propiedad extends Casilla {
                 solicitante.anhadirPropiedad(this);
                 banca.sumarFortuna(this.valor);
                 System.out.println("El jugador " + propietario.getNombre() + " compra la casilla " + super.getNombre() + " por " + this.valor + "€. Su fortuna actual es " + solicitante.getFortuna() + "€.");
-            }
-        } else {System.out.println("La casilla no está en venta.");}
+            } else throw new SaldoInsuficienteException("No se dispone de dinero suficiente para comprar");
+        } else {throw new PropiedadNoDisponibleException("La casilla no está en venta.");}
     }
 
     // Hipoteca la propiedad si no lo está previamente
-    public void hipotecar(Jugador solicitante) {
+    public void hipotecar(Jugador solicitante) throws Exception {
         if(propietario.equals(solicitante)){
             if (!hipotecada) {
                 hipotecada = true;
                 System.out.println("La propiedad " + super.getNombre() + " ha sido hipotecada.");
                 solicitante.sumarFortuna(this.hipoteca);
-            } else {System.out.println("La propiedad ya está hipotecada.");}
-        } else {System.out.println("La propiedad no pertenece al jugador " + solicitante.getNombre() + ".");}
+            } else {throw new PropiedadYaHipotecadaException("La propiedad ya está hipotecada.");}
+        } else {throw new PropiedadNoDisponibleException("La propiedad no pertenece al jugador " + solicitante.getNombre() + ".");}
     }
 
     // Deshipoteca la propiedad si estaba hipotecada
-    public void deshipotecar(Jugador solicitante) {
+    public void deshipotecar(Jugador solicitante) throws Exception{
         if (hipotecada) {
             float deuda = 1.1f*(this.hipoteca);
             if (solicitante.getFortuna() >= deuda) {
@@ -100,7 +103,7 @@ public abstract class Propiedad extends Casilla {
                 solicitante.anhadirPropiedad(this);
                 hipotecada = false;
                 System.out.println("La propiedad " + super.getNombre() + " ha sido deshipotecada.");
-            } else {System.out.println("El jugador " + solicitante.getNombre() + " no puede pagar la cantidad para deshipotecar.");}
+            } else {throw new SaldoInsuficienteException("El jugador " + solicitante.getNombre() + " no puede pagar la cantidad para deshipotecar.");}
         } else {System.out.println("La propiedad no está hipotecada.");}
     }
 

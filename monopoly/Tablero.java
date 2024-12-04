@@ -418,7 +418,7 @@ public class Tablero {
                 if (i.getNombre().equals(nombre)) {return i;}
             }
         }
-        System.out.println("Casilla no encontrada");
+        Juego.consola.imprimir("Casilla no encontrada");
         return null;
     }
 
@@ -429,7 +429,7 @@ public class Tablero {
                 if (i.getPosicion() == posicion) {return i;}
             }
         }
-        System.out.println("Casilla no encontrada");
+        Juego.consola.imprimir("Casilla no encontrada");
         return null;
     }
 

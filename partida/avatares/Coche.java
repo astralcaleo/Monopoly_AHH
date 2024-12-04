@@ -36,7 +36,7 @@ public class Coche extends Avatar {
             int nuevaPosicion = (posicionActual + desplazamiento) % 40;
             Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
     
-            getJuego().getConsola().imprimir("El avatar " + this.getID() + " avanza " + desplazamiento + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
+            Juego.consola.imprimir("El avatar " + this.getID() + " avanza " + desplazamiento + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     
             // Mover el avatar a la nueva posición
             this.moverAvatar(tablero.getPosiciones(), desplazamiento);
@@ -47,28 +47,28 @@ public class Coche extends Avatar {
 
             if((this.getLugar() instanceof Propiedad) && !compraRealizada) {
                 getJuego().verTablero();
-                System.out.println("\ncontinuar ");
-                System.out.println("comprar " + this.getLugar().getNombre());
-                System.out.println("hipotecar " + this.getLugar().getNombre());
-                System.out.println("deshipotecar " + this.getLugar().getNombre());
-                System.out.println("edificar \"TIPOEDIFICIO\"");
-                System.out.println("vender \"TIPOEDIFICIO\"" + this.getLugar().getNombre() + " \"CANTIDAD\"\n");
+                Juego.consola.imprimir("\ncontinuar ");
+                Juego.consola.imprimir("comprar " + this.getLugar().getNombre());
+                Juego.consola.imprimir("hipotecar " + this.getLugar().getNombre());
+                Juego.consola.imprimir("deshipotecar " + this.getLugar().getNombre());
+                Juego.consola.imprimir("edificar \"TIPOEDIFICIO\"");
+                Juego.consola.imprimir("vender \"TIPOEDIFICIO\"" + this.getLugar().getNombre() + " \"CANTIDAD\"\n");
     
-                String comando = getJuego().getConsola().leer("Introduce comando:");
+                String comando = Juego.consola.leer("Introduce comando:");
                 String[] partes = comando.split(" ");
-                while (comando.isEmpty()) {comando = getJuego().getConsola().leer(" ");}
+                while (comando.isEmpty()) {comando = Juego.consola.leer(" ");}
                 getJuego().analizarComando(comando);
                 if(partes[0].equals("comprar")) compraRealizada = true;
     
             } else if((this.getLugar() instanceof Solar)){
                 getJuego().verTablero();
-                System.out.println("\ncontinuar ");
-                System.out.println("hipotecar " + this.getLugar().getNombre());
-                System.out.println("deshipotecar " + this.getLugar().getNombre());
-                System.out.println("edificar \"TIPOEDIFICIO\"");
-                System.out.println("vender \"TIPOEDIFICIO\"" + this.getLugar().getNombre() + " \"CANTIDAD\"\n");
-                String comando = getJuego().getConsola().leer("Introduce comando:");
-                while (comando.isEmpty()) {comando = getJuego().getConsola().leer(" ");}
+                Juego.consola.imprimir("\ncontinuar ");
+                Juego.consola.imprimir("hipotecar " + this.getLugar().getNombre());
+                Juego.consola.imprimir("deshipotecar " + this.getLugar().getNombre());
+                Juego.consola.imprimir("edificar \"TIPOEDIFICIO\"");
+                Juego.consola.imprimir("vender \"TIPOEDIFICIO\"" + this.getLugar().getNombre() + " \"CANTIDAD\"\n");
+                String comando = Juego.consola.leer("Introduce comando:");
+                while (comando.isEmpty()) {comando = Juego.consola.leer(" ");}
                 getJuego().analizarComando(comando);
             }
 
@@ -78,7 +78,7 @@ public class Coche extends Avatar {
     
                 // En la última tirada, evaluar dados dobles
                 if (dado1 == dado2) {
-                    getJuego().getConsola().imprimir("Dado doble en la última tirada, el avatar " + this.getID() + " puede lanzar una tirada extra.");
+                    Juego.consola.imprimir("Dado doble en la última tirada, el avatar " + this.getID() + " puede lanzar una tirada extra.");
                     // Generar una tirada adicional si aplica
                     int[] nuevosDados = lanzarDados(); // Método para lanzar los dados
                     dado1 = nuevosDados[0];
@@ -87,7 +87,7 @@ public class Coche extends Avatar {
     
                     // Comprobar si los nuevos dados son dobles (solo se permite una tirada extra)
                     if (dado1 == dado2) {
-                        getJuego().getConsola().imprimir("En la tirada extra, se obtuvieron dados dobles nuevamente, pero no se permite continuar lanzando.");
+                        Juego.consola.imprimir("En la tirada extra, se obtuvieron dados dobles nuevamente, pero no se permite continuar lanzando.");
                     }
                 }
                 break;
@@ -108,7 +108,7 @@ public class Coche extends Avatar {
         int nuevaPosicion = ((posicionActual - desplazamiento) % 40 + 40) % 40;
         Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
     
-        getJuego().getConsola().imprimir("El avatar " + this.getID() + " retrocede " + desplazamiento + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
+        Juego.consola.imprimir("El avatar " + this.getID() + " retrocede " + desplazamiento + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     
         // Mover el avatar a la nueva posición
         this.moverAvatar(tablero.getPosiciones(), -desplazamiento);
@@ -119,18 +119,18 @@ public class Coche extends Avatar {
     
         // Penalización: establecer 2 turnos bloqueados
         this.setTurnosBloqueados(2);
-        getJuego().getConsola().imprimir("El avatar " + this.getID() + " no podrá lanzar los dados durante los próximos 2 turnos.");
+        Juego.consola.imprimir("El avatar " + this.getID() + " no podrá lanzar los dados durante los próximos 2 turnos.");
     
         // No se permite lanzamiento adicional con dados dobles
         if (dado1 == dado2) {
-            getJuego().getConsola().imprimir("Dados dobles durante el retroceso, pero no se permite lanzar nuevamente.");
+            Juego.consola.imprimir("Dados dobles durante el retroceso, pero no se permite lanzar nuevamente.");
         }
     }
     
     private int[] lanzarDados() {
-        getJuego().getConsola().imprimir("Valor dados: ");
-        int dado1 = getJuego().getConsola().leer();
-        int dado2 = getJuego().getConsola().leer();
+        Juego.consola.imprimir("Valor dados: ");
+        int dado1 = Juego.consola.leer();
+        int dado2 = Juego.consola.leer();
         return new int[]{dado1, dado2};
     }
     

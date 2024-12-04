@@ -66,8 +66,8 @@ public class Pelota extends Avatar {
                 System.out.println("edificar \"TIPOEDIFICIO\"");
                 System.out.println("vender \"TIPOEDIFICIO\"" + this.getLugar().getNombre() + " \"CANTIDAD\"\n");
 
-                String comando = getJuego().getConsola().leer("Introduce comando:");
-                while (comando.isEmpty()) {comando = getJuego().getConsola().leer(" ");}
+                String comando = Juego.consola.leer("Introduce comando:");
+                while (comando.isEmpty()) {comando = Juego.consola.leer(" ");}
                 getJuego().analizarComando(comando);
             }
     
@@ -84,14 +84,14 @@ public class Pelota extends Avatar {
     
             if (tiradasDobles == 3) {
                 this.getJugador().encarcelar(tablero.getPosiciones());
-                getJuego().getConsola().imprimir(this.getJugador().getNombre() + " ha sacado tres dobles seguidos y va a la cárcel.");
+                Juego.consola.imprimir(this.getJugador().getNombre() + " ha sacado tres dobles seguidos y va a la cárcel.");
                 this.setTiradasDobles(0); // Reiniciar contador al encarcelar
             } else if (this.getJugador().getEncarcelado()) {
                 this.getJugador().setEncarcelado(false);
                 this.getJugador().setTiradasCarcel(0);
-                getJuego().getConsola().imprimir(this.getJugador().getNombre() + " sale de la cárcel. Puede lanzar los dados.");
+                Juego.consola.imprimir(this.getJugador().getNombre() + " sale de la cárcel. Puede lanzar los dados.");
             } else {
-                getJuego().getConsola().imprimir("Puede volver a lanzar los dados.");
+                Juego.consola.imprimir("Puede volver a lanzar los dados.");
             }
         } else {
             this.setTiradasDobles(0); // Reiniciar si no son dobles

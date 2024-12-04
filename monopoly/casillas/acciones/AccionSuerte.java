@@ -22,7 +22,7 @@ public class AccionSuerte extends Accion{
         
         CartaSuerte carta = new CartaSuerte();
         Carta cartaSeleccionada = carta.barajarSuerte(numero);
-        System.out.println("Acción: " + cartaSeleccionada.getAccion());
+        Juego.consola.imprimir("Acción: " + cartaSeleccionada.getAccion());
         if(cartaSeleccionada.getNombre().equals("suerte1")){
             actual.getAvatar().moverAvatar(tablero.getPosiciones(),"Trans1");
             tablero.encontrar_casilla("Trans1").getCaidas().set(turno, tablero.encontrar_casilla("Trans1").getCaidas().get(turno)+1);
@@ -43,7 +43,7 @@ public class AccionSuerte extends Accion{
             actual.getAvatar().setLugar(tablero.encontrar_casilla("Solar3"));
         
         } else if(cartaSeleccionada.getNombre().equals("suerte5")){
-            System.out.println("El jugador " + actual.getNombre() + " se dirige a la cárcel.");
+            Juego.consola.imprimir("El jugador " + actual.getNombre() + " se dirige a la cárcel.");
             actual.encarcelar(tablero.getPosiciones());
             tablero.encontrar_casilla(actual.getAvatar().getLugar().getNombre()).eliminarAvatar(super.getAvatares().get(turno));
             tablero.encontrar_casilla("Cárcel").anhadirAvatar(super.getAvatares().get(turno));

@@ -3,6 +3,8 @@ package monopoly.casillas.propiedades;
 import java.util.ArrayList;
 
 import monopoly.edificios.*;
+import monopoly.excepciones.LimiteDeEdificacionAlcanzadoException;
+import monopoly.excepciones.SaldoInsuficienteException;
 import monopoly.Tablero;
 import monopoly.Juego;
 import monopoly.casillas.Grupo;
@@ -63,7 +65,7 @@ public class Solar extends Propiedad {
     }    
 
     // Método para construir un edificio de un tipo en el solar
-    public void construirEdificio(String tipoedificio, Jugador solicitante, ArrayList<Edificio> edificiosConstruidos){
+    public void construirEdificio(String tipoedificio, Jugador solicitante, ArrayList<Edificio> edificiosConstruidos) throws Exception{
         int v = 0;
         for (int i = 1; i < 4; i++) {
             if(grupo.getEdificios().get(i) != grupo.getNumCasillas()){v = 1;}
@@ -83,15 +85,15 @@ public class Solar extends Propiedad {
                         edificios.add(casa);
                         edificiosConstruidos.add(casa);
 
-                    } else {System.out.println("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una casa en la casilla " + super.getNombre() + ".");}
+                    } else {throw new SaldoInsuficienteException("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una casa en la casilla " + super.getNombre() + ".");}
                 
-                } else {System.out.println("No se pueden edificar más casas en este solar.");}
+                } else {throw new LimiteDeEdificacionAlcanzadoException("No se pueden edificar más casas en este solar.");}
             
             } else if(tipoedificio.equals("hotel")){
                 float precio = super.getValorInicial() * 0.6f;
                 if(grupo.getEdificios().get(1) < grupo.getNumCasillas()){
                     if(grupo.getEdificios().get(1) == grupo.getNumCasillas()-1 && grupo.getEdificios().get(0) > grupo.getNumCasillas()){
-                        System.out.println("No puedes edificar el hotel. Debes vender antes otras casas para tener como máximo " + grupo.getNumCasillas() + " hoteles y " + grupo.getNumCasillas() + " casas.");
+                        throw new LimiteDeEdificacionAlcanzadoException("No puedes edificar el hotel. Debes vender antes otras casas para tener como máximo " + grupo.getNumCasillas() + " hoteles y " + grupo.getNumCasillas() + " casas.");
                     } else {
                         if(numEdificios.get(0) == 4){
                             if (solicitante.getFortuna() >= precio) {
@@ -114,10 +116,10 @@ public class Solar extends Propiedad {
                                 edificios.add(hotel);
                                 edificiosConstruidos.add(hotel);
 
-                            } else {System.out.println("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar un hotel en la casilla " + super.getNombre() + ".");}
-                        } else {System.out.println("No se puede edificar un hotel, ya que no se dispone de cuatro casas en este solar.");}
+                            } else {throw new SaldoInsuficienteException("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar un hotel en la casilla " + super.getNombre() + ".");}
+                        } else {throw new LimiteDeEdificacionAlcanzadoException("No se puede edificar un hotel, ya que no se dispone de cuatro casas en este solar.");}
                     }
-                } else {System.out.println("No se pueden edificar más hoteles en este solar.");}
+                } else {throw new LimiteDeEdificacionAlcanzadoException("No se pueden edificar más hoteles en este solar.");}
             
             } else if(tipoedificio.equals("piscina")){
                 float precio = super.getValorInicial() * 0.4f;
@@ -133,9 +135,9 @@ public class Solar extends Propiedad {
                             edificios.add(piscina);
                             edificiosConstruidos.add(piscina);
 
-                        } else {System.out.println("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una piscina en la casilla " + getNombre() + ".");}
-                    } else {System.out.println("No se puede edificar una piscina, ya que no se dispone de al menos un hotel y dos casas.");}
-                } else {System.out.println("No se pueden edificar más piscinas en este solar.");}
+                        } else {throw new SaldoInsuficienteException("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una piscina en la casilla " + getNombre() + ".");}
+                    } else {throw new LimiteDeEdificacionAlcanzadoException("No se puede edificar una piscina, ya que no se dispone de al menos un hotel y dos casas.");}
+                } else {throw new LimiteDeEdificacionAlcanzadoException("No se pueden edificar más piscinas en este solar.");}
             
             } else if(tipoedificio.equals("pista")){
                 float precio = super.getValorInicial() * 1.25f;
@@ -151,11 +153,11 @@ public class Solar extends Propiedad {
                             edificios.add(pista);
                             edificiosConstruidos.add(pista);
 
-                        } else {System.out.println("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una pista de deporte en la casilla " + super.getNombre() + ".");}
-                    } else {System.out.println("No se puede edificar una pista de deportes, ya que no se dispone de dos hoteles.");}
-                } else {System.out.println("No se pueden edificar más piscinas en este solar.");}
+                        } else {throw new SaldoInsuficienteException("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una pista de deporte en la casilla " + super.getNombre() + ".");}
+                    } else {throw new LimiteDeEdificacionAlcanzadoException("No se puede edificar una pista de deportes, ya que no se dispone de dos hoteles.");}
+                } else {throw new LimiteDeEdificacionAlcanzadoException("No se pueden edificar más piscinas en este solar.");}
             } //else {System.out.println("Edificio no reconocido.");}
-        } else {System.out.println("No se pueden construir más edificios en este grupo.");}
+        } else {throw new LimiteDeEdificacionAlcanzadoException("No se pueden construir más edificios en este grupo.");}
         this.calcularAlquiler();
     }
    
