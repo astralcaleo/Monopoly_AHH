@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import monopoly.casillas.propiedades.*;
+import monopoly.casillas.acciones.*;
 import monopoly.casillas.*;
 import monopoly.edificios.*;
 import monopoly.excepciones.*;
