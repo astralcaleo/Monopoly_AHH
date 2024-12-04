@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import monopoly.casillas.propiedades.*;
-import monopoly.casillas.acciones.*;
 import monopoly.casillas.*;
 import monopoly.edificios.*;
 import monopoly.excepciones.*;
@@ -411,7 +410,7 @@ public class Juego implements Comando {
     public void descCasilla(String nombre) {
         Casilla dCasilla = this.tablero.encontrar_casilla(nombre);
         if(dCasilla!=null){
-            System.out.print("\n" + dCasilla.toString() + "\nVeces que han caído en esta casilla: ");
+            System.out.print("\n" + dCasilla.toString() + "\n\tVeces que han caído en esta casilla: ");
             for (int i = 0; i < jugadores.size(); i++) {
                 System.out.print("[" + jugadores.get(i).getNombre() + ", " + dCasilla.getCaidas().get(i) + "]" + (i == (this.jugadores.size()-1) ? "" : ", "));
             } System.out.print("\n");

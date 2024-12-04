@@ -18,8 +18,8 @@ public class Solar extends Propiedad {
     private ArrayList<Integer> numEdificios;    // Cantidad de edificios (0: casas, 1: hoteles, 2: piscinas, 3: pistas deporte)
 
     // Constructor
-    public Solar(String nombre, int posicion, float valorInicial) {
-        super(nombre, posicion, valorInicial);       // Llama al constructor de la clase padre Propiedad
+    public Solar(String nombre, int posicion, float valorInicial, Jugador propietario) {
+        super(nombre, posicion, valorInicial, propietario);       // Llama al constructor de la clase padre Propiedad
         this.valor = super.getValor();
         this.propietario = super.getPropietario();
         this.alquiler = super.getAlquiler();
@@ -40,7 +40,7 @@ public class Solar extends Propiedad {
 
     // Método que recalcula el alquiler del Solar teniendo en cuenta los edificios construidos
     public void calcularAlquiler(){
-        if(!this.propietario.equals(null)){
+        if(!this.propietario.getNombre().equals("banca")){
             int v = 0;
             for (int i = 0; i < 4; i++) {if(grupo.getEdificios().get(i)!=0){v = 1;}}
             if(grupo.esDuenhoGrupo(propietario) && v==0){
@@ -335,7 +335,7 @@ public class Solar extends Propiedad {
     // Método para ejecutar acciones específicas de cada tipo de casilla
     @Override
     public boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu){
-        if (!this.propietario.equals(null) && !this.propietario.equals(actual)) {
+        if (!this.propietario.equals(tablero.getBanca()) && !this.propietario.equals(actual)) {
             if (!super.isHipotecada()){
                 calcularAlquiler();
                 
@@ -365,7 +365,7 @@ public class Solar extends Propiedad {
         return super.getNombre() + 
                "\n\tGrupo: " + grupo.colorGrupo() + 
                "\n\tValor de compra: " + super.getValor() + 
-               "\n\tPropietario: " + (propietario == null ? "Ninguno" : propietario.getNombre()) + 
+               "\n\tPropietario: " + ((propietario.getNombre().equals("banca")) ? "Banca" : propietario.getNombre()) + 
                "\n\tHipotecada: " + (super.isHipotecada() ? "SI" : "NO") +
                "\n\tAlquiler sin edificar: " + alquilerOriginal + "\n" +
 

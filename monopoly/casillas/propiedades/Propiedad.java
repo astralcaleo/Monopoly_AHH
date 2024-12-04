@@ -16,10 +16,10 @@ public abstract class Propiedad extends Casilla {
     private float rentabilidad;        // Dinero que ha sido obtenido en esta casilla mediante cobro de alquileres
 
     // Constructor
-    public Propiedad(String nombre, int posicion, float valor) {
+    public Propiedad(String nombre, int posicion, float valor, Jugador propietario) {
         super(nombre, posicion);       // Llama al constructor de la clase base Casilla
         this.valorInicial = this.valor = valor;
-        this.propietario = null;       // Inicialmente sin propietario
+        this.propietario = propietario;       // Inicialmente sin propietario
         this.hipotecada = false;       // Inicialmente no hipotecada
         this.hipoteca = (this.valorInicial)/2f;
         this.rentabilidad = 0f;
@@ -49,7 +49,7 @@ public abstract class Propiedad extends Casilla {
 
     // Métodos de Propiedad
     // Devuelve true si la propiedad no tiene dueño
-    public boolean estaDisponible() {return (propietario == null);}
+    public boolean estaDisponible() {return (propietario.getNombre().equals("banca"));}
 
     // Devuelve true si la propiedad es del jugador que lo pregunta
     public boolean perteneceAJugador(Jugador jugador) {
@@ -119,7 +119,7 @@ public abstract class Propiedad extends Casilla {
         return super.toString() + 
                "\n\tValor de compra: " + valor + 
                "\n\tAlquiler: " + alquiler + 
-               "\n\tPropietario: " + (propietario == null ? "Ninguno" : propietario.getNombre()) + 
+               "\n\tPropietario: " + ((propietario.getNombre().equals("banca"))? "Banca" : propietario.getNombre()) + 
                "\n\tHipotecada: " + (hipotecada ? "SI" : "NO");
     }
 }

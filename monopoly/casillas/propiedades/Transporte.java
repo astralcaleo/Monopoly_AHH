@@ -12,8 +12,8 @@ public class Transporte extends Propiedad {
     private Jugador propietario;       // Nombre del propietario actual (null si no tiene)
 
     // Constructor
-    public Transporte(String nombre, int posicion, float valor) {
-        super(nombre, posicion, valor);       // Llama al constructor de la clase padre Propiedad
+    public Transporte(String nombre, int posicion, float valor, Jugador propietario) {
+        super(nombre, posicion, valor, propietario);       // Llama al constructor de la clase padre Propiedad
         this.propietario = super.getPropietario();
         this.alquiler = super.getAlquiler();
     }
@@ -22,7 +22,7 @@ public class Transporte extends Propiedad {
     // Método abstracto para ejecutar acciones específicas de cada tipo de casilla
     @Override
     public boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu){
-        if (!this.propietario.equals(null) && !this.propietario.equals(actual)) {
+        if (!this.propietario.getNombre().equals("banca") && !this.propietario.equals(actual)) {
             if(!super.isHipotecada()){
                 float propio = 0f;
                 for(Casilla cas : this.propietario.getPropiedades()){

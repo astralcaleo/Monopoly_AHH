@@ -11,8 +11,8 @@ public class Servicio extends Propiedad {
     private Jugador propietario;       // Nombre del propietario actual (null si no tiene)
 
     // Constructor
-    public Servicio(String nombre, int posicion, float valor) {
-        super(nombre, posicion, valor);       // Llama al constructor de la clase padre Propiedad
+    public Servicio(String nombre, int posicion, float valor, Jugador propietario) {
+        super(nombre, posicion, valor, propietario);       // Llama al constructor de la clase padre Propiedad
         this.propietario = super.getPropietario();
         this.alquiler = super.getAlquiler();
     }
@@ -21,11 +21,11 @@ public class Servicio extends Propiedad {
     // Método abstracto para ejecutar acciones específicas de cada tipo de casilla
     @Override
     public boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu){
-        if (!this.propietario.equals(null) && !this.propietario.equals(actual)) {
+        if (!this.propietario.equals(tablero.getBanca()) && !this.propietario.equals(actual)) {
             if(!super.isHipotecada()){
                 float factor = super.getValor()/200f;
-                Servicio imp1 = new Servicio("Serv1", 12, 0.75f*(Valor.SUMA_VUELTA)); 
-                Servicio imp2 = new Servicio("Serv2", 28, 0.75f*(Valor.SUMA_VUELTA));
+                Servicio imp1 = new Servicio("Serv1", 12, 0.75f*(Valor.SUMA_VUELTA), tablero.getBanca()); 
+                Servicio imp2 = new Servicio("Serv2", 28, 0.75f*(Valor.SUMA_VUELTA), tablero.getBanca());
                 if (this.propietario.getPropiedades().contains(imp1)){
                     if(this.propietario.getPropiedades().contains(imp2)){
                         alquiler = 10 * tirada * factor;
