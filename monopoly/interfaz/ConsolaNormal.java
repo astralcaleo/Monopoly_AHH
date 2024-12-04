@@ -17,6 +17,7 @@ public class ConsolaNormal implements Consola {
         return mensaje;
     }
 
+    @Override
     public int leer(){
         int numero = scanner.nextInt();
         return numero;

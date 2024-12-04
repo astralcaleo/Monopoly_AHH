@@ -6,7 +6,7 @@ import partida.Jugador;
 
 import java.util.ArrayList;
 
-public class Avatar {
+public abstract class Avatar {
 
     protected String id; // Identificador: una letra generada aleatoriamente.
     protected Jugador jugador; // Jugador al que pertenece este avatar.
@@ -16,22 +16,26 @@ public class Avatar {
     protected int turnosBloqueados;
     protected String tipo; // Tipo de avatar (por ejemplo, "pelota" o "coche")
     protected int tiradasDobles;
+    protected Juego juego;
 
     // Constructor vacío
     public Avatar() {}
 
     // Constructor principal
-    public Avatar(String tipo,Jugador jugador, CasillaX lugar, ArrayList<Avatar> avCreados) {
+    public Avatar(String tipo,Jugador jugador, Casilla lugar, ArrayList<Avatar> avCreados,Juego juego) {
         this.tipo=tipo;
         this.jugador = jugador;
         this.lugar = lugar;
         this.movAvanzado = false;
         this.turnosBloqueados = 0;
         this.tiradasDobles=0;
+        this.juego=juego;
         generarId(avCreados);
     }
 
-    public void moverAvatar(ArrayList<ArrayList<CasillaX>> casillas, int valorTirada) {
+    public abstract void mover(int dado1, int dado2, Tablero tablero, Jugador banca);
+
+    public void moverAvatar(ArrayList<ArrayList<Casilla>> casillas, int valorTirada) {
         this.lugar.eliminarAvatar(this);
 
         int nuevaPosicion = (this.lugar.getPosicion() + valorTirada) % 40;
@@ -146,6 +150,10 @@ public class Avatar {
 
     public int getTiradasDobles() {
         return this.tiradasDobles;
+    }
+
+    public Juego getJuego(){
+        return this.juego;
     }
 
     //SETTERS
