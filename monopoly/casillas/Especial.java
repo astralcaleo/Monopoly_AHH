@@ -29,7 +29,7 @@ public class Especial extends Casilla {
             actual.getEstadisticas().set(6, actual.getEstadisticas().get(6) + 1f);
         } else if (super.getNombre().equals("Parking")){
             actual.sumarFortuna(bote);
-            actual.getEstadisticas().set(5, actual.getEstadisticas().get(5) + this.valor);
+            actual.getEstadisticas().set(5, actual.getEstadisticas().get(5) + bote);
             System.out.println("El jugador " + actual.getNombre() + " recibe un bote de " + bote + "€.");
             bote = 0;
         } return true;
