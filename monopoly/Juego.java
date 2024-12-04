@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 import monopoly.casillas.propiedades.*;
-import monopoly.casillas.acciones.*;
 import monopoly.casillas.*;
 import monopoly.edificios.*;
 import monopoly.excepciones.*;
@@ -828,7 +827,7 @@ public class Juego implements Comando {
             Propiedad prop = (Propiedad) this.tablero.encontrar_casilla(nombre);
             prop.comprar(this.avatares.get(this.turno).getJugador(), banca);
         } else{
-            consola.imprimir("Al jugador no le pertenece esta propiedad");
+            throw new PropiedadNoDisponibleException("Al jugador no le pertenece esta propiedad");
         }
     }
 
@@ -837,7 +836,7 @@ public class Juego implements Comando {
             Propiedad prop = (Propiedad) this.tablero.encontrar_casilla(nombre);
             prop.hipotecar(this.jugadores.get(this.turno));
         } else{
-            consola.imprimir("Al jugador no le pertenece esta propiedad");
+            consola.imprimir("Esta casilla no se puede hipotecar");
         }
     }
 
