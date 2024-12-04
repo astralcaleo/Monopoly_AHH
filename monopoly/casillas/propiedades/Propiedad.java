@@ -1,5 +1,7 @@
 package monopoly.casillas.propiedades;
 
+import monopoly.Juego;
+import monopoly.Tablero;
 import monopoly.casillas.Casilla;
 import partida.Jugador;
 
@@ -11,6 +13,7 @@ public abstract class Propiedad extends Casilla {
     private Jugador propietario;       // Nombre del propietario actual (null si no tiene)
     private boolean hipotecada;        // Indica si la propiedad está hipotecada
     private float hipoteca;            // Dinero que se recibe al hipotecar la propiedad
+    private float rentabilidad;        // Dinero que ha sido obtenido en esta casilla mediante cobro de alquileres
 
     // Constructor
     public Propiedad(String nombre, int posicion, float valor) {
@@ -19,6 +22,7 @@ public abstract class Propiedad extends Casilla {
         this.propietario = null;       // Inicialmente sin propietario
         this.hipotecada = false;       // Inicialmente no hipotecada
         this.hipoteca = (this.valorInicial)/2f;
+        this.rentabilidad = 0f;
     }
 
     // Getters y Setters
@@ -39,6 +43,9 @@ public abstract class Propiedad extends Casilla {
 
     public boolean isHipotecada() {return hipotecada;}
     public void setHipotecada(boolean hipotecada) {this.hipotecada = hipotecada;}
+
+    public float getRentabilidad() {return rentabilidad;}
+    public void setRentabilidad(float rentabilidad) {this.rentabilidad = rentabilidad;}
 
     // Métodos de Propiedad
     // Devuelve true si la propiedad no tiene dueño
@@ -99,7 +106,7 @@ public abstract class Propiedad extends Casilla {
     // Métodos heredados
     // Método abstracto para ejecutar acciones específicas de cada tipo de casilla
     @Override
-    public abstract boolean evaluarCasilla(Jugador actual, int tirada);
+    public abstract boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu);
 
     // Método abstracto para imprimir la información de cada tipo de casilla
     @Override 

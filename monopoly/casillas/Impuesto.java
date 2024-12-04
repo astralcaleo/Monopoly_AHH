@@ -1,5 +1,7 @@
 package monopoly.casillas;
 
+import monopoly.Tablero;
+import monopoly.Juego;
 import partida.Jugador;
 
 public class Impuesto extends Casilla {
@@ -13,10 +15,13 @@ public class Impuesto extends Casilla {
 
     }
 
+    // Getters y Setters
+    public float getImpuesto() {return impuesto;}
+
     // Métodos heredados
     // Método abstracto para ejecutar acciones específicas de cada tipo de casilla
     @Override
-    public boolean evaluarCasilla(Jugador actual, int tirada){
+    public boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu){
         if (actual.getFortuna() < this.impuesto) {
             System.out.println("El jugador " + actual.getNombre() + " no puede pagar la deuda.");
             return false; 

@@ -1,5 +1,7 @@
 package monopoly.casillas.acciones;
 
+import monopoly.Juego;
+import monopoly.Tablero;
 import monopoly.casillas.Casilla;
 import partida.Jugador;
 
@@ -12,7 +14,7 @@ public abstract class Accion extends Casilla {
     // Métodos heredados
     // Método abstracto para ejecutar acciones específicas de cada tipo de casilla
     @Override
-    public abstract boolean evaluarCasilla(Jugador actual, int tirada);
+    public abstract boolean evaluarCasilla(Jugador actual, int tirada, Tablero tablero, int turno, Juego menu);
 
     // Método abstracto para imprimir la información de cada tipo de casilla
     @Override 

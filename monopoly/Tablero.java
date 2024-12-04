@@ -42,10 +42,10 @@ public class Tablero {
         ArrayList<Casilla> ladoSur = new ArrayList<Casilla>();
     
         ladoSur.add(new Especial("Salida", 0));
-        ladoSur.add(new AccionCajaComunidad("Caja", "Comunidad", 2, banca)); 
+        ladoSur.add(new AccionCajaComunidad("Caja", 2)); 
         ladoSur.add(new Impuesto("Imp1", 4, Valor.SUMA_VUELTA/2f)); 
         ladoSur.add(new Transporte("Trans1", 5, Valor.SUMA_VUELTA));
-        ladoSur.add(new AccionSuerte("Suerte", "Suerte", 7, banca)); 
+        ladoSur.add(new AccionSuerte("Suerte", 7)); 
         
         Solar solar1 = new Solar("Solar1", 1, 600000f); 
         Solar solar2 = new Solar("Solar2", 3, 600000f); 
@@ -80,7 +80,7 @@ public class Tablero {
         ladoOeste.add(new Especial("Cárcel", 10)); 
         ladoOeste.add(new Servicio("Serv1", 12, 0.75f*(Valor.SUMA_VUELTA))); 
         ladoOeste.add(new Transporte("Trans2", 15, Valor.SUMA_VUELTA)); 
-        ladoOeste.add(new AccionCajaComunidad("Caja", "Comunidad", 17));
+        ladoOeste.add(new AccionCajaComunidad("Caja", 17));
 
         Solar solar6 = new Solar("Solar6", 11, 680000f); 
         Solar solar7 = new Solar("Solar7", 13, 680000f); 
@@ -116,7 +116,7 @@ public class Tablero {
         ArrayList<Casilla> ladoNorte = new ArrayList<Casilla>();
     
         ladoNorte.add(new Especial("Parking", 20)); 
-        ladoNorte.add(new AccionSuerte("Suerte", 22, banca));
+        ladoNorte.add(new AccionSuerte("Suerte", 22));
         ladoNorte.add(new Transporte("Trans3", 25, Valor.SUMA_VUELTA)); 
         ladoNorte.add(new Servicio("Serv2", 28, 0.75f*(Valor.SUMA_VUELTA))); 
 
@@ -153,7 +153,7 @@ public class Tablero {
         ArrayList<Casilla> ladoEste = new ArrayList<Casilla>();
     
         ladoEste.add(new Especial("IrCarcel", 30));  
-        ladoEste.add(new AccionCajaComunidad("Caja", 33, banca)); 
+        ladoEste.add(new AccionCajaComunidad("Caja", 33)); 
         ladoEste.add(new Transporte("Trans4", 35, Valor.SUMA_VUELTA)); 
         ladoEste.add(new AccionSuerte("Suerte", 36)); 
         ladoEste.add(new Impuesto("Imp2", 38, Valor.SUMA_VUELTA));

@@ -1,7 +1,8 @@
 package partida.avatares;
 
 import monopoly.*;
-import monopoly.casillas.CasillaX;
+import monopoly.casillas.Casilla;
+import monopoly.casillas.propiedades.*;
 import partida.Jugador;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class Coche extends Avatar {
     public Coche(Jugador jugador, Casilla lugar, ArrayList<Avatar> avCreados, Juego juego) {
         super("coche",jugador, lugar, avCreados, juego);
     }
+
     public void mover(int dado1, int dado2, Tablero tablero, Jugador banca) {
         int desplazamiento = dado1 + dado2;
     
@@ -32,7 +34,7 @@ public class Coche extends Avatar {
             int desplazamiento = dado1 + dado2;
             int posicionActual = this.getLugar().getPosicion();
             int nuevaPosicion = (posicionActual + desplazamiento) % 40;
-            CasillaX destino = tablero.encontrar_casilla(nuevaPosicion);
+            Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
     
             getJuego().getConsola().imprimir("El avatar " + this.getID() + " avanza " + desplazamiento + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     
@@ -41,9 +43,9 @@ public class Coche extends Avatar {
             this.setLugar(destino);
     
             // Evaluar la casilla
-            destino.evaluarCasilla(this.getJugador(), banca, desplazamiento);
+            destino.evaluarCasilla(this.getJugador(), desplazamiento, tablero, juego.getTurno(), juego);
 
-            if((this.getLugar().getTipo().equals("Solar") || this.getLugar().getTipo().equals("Transporte") || this.getLugar().getTipo().equals("Servicio")) && !compraRealizada) {
+            if((this.getLugar() instanceof Propiedad) && !compraRealizada) {
                 getJuego().verTablero();
                 System.out.println("\ncontinuar ");
                 System.out.println("comprar " + this.getLugar().getNombre());
@@ -58,7 +60,7 @@ public class Coche extends Avatar {
                 getJuego().analizarComando(comando);
                 if(partes[0].equals("comprar")) compraRealizada = true;
     
-            } else if(this.getLugar().getTipo().equals("Solar")){
+            } else if((this.getLugar() instanceof Solar)){
                 getJuego().verTablero();
                 System.out.println("\ncontinuar ");
                 System.out.println("hipotecar " + this.getLugar().getNombre());
@@ -104,7 +106,7 @@ public class Coche extends Avatar {
         int desplazamiento = dado1 + dado2;
         int posicionActual = this.getLugar().getPosicion();
         int nuevaPosicion = ((posicionActual - desplazamiento) % 40 + 40) % 40;
-        CasillaX destino = tablero.encontrar_casilla(nuevaPosicion);
+        Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
     
         getJuego().getConsola().imprimir("El avatar " + this.getID() + " retrocede " + desplazamiento + " posiciones, desde " + this.getLugar().getNombre() + " hasta " + destino.getNombre());
     
@@ -113,7 +115,7 @@ public class Coche extends Avatar {
         this.setLugar(destino);
     
         // Evaluar la casilla
-        destino.evaluarCasilla(this.getJugador(), banca, desplazamiento);
+        destino.evaluarCasilla(this.getJugador(), desplazamiento, tablero, juego.getTurno(), juego);
     
         // Penalización: establecer 2 turnos bloqueados
         this.setTurnosBloqueados(2);
