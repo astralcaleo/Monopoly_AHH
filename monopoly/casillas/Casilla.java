@@ -6,11 +6,12 @@ import partida.avatares.Avatar;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import monopoly.Menu;
+import monopoly.Juego;
 import monopoly.Tablero;
 import monopoly.Valor;
 import monopoly.cartas.Carta;
 import monopoly.edificios.Edificio;
+import monopoly.excepciones.*;
 
 public class Casilla {
 
@@ -375,7 +376,7 @@ public class Casilla {
     /*Método usado para comprar una casilla determinada. Parámetros:
     * - Jugador que solicita la compra de la casilla.
     * - Banca del monopoly (es el dueño de las casillas no compradas aún).*/
-    public void comprarCasilla(Jugador solicitante, Jugador banca) {
+    public void comprarCasilla(Jugador solicitante, Jugador banca) throws Exception{
         if (this.duenho.equals(banca)) {
             if (solicitante.getFortuna() >= this.valor) {
                 solicitante.sumarGastos(this.valor);
@@ -385,15 +386,16 @@ public class Casilla {
                 solicitante.getEstadisticas().set(0, solicitante.getEstadisticas().get(0) + this.valor);
                 System.out.println("El jugador " + solicitante.getNombre() + " compra la casilla " + this.nombre + " por " + this.valor + "€. Su fortuna actual es " + solicitante.getFortuna() + "€.");
             }
+            else throw new SaldoInsuficienteException(solicitante.getNombre() + " no tiene suficiente dinero para comprar " + this.nombre);
         } else{
-            System.out.println("La casilla no está en venta.");
+            throw new PropiedadNoDisponibleException("La casilla no está en venta, porque es ya de otro jugador");
         }
     }
 
     /*Método para hipotecar una casilla. */
-    public void hipotecarCasilla(Jugador solicitante, Jugador banca){
+    public void hipotecarCasilla(Jugador solicitante, Jugador banca) throws Exception{
         if(this.duenho.equals(solicitante)){
-            if(this.hipotecada){System.out.println(solicitante.getNombre() + " no puede hipotecar " + this.getNombre() +". Ya está hipotecada.");
+            if(this.hipotecada){throw new PropiedadYaHipotecadaException(solicitante.getNombre() + " no puede hipotecar " + this.getNombre() +". Ya está hipotecada.");
             } else{
                 if(this.getTipo().equals("Solar")){
                     int cont=0;
@@ -414,11 +416,11 @@ public class Casilla {
                     //banca.sumarGastos(this.hipoteca);
                 }
             }
-        } else{System.out.println(solicitante.getNombre() + " no puede hipotecar " + this.getNombre() + ". No es una propiedad que le pertenece.\n");}
+        } else{throw new PropiedadNoDisponibleException(solicitante.getNombre() + " no puede hipotecar " + this.getNombre() + ". No es una propiedad que le pertenece.\n");}
     }
 
     /*Método para deshipotecar una casilla. */
-    public void deshipotecarCasilla(Jugador solicitante, Jugador banca){
+    public void deshipotecarCasilla(Jugador solicitante, Jugador banca) throws Exception{
         if(this.duenho.equals(solicitante)){
             if(!this.hipotecada){System.out.println(solicitante.getNombre() + " no puede deshipotecar " + this.getNombre() + ". Ya está deshipotecada.");
             } else{
@@ -430,9 +432,9 @@ public class Casilla {
                     this.hipotecada=false;
                     solicitante.sumarGastos(deuda);
                     //banca.sumarFortuna(deuda);
-                } else{System.out.println(solicitante.getNombre() + " no tiene dinero suficiente para deshipotecar " + this.getNombre() + ".");}
+                } else{throw new SaldoInsuficienteException(solicitante.getNombre() + " no tiene dinero suficiente para deshipotecar " + this.getNombre() + ".");}
             }
-        } else{System.out.println(solicitante.getNombre() + " no puede deshipotecar " + this.getNombre() + ". No es una propiedad que le pertenece.\n");}
+        } else{throw new PropiedadNoDisponibleException(solicitante.getNombre() + " no puede deshipotecar " + this.getNombre() + ". No es una propiedad que le pertenece.\n");}
     }
 
     /*Método para vender una cantidad concreta de edificios de un tipo. */
@@ -576,7 +578,7 @@ public class Casilla {
         }
     }
 
-    public void construirEdificio(String tipoedificio, Jugador solicitante, Jugador banca, ArrayList<Edificio> lista_edificios){
+    public void construirEdificio(String tipoedificio, Jugador solicitante, Jugador banca, ArrayList<Edificio> lista_edificios) throws Exception{
         int v = 0;
         for (int i = 1; i < 4; i++) {
             if(this.grupo.getEdificios().get(i)!=this.grupo.getNumCasillas()){v = 1;}
@@ -599,7 +601,7 @@ public class Casilla {
                         lista_edificio.add(casa);
 
 
-                    } else {System.out.println("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una casa en la casilla " + this.nombre + ".");}
+                    } else {throw new SaldoInsuficienteException("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una casa en la casilla " + this.nombre + ".");}
                 } else if (this.grupo.getEdificios().get(1)<this.grupo.getNumCasillas() && this.edificios.get(0)<4){
                     if (solicitante.getFortuna() >= this.valor_inicial*0.6f) {
                         solicitante.sumarGastos(this.valor_inicial*0.6f);
@@ -614,13 +616,13 @@ public class Casilla {
                         lista_edificios.add(casa);
                         lista_edificio.add(casa);
 
-                    } else {System.out.println("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una casa en la casilla " + this.nombre + ".");}
-                } else {System.out.println("No se pueden edificar más casas en este solar.");}
+                    } else {throw new SaldoInsuficienteException("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una casa en la casilla " + this.nombre + ".");}
+                } else {throw new LimiteDeEdificacionAlcanzadoException("No se pueden edificar más casas en este solar.");}
             
             } else if(tipoedificio.equals("hotel")){
                 if(this.grupo.getEdificios().get(1)<this.grupo.getNumCasillas()){
                     if(this.grupo.getEdificios().get(1)==this.grupo.getNumCasillas()-1 && this.grupo.getEdificios().get(0)>this.grupo.getNumCasillas()){
-                        System.out.println("No puedes edificar el hotel. Debes vender antes otras casas para tener como máximo " + this.grupo.getNumCasillas() + " hoteles y " + this.grupo.getNumCasillas() + " casas.");
+                        throw new LimiteDeEdificacionAlcanzadoException("No puedes edificar el hotel. Debes vender antes otras casas para tener como máximo " + this.grupo.getNumCasillas() + " hoteles y " + this.grupo.getNumCasillas() + " casas.");
                     } else {
                         if(this.edificios.get(0)==4){
                             if (solicitante.getFortuna() >= this.valor_inicial*0.6f) {
@@ -646,10 +648,10 @@ public class Casilla {
                                 lista_edificios.add(hotel);
                                 lista_edificio.add(hotel);
 
-                            } else {System.out.println("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar un hotel en la casilla " + this.nombre + ".");}
-                        } else {System.out.println("No se puede edificar un hotel, ya que no se dispone de cuatro casas en este solar.");}
+                            } else {throw new SaldoInsuficienteException("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar un hotel en la casilla " + this.nombre + ".");}
+                        } else {throw new LimiteDeEdificacionAlcanzadoException("No se puede edificar un hotel, ya que no se dispone de cuatro casas en este solar.");}
                     }
-                } else {System.out.println("No se pueden edificar más hoteles en este solar.");}
+                } else {throw new LimiteDeEdificacionAlcanzadoException("No se pueden edificar más hoteles en este solar.");}
             
             } else if(tipoedificio.equals("piscina")){
                 if(this.grupo.getEdificios().get(2)<this.grupo.getNumCasillas()){
@@ -667,9 +669,9 @@ public class Casilla {
                             lista_edificios.add(piscina);
                             lista_edificio.add(piscina);
 
-                        } else {System.out.println("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una piscina en la casilla " + this.nombre + ".");}
-                    } else {System.out.println("No se puede edificar una piscina, ya que no se dispone de un hotel y dos casas.");}
-                } else {System.out.println("No se pueden edificar más piscinas en este solar.");}
+                        } else {throw new SaldoInsuficienteException("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una piscina en la casilla " + this.nombre + ".");}
+                    } else {throw new LimiteDeEdificacionAlcanzadoException("No se puede edificar una piscina, ya que no se dispone de un hotel y dos casas.");}
+                } else {throw new LimiteDeEdificacionAlcanzadoException("No se pueden edificar más piscinas en este solar.");}
             
             } else if(tipoedificio.equals("pista")){
                 if(this.grupo.getEdificios().get(3)<this.grupo.getNumCasillas()){
@@ -687,11 +689,11 @@ public class Casilla {
                             lista_edificios.add(pista);
                             lista_edificio.add(pista);
 
-                        } else {System.out.println("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una pista de deporte en la casilla " + this.nombre + ".");}
-                    } else {System.out.println("No se puede edificar una pista de deportes, ya que no se dispone de dos hoteles.");}
-                } else {System.out.println("No se pueden edificar más piscinas en este solar.");}
+                        } else {throw new SaldoInsuficienteException("La fortuna de " + solicitante.getNombre() + " no es suficiente para edificar una pista de deporte en la casilla " + this.nombre + ".");}
+                    } else {throw new LimiteDeEdificacionAlcanzadoException("No se puede edificar una pista de deportes, ya que no se dispone de dos hoteles.");}
+                } else {throw new LimiteDeEdificacionAlcanzadoException("No se pueden edificar más piscinas en este solar.");}
             } //else {System.out.println("Edificio no reconocido.");}
-        } else {System.out.println("No se pueden construir más edificios en este grupo.");}
+        } else {throw new LimiteDeEdificacionAlcanzadoException("No se pueden construir más edificios en este grupo.");}
         this.calcularImpuesto();
     }
 

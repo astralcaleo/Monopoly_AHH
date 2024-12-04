@@ -12,6 +12,8 @@ package monopoly;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import partida.Trato;
+
 public class Menu {
 
     private Juego juego;

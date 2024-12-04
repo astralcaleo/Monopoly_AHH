@@ -6,9 +6,7 @@ import partida.avatares.Avatar;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import monopoly.casillas.Casilla;
-import monopoly.casillas.Grupo;
-
+import monopoly.casillas.*;
 
 public class Tablero {
     //Atributos.
