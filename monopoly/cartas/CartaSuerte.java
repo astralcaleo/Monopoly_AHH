@@ -10,7 +10,7 @@ public class CartaSuerte extends Carta{
     // Constructores
     public CartaSuerte() {
         super();
-        if(cartasSuerte == null){inicializarCartas();}
+        if(cartasSuerte == null){accion();}
     }
 
     public CartaSuerte(String nombre, String accion) {
@@ -27,7 +27,7 @@ public class CartaSuerte extends Carta{
     // Métodos heredados
     // Método abstracto que inicializa las barajas añadiendo las cartas correspondientes de Suerte y Comunidad
     @Override
-    public void inicializarCartas(){
+    public void accion(){
         cartasSuerte = new ArrayList<>();
         cartasSuerte.add(new CartaSuerte("suerte1", "Ve al Transportes1 y coge un avión. Si pasas por la casilla de Salida, cobra la cantidad habitual."));
         cartasSuerte.add(new CartaSuerte("suerte2", "Decides hacer un viaje de placer. Avanza hasta Solar15 directamente, sin pasar por la casilla de Salida y sin cobrar la cantidad habitual."));

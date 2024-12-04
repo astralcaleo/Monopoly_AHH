@@ -1127,16 +1127,14 @@ public class Juego implements Comando {
 
         for(ArrayList<Casilla> lado : this.tablero.getPosiciones()){
             for(Casilla cas : lado){
-                int suma = 0;
-                for (Integer num : cas.getCaidas()){suma += num;}
+                int suma = cas.frecuenciaVisita();
                 if(suma>maximo){maximo=suma;}
             }
         }
 
         for(ArrayList<Casilla> lado : this.tablero.getPosiciones()){
             for(Casilla cas : lado){
-                int suma = 0;
-                for (Integer num : cas.getCaidas()) suma += num;
+                int suma = cas.frecuenciaVisita();
                 if(suma==maximo){System.out.print(cas.getNombre() + ", ");}
             }
         } System.out.println();

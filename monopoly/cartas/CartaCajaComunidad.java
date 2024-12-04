@@ -10,7 +10,7 @@ public class CartaCajaComunidad extends Carta{
     // Constructores
     public CartaCajaComunidad() {
         super();
-        if(cartasCaja == null){inicializarCartas();}
+        if(cartasCaja == null){accion();}
     }
 
     public CartaCajaComunidad(String nombre, String accion) {
@@ -28,7 +28,7 @@ public class CartaCajaComunidad extends Carta{
     // Métodos heredados
     // Método abstracto que inicializa las barajas añadiendo las cartas correspondientes de Suerte y Comunidad
     @Override
-    public void inicializarCartas(){
+    public void accion(){
         cartasCaja = new ArrayList<>();
         cartasCaja.add(new CartaCajaComunidad("caja1", "Paga 500000€ por un fin de semana en un balneario de 5 estrellas."));
         cartasCaja.add(new CartaCajaComunidad("caja2", "Te investigan por fraude de identidad. Ve a la Cárcel. Ve directamente sin pasar por la casilla de Salida y sin cobrar la cantidad habitual."));
