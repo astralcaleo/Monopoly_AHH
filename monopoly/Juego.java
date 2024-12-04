@@ -410,10 +410,10 @@ public class Juego implements Comando {
     public void descCasilla(String nombre) {
         Casilla dCasilla = this.tablero.encontrar_casilla(nombre);
         if(dCasilla!=null){
-            System.out.print("\n" + dCasilla.toString() + "\n\tVeces que han caído en esta casilla: ");
+            Juego.consola.imprimir("\n" + dCasilla.toString() + "\n\tVeces que han caído en esta casilla: ");
             for (int i = 0; i < jugadores.size(); i++) {
-                System.out.print("[" + jugadores.get(i).getNombre() + ", " + dCasilla.getCaidas().get(i) + "]" + (i == (this.jugadores.size()-1) ? "" : ", "));
-            } System.out.print("\n");
+                Juego.consola.imprimir("[" + jugadores.get(i).getNombre() + ", " + dCasilla.getCaidas().get(i) + "]" + (i == (this.jugadores.size()-1) ? "" : ", "));
+            } Juego.consola.imprimir("\n");
         }   
     }
 
@@ -661,7 +661,7 @@ public class Juego implements Comando {
                             //acabarTurno();
                             return;
                         } else{
-                            System.out.print("Has sacado doble, puedes volver a lanzar. Valor dados: ");
+                            Juego.consola.imprimir("Has sacado doble, puedes volver a lanzar. Valor dados: ");
                             int dado1 = scanner.nextInt();
                             int dado2 = scanner.nextInt();
                             lanzarDadosEsp(dado1, dado2);
@@ -732,14 +732,14 @@ public class Juego implements Comando {
                                 tiradasExtras++;
                         
                                 if (tiradasExtras < 3) {
-                                    System.out.print("Vuelves a lanzar los dados. Valor dados: ");
+                                    Juego.consola.imprimir("Vuelves a lanzar los dados. Valor dados: ");
                                     d1 = scanner.nextInt();
                                     d2 = scanner.nextInt();
                                     desp = d1 + d2;
                                     this.lanzamientostotales.set(this.turno, this.lanzamientostotales.get(this.turno) + 1);
                                     doblesPermitido = false;
                                 } else if (tiradasExtras == 3) {
-                                    System.out.print("Última tirada del turno. Valor dados: ");
+                                    Juego.consola.imprimir("Última tirada del turno. Valor dados: ");
                                     d1 = scanner.nextInt();
                                     d2 = scanner.nextInt();
                                     desp = d1 + d2;
@@ -747,9 +747,9 @@ public class Juego implements Comando {
                                     if (d1==d2){doblesPermitido = true;}
                                 
                                 } if (doblesPermitido && d1 == d2 && tiradasExtras==4) {
-                                    System.out.print("Has sacado dobles en la última tirada. Se permite una tirada adicional.");
+                                    Juego.consola.imprimir("Has sacado dobles en la última tirada. Se permite una tirada adicional.");
                                     doblesPermitido = false;
-                                    System.out.print("Vuelves a lanzar los dados. Valor dados: ");
+                                    Juego.consola.imprimir("Vuelves a lanzar los dados. Valor dados: ");
                                     d1 = scanner.nextInt();
                                     d2 = scanner.nextInt();
                                     desp = d1 + d2;
@@ -900,9 +900,9 @@ public class Juego implements Comando {
         if (this.fin){
             consola.imprimir("\nEl jugador actual es " + this.avatares.get(this.turno).getJugador().getNombre());
         } else{
-            System.out.print("La partida ha terminado. ");
-            if(this.jugadores.size()==0){System.out.print("Todos los jugadores han perdido\n");
-            } else{System.out.print("El jugador " + this.jugadores.get(0).getNombre() + " ha ganado\n");}
+            Juego.consola.imprimir("La partida ha terminado. ");
+            if(this.jugadores.size()==0){Juego.consola.imprimir("Todos los jugadores han perdido\n");
+            } else{Juego.consola.imprimir("El jugador " + this.jugadores.get(0).getNombre() + " ha ganado\n");}
         }
     }
 
@@ -932,7 +932,7 @@ public class Juego implements Comando {
             }
         }
         
-        if(lista.size()==0){System.out.print("No hay propiedades en venta");}
+        if(lista.size()==0){Juego.consola.imprimir("No hay propiedades en venta");}
         
         else{
             for(Propiedad cas : lista){
@@ -1075,9 +1075,9 @@ public class Juego implements Comando {
                 break;
         }
         
-        System.out.print(tipo + "s: " + (edificios.isEmpty() ? "-" : ""));
+        Juego.consola.imprimir(tipo + "s: " + (edificios.isEmpty() ? "-" : ""));
         for (Edificio edificio : edificios) {
-            System.out.print("[" + edificio.getID() + "]");
+            Juego.consola.imprimir("[" + edificio.getID() + "]");
         }
         consola.imprimir("\n");
         return edificios.size();
@@ -1106,7 +1106,7 @@ public class Juego implements Comando {
             for(Casilla cas : lado){
                 if(cas instanceof Propiedad){
                     prop = (Propiedad) cas;
-                    if(masRentable == prop.getRentabilidad()){System.out.print(cas.getNombre() + ", ");}
+                    if(masRentable == prop.getRentabilidad()){Juego.consola.imprimir(cas.getNombre() + ", ");}
                 }
             }
         }
@@ -1158,14 +1158,14 @@ public class Juego implements Comando {
 
         for(int i=0;i<8;i++){
             if(masRentable.get(i) == grupoMasRentable){
-                if(i==0){ System.out.print("Negro, ");}  
-                else if(i==1){ System.out.print("Rojo, ");}
-                else if(i==2){ System.out.print("Verde, ");}
-                else if(i==3){ System.out.print("Amarillo, ");}
-                else if(i==4){ System.out.print("Azul, ");}
-                else if(i==5){ System.out.print("Rosa, ");}
-                else if(i==6){ System.out.print("Cian, ");}
-                else if(i==7){ System.out.print("Blanco, ");}
+                if(i==0){ Juego.consola.imprimir("Negro, ");}  
+                else if(i==1){ Juego.consola.imprimir("Rojo, ");}
+                else if(i==2){ Juego.consola.imprimir("Verde, ");}
+                else if(i==3){ Juego.consola.imprimir("Amarillo, ");}
+                else if(i==4){ Juego.consola.imprimir("Azul, ");}
+                else if(i==5){ Juego.consola.imprimir("Rosa, ");}
+                else if(i==6){ Juego.consola.imprimir("Cian, ");}
+                else if(i==7){ Juego.consola.imprimir("Blanco, ");}
             } 
         }
         consola.imprimir("\n");
@@ -1184,7 +1184,7 @@ public class Juego implements Comando {
         for(ArrayList<Casilla> lado : this.tablero.getPosiciones()){
             for(Casilla cas : lado){
                 int suma = cas.frecuenciaVisita();
-                if(suma==maximo){System.out.print(cas.getNombre() + ", ");}
+                if(suma==maximo){Juego.consola.imprimir(cas.getNombre() + ", ");}
             }
         } consola.imprimir("\n");
     }
@@ -1193,7 +1193,7 @@ public class Juego implements Comando {
         int maximo = this.vueltastotales.get(0);
 
         for(int i=0;i<this.vueltastotales.size();i++){if(i>maximo) maximo = this.vueltastotales.get(i);}
-        for(int i=0;i<this.vueltastotales.size();i++){if(this.vueltastotales.get(i)==maximo) System.out.print(this.jugadores.get(i).getNombre() + ", ");}
+        for(int i=0;i<this.vueltastotales.size();i++){if(this.vueltastotales.get(i)==maximo) Juego.consola.imprimir(this.jugadores.get(i).getNombre() + ", ");}
         consola.imprimir("\n");
     }
 
@@ -1203,7 +1203,7 @@ public class Juego implements Comando {
         for(int i=0;i<this.lanzamientostotales.size();i++){
             if(i>maximo) maximo = this.lanzamientostotales.get(i);
         } for(int i=0;i<this.lanzamientostotales.size();i++){
-            if(this.lanzamientostotales.get(i)==maximo) System.out.print(this.jugadores.get(i).getNombre() + ", ");
+            if(this.lanzamientostotales.get(i)==maximo) Juego.consola.imprimir(this.jugadores.get(i).getNombre() + ", ");
         } consola.imprimir("\n");
    }
 
@@ -1227,20 +1227,20 @@ public class Juego implements Comando {
         float max=0f;
 
         for(int i=0;i<fortuna.size();i++){if(max<fortuna.get(i)) max=fortuna.get(i);}
-        for(int i=0;i<fortuna.size();i++){if(max==fortuna.get(i)) System.out.print(this.jugadores.get(i).getNombre() + ", ");}
+        for(int i=0;i<fortuna.size();i++){if(max==fortuna.get(i)) Juego.consola.imprimir(this.jugadores.get(i).getNombre() + ", ");}
         consola.imprimir("\n");
 
 }
     
     public void estadisticasjuego(){
-        System.out.print("estadisticas\n{\n");
-        System.out.print("casillaMasRentable: "); casillaMasRentable();
-        System.out.print("grupoMasRentable: "); grupoMasRentable();
-        System.out.print("casillaMasFrecuentada: "); casillaMasFrecuentada();
-        System.out.print("jugadorMasVueltas: "); jugadorMasVueltas();
-        System.out.print("jugadorMasVecesDados: "); MasVecesDados();
-        System.out.print("jugadorEnCabeza: "); EnCabeza();
-        System.out.print("\n}\n");
+        Juego.consola.imprimir("estadisticas\n{\n");
+        Juego.consola.imprimir("casillaMasRentable: "); casillaMasRentable();
+        Juego.consola.imprimir("grupoMasRentable: "); grupoMasRentable();
+        Juego.consola.imprimir("casillaMasFrecuentada: "); casillaMasFrecuentada();
+        Juego.consola.imprimir("jugadorMasVueltas: "); jugadorMasVueltas();
+        Juego.consola.imprimir("jugadorMasVecesDados: "); MasVecesDados();
+        Juego.consola.imprimir("jugadorEnCabeza: "); EnCabeza();
+        Juego.consola.imprimir("\n}\n");
     }
 
     public void estadisticasjugador(String nombre) throws Exception{
