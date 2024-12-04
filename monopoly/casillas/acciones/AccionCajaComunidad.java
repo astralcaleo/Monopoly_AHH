@@ -24,11 +24,11 @@ public class AccionCajaComunidad extends Accion{
 
         CartaCajaComunidad carta = new CartaCajaComunidad();
         Carta cartaSeleccionada = carta.barajarCaja(numero);
-        System.out.println("Acción: " + cartaSeleccionada.getAccion());
+        Juego.consola.imprimir("Acción: " + cartaSeleccionada.getAccion());
         if(cartaSeleccionada.getNombre().equals("caja1")){
             if(actual.getFortuna() < 500000f){
-                System.out.println("El jugador " + actual.getNombre() + " no puede pagar la deuda.");
-                System.out.println("El jugador debe o bien hipotecar o bien declararse en bancarrota.");
+                Juego.consola.imprimir("El jugador " + actual.getNombre() + " no puede pagar la deuda.");
+                Juego.consola.imprimir("El jugador debe o bien hipotecar o bien declararse en bancarrota.");
                 return false;
             } else{
                 actual.sumarGastos(500000f);
@@ -38,7 +38,7 @@ public class AccionCajaComunidad extends Accion{
             }
         
         } else if(cartaSeleccionada.getNombre().equals("caja2")){
-            System.out.println("El jugador " + actual.getNombre() + " se dirige a la cárcel.");
+            Juego.consola.imprimir("El jugador " + actual.getNombre() + " se dirige a la cárcel.");
             actual.encarcelar(menu.getTablero().getPosiciones());
             menu.getTablero().encontrar_casilla(actual.getAvatar().getLugar().getNombre()).eliminarAvatar(menu.getAvatares().get(menu.getTurno()));
             menu.getTablero().encontrar_casilla("Cárcel").anhadirAvatar(menu.getAvatares().get(menu.getTurno()));
@@ -59,8 +59,8 @@ public class AccionCajaComunidad extends Accion{
         
         } else if(cartaSeleccionada.getNombre().equals("caja5")){
             if(actual.getFortuna() < 1000000){
-                System.out.println("El jugador " + actual.getNombre() + " no puede pagar la deuda.");
-                System.out.println("El jugador debe o bien hipotecar o bien declararse en bancarrota.");
+                Juego.consola.imprimir("El jugador " + actual.getNombre() + " no puede pagar la deuda.");
+                Juego.consola.imprimir("El jugador debe o bien hipotecar o bien declararse en bancarrota.");
                 return false;
             } else{
                 actual.sumarGastos(1000000f);
@@ -71,8 +71,8 @@ public class AccionCajaComunidad extends Accion{
         
         } else if(cartaSeleccionada.getNombre().equals("caja6")){
             if(actual.getFortuna() < 200000*(menu.getJugadores().size())){ 
-                System.out.println("El jugador " + actual.getNombre() + " no puede pagar la deuda.");
-                System.out.println("El jugador debe o bien hipotecar o bien declararse en bancarrota.");
+                Juego.consola.imprimir("El jugador " + actual.getNombre() + " no puede pagar la deuda.");
+                Juego.consola.imprimir("El jugador debe o bien hipotecar o bien declararse en bancarrota.");
                 return false;
             } else{
                 for(Jugador jugador : menu.getJugadores()){

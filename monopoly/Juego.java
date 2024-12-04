@@ -34,7 +34,7 @@ public class Juego implements Comando {
     private int doblesContador = 0;
     private ArrayList<ArrayList<Trato>> tratos;
     private Menu menu;
-    private static ConsolaNormal consola = new ConsolaNormal();
+    public static ConsolaNormal consola = new ConsolaNormal();
 
     public Juego(Menu menu) {
         this.menu = menu;
@@ -67,9 +67,9 @@ public class Juego implements Comando {
             for (int i = 0; i < 40; i++) {
                 this.tablero.encontrar_casilla(i).getCaidas().add(0);
             }
-            Juego.consola.imprimir("nombre: " + nJugador.getNombre() + ",\navatar: " + nJugador.getAvatar().getID());
+            consola.imprimir("nombre: " + nJugador.getNombre() + ",\navatar: " + nJugador.getAvatar().getID());
         } else {
-            Juego.consola.imprimir("Número máximo de jugadores alcanzado. No se pueden crear jugadores nuevos.");
+            consola.imprimir("Número máximo de jugadores alcanzado. No se pueden crear jugadores nuevos.");
         }
     }
 
@@ -111,7 +111,7 @@ public class Juego implements Comando {
 
     // Método para mostrar el tablero por pantalla asociado al comando 'ver tablero'.
     public void verTablero() {
-        System.out.println("\n" + this.tablero.toString());
+        consola.imprimir("\n" + this.tablero.toString());
     }
 
     /*Método que interpreta el comando introducido y toma la accion correspondiente.
@@ -136,45 +136,45 @@ public class Juego implements Comando {
             try{
                 salirCarcel();;
             } catch (SaldoInsuficienteException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             } catch (JugadorException e) {
-                System.out.println("Error relacionado con el jugador: " + e.getMessage());
+                consola.imprimir("Error relacionado con el jugador: " + e.getMessage());
             } catch (JuegoException e) {
-                System.out.println("Error general del juego: " + e.getMessage());
+                consola.imprimir("Error general del juego: " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("Error inesperado: " + e.getMessage());
+                consola.imprimir("Error inesperado: " + e.getMessage());
             }
         } else if(partes[0].equals("describir") && partes.length >= 2){
             if(partes[1].equals("jugador") && partes.length == 3){
                 try{
                     descJugador(partes);
                 } catch (JugadorNoExisteException e) {
-                    System.out.println("Error: " + e.getMessage());
+                    consola.imprimir("Error: " + e.getMessage());
                 } catch (JugadorException e) {
-                    System.out.println("Error relacionado con el jugador: " + e.getMessage());
+                    consola.imprimir("Error relacionado con el jugador: " + e.getMessage());
                 } catch (JuegoException e) {
-                    System.out.println("Error general del juego: " + e.getMessage());
+                    consola.imprimir("Error general del juego: " + e.getMessage());
                 } catch (Exception e) {
-                    System.out.println("Error inesperado: " + e.getMessage());
+                    consola.imprimir("Error inesperado: " + e.getMessage());
                 }
             } else if(partes[1].equals("avatar") && partes.length == 3){
                 descAvatar(partes[2]);
             } else if(partes.length == 2){
                 descCasilla(partes[1]);
             } else{
-                System.out.println("Comando inválido\n");
+                consola.imprimir("Comando inválido\n");
             }
         } else if(partes.length == 3 && partes[0].equals("estadisticas") && partes[1].equals("jugador")){
             try{
                 estadisticasjugador(partes[2]);
             } catch (JugadorNoExisteException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             } catch (JugadorException e) {
-                System.out.println("Error relacionado con el jugador: " + e.getMessage());
+                consola.imprimir("Error relacionado con el jugador: " + e.getMessage());
             } catch (JuegoException e) {
-                System.out.println("Error general del juego: " + e.getMessage());
+                consola.imprimir("Error general del juego: " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("Error inesperado: " + e.getMessage());
+                consola.imprimir("Error inesperado: " + e.getMessage());
             }
         } else if(partes.length == 2 && partes[0].equals("listar") && partes[1].equals("enventa")){
             listarVenta();
@@ -182,47 +182,47 @@ public class Juego implements Comando {
             try{
                 comprar(this.avatares.get(this.turno).getLugar().getNombre());
             } catch (PropiedadNoDisponibleException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             } catch (SaldoInsuficienteException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             } catch (JugadorException e) {
-                System.out.println("Error relacionado con el jugador: " + e.getMessage());
+                consola.imprimir("Error relacionado con el jugador: " + e.getMessage());
             } catch (PropiedadException e) {
-                System.out.println("Error relacionado con la propiedad: " + e.getMessage());
+                consola.imprimir("Error relacionado con la propiedad: " + e.getMessage());
             } catch (JuegoException e) {
-                System.out.println("Error general del juego: " + e.getMessage());
+                consola.imprimir("Error general del juego: " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("Error inesperado: " + e.getMessage());
+                consola.imprimir("Error inesperado: " + e.getMessage());
             }
         } else if(partes.length == 2 && partes[0].equals("hipotecar") && partes[1].equals(this.avatares.get(this.turno).getLugar().getNombre())){
             try{
                 hipotecar(partes[1]);
             } catch (PropiedadNoDisponibleException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             } catch (PropiedadYaHipotecadaException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             }catch (PropiedadException e) {
-                System.out.println("Error relacionado con la propiedad: " + e.getMessage());
+                consola.imprimir("Error relacionado con la propiedad: " + e.getMessage());
             } catch (JuegoException e) {
-                System.out.println("Error general del juego: " + e.getMessage());
+                consola.imprimir("Error general del juego: " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("Error inesperado: " + e.getMessage());
+                consola.imprimir("Error inesperado: " + e.getMessage());
             }
         } else if(partes.length == 2 && partes[0].equals("deshipotecar") && partes[1].equals(this.avatares.get(this.turno).getLugar().getNombre())){
             try{
                 deshipotecar(partes[1]);
             } catch (PropiedadNoDisponibleException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             } catch (SaldoInsuficienteException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             } catch (JugadorException e) {
-                System.out.println("Error relacionado con la propiedad: " + e.getMessage());
+                consola.imprimir("Error relacionado con la propiedad: " + e.getMessage());
             }catch (PropiedadException e) {
-                System.out.println("Error relacionado con la propiedad: " + e.getMessage());
+                consola.imprimir("Error relacionado con la propiedad: " + e.getMessage());
             } catch (JuegoException e) {
-                System.out.println("Error general del juego: " + e.getMessage());
+                consola.imprimir("Error general del juego: " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("Error inesperado: " + e.getMessage());
+                consola.imprimir("Error inesperado: " + e.getMessage());
             }
         } else if(partes.length == 3 && partes[0].equals("declararse") && partes[1].equals("en") && partes[2].equals("bancarrota")){
             if(this.solvente) bancarrota(this.jugadores.get(this.turno), banca);
@@ -235,21 +235,21 @@ public class Juego implements Comando {
             try{
                 edificarCasilla(partes[1]);
             } catch (LimiteDeEdificacionAlcanzadoException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             } catch (PropiedadNoDisponibleException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             } catch (PropiedadNoEdificableException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             } catch (PropiedadException e) {
-                System.out.println("Error relacionado con la propiedad: " + e.getMessage());
+                consola.imprimir("Error relacionado con la propiedad: " + e.getMessage());
             } catch (SaldoInsuficienteException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             } catch (JugadorException e) {
-                System.out.println("Error relacionado con el jugador: " + e.getMessage());
+                consola.imprimir("Error relacionado con el jugador: " + e.getMessage());
             }catch (JuegoException e) {
-                System.out.println("Error general del juego: " + e.getMessage());
+                consola.imprimir("Error general del juego: " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("Error inesperado: " + e.getMessage());
+                consola.imprimir("Error inesperado: " + e.getMessage());
             }
         } else if(partes.length >= 2 && partes[0].equals("listar") && partes[1].equals("edificios")){
             ArrayList<String> grupos = new ArrayList<String>(8);
@@ -261,7 +261,7 @@ public class Juego implements Comando {
             } else if(grupos.contains(partes[2]) && partes.length == 3){
                 listarEdificiosGrupo(partes[2]);
             } else{
-                System.out.println("Comando inválido\n");
+                consola.imprimir("Comando inválido\n");
             }
         } else if(partes.length == 4 && partes[0].equals("vender") && edificios.contains(partes[1]) && partes[2].equals(this.avatares.get(this.turno).getLugar().getNombre())){
             venderEdificios(partes[1], partes[2], partes[3]);
@@ -295,13 +295,13 @@ public class Juego implements Comando {
             try{
             aceptarTrato(partes[1]);
             } catch (SaldoInsuficienteException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             } catch (JugadorException e) {
-                System.out.println("Error relacionado con la propiedad: " + e.getMessage());
+                consola.imprimir("Error relacionado con la propiedad: " + e.getMessage());
             } catch (JuegoException e) {
-                System.out.println("Error general del juego: " + e.getMessage());
+                consola.imprimir("Error general del juego: " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("Error inesperado: " + e.getMessage());
+                consola.imprimir("Error inesperado: " + e.getMessage());
             }
         } else if(partes.length == 1 && partes[0].equals("tratos")){
             tratos();
@@ -316,18 +316,18 @@ public class Juego implements Comando {
                 this.tirado=true;
                 }
             } catch (MovimientoInvalidoException e) {
-                System.out.println("Error: " + e.getMessage());
+                consola.imprimir("Error: " + e.getMessage());
             } catch (JugadorException e) {
-                System.out.println("Error relacionado con el jugador: " + e.getMessage());
+                consola.imprimir("Error relacionado con el jugador: " + e.getMessage());
             } catch (JuegoException e) {
-                System.out.println("Error general del juego: " + e.getMessage());
+                consola.imprimir("Error general del juego: " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("Error inesperado: " + e.getMessage());
+                consola.imprimir("Error inesperado: " + e.getMessage());
             }
         } else if(partes[0].equals("exit")){
             System.exit(0);
         } else{
-            System.out.println("Comando inválido\n");
+            consola.imprimir("Comando inválido\n");
         }
         
     }
@@ -338,13 +338,13 @@ public class Juego implements Comando {
                 return i;
             }
         }
-        System.out.println("El jugador " + nombre + " no está en la partida.");
+        consola.imprimir("El jugador " + nombre + " no está en la partida.");
         return null;
     }
 
     /*Método que realiza las acciones asociadas al comando 'jugador'.*/
     public void turnoJugador() {
-        System.out.println("nombre: " + this.jugadores.get(this.turno).getNombre() + ",\navatar: " + this.avatares.get(this.turno).getID());
+        consola.imprimir("nombre: " + this.jugadores.get(this.turno).getNombre() + ",\navatar: " + this.avatares.get(this.turno).getID());
     }
 
     /*Método que realiza las acciones asociadas al comando 'describir jugador'.
@@ -362,15 +362,15 @@ public class Juego implements Comando {
      */
     private void descJugador(int numero) {
         Jugador dJugador = this.jugadores.get(numero);
-        System.out.println(dJugador.toString()); 
+        consola.imprimir(dJugador.toString()); 
     }
 
     // Método que realiza las acciones asociadas al comando 'listar jugadores'.
     public void listarJugadores() {
         for(int i=0; i<this.jugadores.size(); i++){
-            System.out.println("{\n");
+            consola.imprimir("{\n");
             descJugador(i);
-            System.out.println((i == (this.jugadores.size()-1) ? "}\n" : "},\n"));
+            consola.imprimir((i == (this.jugadores.size()-1) ? "}\n" : "},\n"));
         }
     }
 
@@ -380,11 +380,11 @@ public class Juego implements Comando {
     public void descAvatar(String ID) {
         for (Avatar i : this.avatares) {
             if (i.getID().equals(ID)) {
-                System.out.println("{\n" + i.toString() + "}"); 
+                consola.imprimir("{\n" + i.toString() + "}"); 
                 return;
             }
         }
-        System.out.println("El avatar con ID " + ID + " no está en la partida");
+        consola.imprimir("El avatar con ID " + ID + " no está en la partida");
     }
 
     /*Método que muestra la información sobre un avatar.
@@ -392,15 +392,15 @@ public class Juego implements Comando {
      */
     private void descAvatar(int numero) {
         Avatar dAvatar = this.avatares.get(numero);
-        System.out.println(dAvatar.toString()); 
+        consola.imprimir(dAvatar.toString()); 
     }
 
     // Método que realiza las acciones asociadas al comando 'listar avatares'.
     public void listarAvatares() {
         for(int i=0; i<this.avatares.size(); i++){
-            System.out.println("{\n");
+            consola.imprimir("{\n");
             descAvatar(i);
-            System.out.println((i == (this.avatares.size()-1) ? "}\n" : "},\n"));
+            consola.imprimir((i == (this.avatares.size()-1) ? "}\n" : "},\n"));
         }
     }
 
@@ -420,14 +420,14 @@ public class Juego implements Comando {
     /*Método para cambiar de modo de lanzamiento (normal o avanzado) */
     public void cambiarModo(){
         if(!this.jugadores.get(this.turno).getAvatar().getmovAvanzado()){
-            System.out.println("A partir de ahora el avatar " + this.jugadores.get(this.turno).getAvatar().getID() + ", de tipo " + this.jugadores.get(this.turno).getAvatar().getTipo() + ", se moverá en modo avanzado.");
-        } else{System.out.println("A partir de ahora el avatar " + this.jugadores.get(this.turno).getAvatar().getID() + ", de tipo " + this.jugadores.get(this.turno).getAvatar().getTipo() + ", se moverá en modo normal.");}
+            consola.imprimir("A partir de ahora el avatar " + this.jugadores.get(this.turno).getAvatar().getID() + ", de tipo " + this.jugadores.get(this.turno).getAvatar().getTipo() + ", se moverá en modo avanzado.");
+        } else{consola.imprimir("A partir de ahora el avatar " + this.jugadores.get(this.turno).getAvatar().getID() + ", de tipo " + this.jugadores.get(this.turno).getAvatar().getTipo() + ", se moverá en modo normal.");}
         this.jugadores.get(this.turno).getAvatar().setmovAvanzado(this.jugadores.get(this.turno));
     }
 
     //Método que ejecuta todas las acciones relacionadas con el comando 'lanzar dados'.
     public void lanzarDados() {
-        if(this.tirado){System.out.println("El jugador actual ya ha realizado todas sus tiradas.");}
+        if(this.tirado){consola.imprimir("El jugador actual ya ha realizado todas sus tiradas.");}
 
         if (!this.tirado){
             int d1 = this.dado1.hacerTirada(), d2 = this.dado2.hacerTirada();
@@ -438,7 +438,7 @@ public class Juego implements Comando {
                 String origen = this.avatares.get(this.turno).getLugar().getNombre(), destino = this.tablero.encontrar_casilla(mov).getNombre();
                 int oint = this.avatares.get(this.turno).getLugar().getPosicion(), dint = this.tablero.encontrar_casilla(mov).getPosicion();
 
-                System.out.println("El avatar " + this.avatares.get(this.turno).getID() + " avanza " + desp + " posiciones, desde " + origen + " hasta " + destino);
+                consola.imprimir("El avatar " + this.avatares.get(this.turno).getID() + " avanza " + desp + " posiciones, desde " + origen + " hasta " + destino);
                 this.lanzamientostotales.set(this.turno, this.lanzamientostotales.get(this.turno) + 1);
                 
                 //this.tablero.encontrar_casilla(oint).eliminarAvatar(this.avatares.get(this.turno));
@@ -458,7 +458,7 @@ public class Juego implements Comando {
                         parking.sumarBote(imp.getImpuesto());
                     }
                 verTablero();
-                } else{ System.out.println("El jugador " + this.jugadores.get(this.turno).getNombre() + " está encarcelado. No se desplaza.");}
+                } else{ consola.imprimir("El jugador " + this.jugadores.get(this.turno).getNombre() + " está encarcelado. No se desplaza.");}
 
                 if (d1 == d2){
                     ++this.lanzamientos;
@@ -467,12 +467,12 @@ public class Juego implements Comando {
                     if (this.avatares.get(this.turno).getJugador().getEncarcelado()){
                         this.avatares.get(this.turno).getJugador().setEncarcelado(false);
                         this.avatares.get(this.turno).getJugador().setTiradasCarcel(0);
-                        System.out.println(this.avatares.get(this.turno).getJugador().getNombre() + " sale de la cárcel. Puede lanzar los dados.");
-                    } else{System.out.println("Puede volver a lanzar los dados.");} 
+                        consola.imprimir(this.avatares.get(this.turno).getJugador().getNombre() + " sale de la cárcel. Puede lanzar los dados.");
+                    } else{consola.imprimir("Puede volver a lanzar los dados.");} 
 
                     if (this.lanzamientos == 3){
                         this.avatares.get(this.turno).getJugador().encarcelar(this.tablero.getPosiciones());
-                        System.out.println(this.jugadores.get(this.turno).getNombre() + " ha sacado tres dobles seguidos y va a la cárcel.");
+                        consola.imprimir(this.jugadores.get(this.turno).getNombre() + " ha sacado tres dobles seguidos y va a la cárcel.");
                         this.lanzamientos = 0;
                         this.tirado = true;
                     }
@@ -485,7 +485,7 @@ public class Juego implements Comando {
                     this.avatares.get(this.turno).getJugador().getEstadisticas().set(4, this.avatares.get(this.turno).getJugador().getEstadisticas().get(4) + Valor.SUMA_VUELTA);
                     this.vueltastotales.set(this.turno,this.vueltastotales.get(this.turno) + 1);
                     
-                    System.out.println("El jugador " + this.jugadores.get(this.turno).getNombre() + " ha cruzado la casilla de Salida. Recibe " + Valor.SUMA_VUELTA + "€.");
+                    consola.imprimir("El jugador " + this.jugadores.get(this.turno).getNombre() + " ha cruzado la casilla de Salida. Recibe " + Valor.SUMA_VUELTA + "€.");
                     int ultimo = 1;
                     if(this.avatares.get(this.turno).getJugador().getVueltas() != 0 && this.avatares.get(this.turno).getJugador().getVueltas()%4 == 0){
                         for(Jugador j:this.jugadores){
@@ -515,7 +515,7 @@ public class Juego implements Comando {
                 String origen = this.avatares.get(this.turno).getLugar().getNombre(), destino = this.tablero.encontrar_casilla(mov).getNombre();
                 int oint = this.avatares.get(this.turno).getLugar().getPosicion(), dint = this.tablero.encontrar_casilla(mov).getPosicion();
 
-                System.out.println("El avatar " + this.avatares.get(this.turno).getID() + " avanza " + desp + " posiciones, desde " + origen + " hasta " + destino);
+                consola.imprimir("El avatar " + this.avatares.get(this.turno).getID() + " avanza " + desp + " posiciones, desde " + origen + " hasta " + destino);
                 this.lanzamientostotales.set(this.turno, this.lanzamientostotales.get(this.turno) + 1);
                 
                 //this.tablero.encontrar_casilla(oint).eliminarAvatar(this.avatares.get(this.turno));
@@ -544,12 +544,12 @@ public class Juego implements Comando {
                     if (this.avatares.get(this.turno).getJugador().getEncarcelado()){
                         this.avatares.get(this.turno).getJugador().setEncarcelado(false);
                         this.avatares.get(this.turno).getJugador().setTiradasCarcel(0);
-                        System.out.println(this.avatares.get(this.turno).getJugador().getNombre() + " sale de la cárcel. Puede lanzar los dados.");
-                    } else{System.out.println("Puede volver a lanzar los dados.");} 
+                        consola.imprimir(this.avatares.get(this.turno).getJugador().getNombre() + " sale de la cárcel. Puede lanzar los dados.");
+                    } else{consola.imprimir("Puede volver a lanzar los dados.");} 
 
                     if (this.lanzamientos == 3){
                         this.avatares.get(this.turno).getJugador().encarcelar(this.tablero.getPosiciones());
-                        System.out.println(this.jugadores.get(this.turno).getNombre() + " ha sacado tres dobles seguidos y va a la cárcel.");
+                        consola.imprimir(this.jugadores.get(this.turno).getNombre() + " ha sacado tres dobles seguidos y va a la cárcel.");
                         this.lanzamientos = 0;
                         this.tirado = true;
                     }
@@ -561,7 +561,7 @@ public class Juego implements Comando {
                     this.avatares.get(this.turno).getJugador().sumarFortuna(Valor.SUMA_VUELTA);
                     this.avatares.get(this.turno).getJugador().getEstadisticas().set(4, this.avatares.get(this.turno).getJugador().getEstadisticas().get(4) + Valor.SUMA_VUELTA);
 
-                    System.out.println("El jugador " + this.jugadores.get(this.turno).getNombre() + " ha cruzado la casilla de Salida. Recibe " + Valor.SUMA_VUELTA + "€.");
+                    consola.imprimir("El jugador " + this.jugadores.get(this.turno).getNombre() + " ha cruzado la casilla de Salida. Recibe " + Valor.SUMA_VUELTA + "€.");
                     int ultimo = 1;
                     if(this.avatares.get(this.turno).getJugador().getVueltas() != 0 && this.avatares.get(this.turno).getJugador().getVueltas()%4 == 0){
                         for(Jugador j:this.jugadores){
@@ -580,7 +580,7 @@ public class Juego implements Comando {
 
 
     public void lanzarDadosEsp(int valor1, int valor2) {
-        if (this.tirado) {System.out.println("El jugador actual ya ha realizado todas sus tiradas.");}
+        if (this.tirado) {consola.imprimir("El jugador actual ya ha realizado todas sus tiradas.");}
         if (!this.tirado) {
             int d1 = valor1, d2 = valor2;
             int desp = d1 + d2;
@@ -596,18 +596,18 @@ public class Juego implements Comando {
                             int oint = this.avatares.get(this.turno).getLugar().getPosicion();
                             int dint = this.tablero.encontrar_casilla(mov).getPosicion();
 
-                            System.out.println("El avatar " + this.avatares.get(this.turno).getID() + " retrocede " + j + " posiciones, desde " + origen + " hasta " + destino);
+                            consola.imprimir("El avatar " + this.avatares.get(this.turno).getID() + " retrocede " + j + " posiciones, desde " + origen + " hasta " + destino);
                             this.lanzamientostotales.set(this.turno, this.lanzamientostotales.get(this.turno) + 1);
                         
                             actualizar(mov,origen,destino,oint,dint,d1,d2,((-j % 40) + 40) % 40);
                             if (this.avatares.get(this.turno).getLugar() instanceof Propiedad) {
                                 
-                                System.out.println("continuar ");
-                                System.out.println("comprar " + this.avatares.get(this.turno).getLugar().getNombre());
-                                System.out.println("hipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
-                                System.out.println("deshipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
-                                System.out.println("edificar \"TIPOEDIFICIO\"");
-                                System.out.println("vender \"TIPOEDIFICIO\"" + this.avatares.get(this.turno).getLugar().getNombre() + " \"CANTIDAD\"");
+                                consola.imprimir("continuar ");
+                                consola.imprimir("comprar " + this.avatares.get(this.turno).getLugar().getNombre());
+                                consola.imprimir("hipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
+                                consola.imprimir("deshipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
+                                consola.imprimir("edificar \"TIPOEDIFICIO\"");
+                                consola.imprimir("vender \"TIPOEDIFICIO\"" + this.avatares.get(this.turno).getLugar().getNombre() + " \"CANTIDAD\"");
 
                                 String comando = this.scanner.nextLine();
                                 while (comando.isEmpty()) {comando = this.scanner.nextLine();}
@@ -627,18 +627,18 @@ public class Juego implements Comando {
                             int oint = this.avatares.get(this.turno).getLugar().getPosicion();
                             int dint = this.tablero.encontrar_casilla(mov).getPosicion();
 
-                            System.out.println("El avatar " + this.avatares.get(this.turno).getID() + " avanza " + j + " posiciones, desde " + origen + " hasta " + destino);
+                            consola.imprimir("El avatar " + this.avatares.get(this.turno).getID() + " avanza " + j + " posiciones, desde " + origen + " hasta " + destino);
                             this.lanzamientostotales.set(this.turno, this.lanzamientostotales.get(this.turno) + 1);
 
                             actualizar(mov,origen,destino,oint,dint,d1,d2,j);
                             if (this.avatares.get(this.turno).getLugar() instanceof Propiedad) {
                                 
-                                System.out.println("continuar ");
-                                System.out.println("comprar " + this.avatares.get(this.turno).getLugar().getNombre());
-                                System.out.println("hipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
-                                System.out.println("deshipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
-                                System.out.println("edificar \"TIPOEDIFICIO\"");
-                                System.out.println("vender \"TIPOEDIFICIO\"" + this.avatares.get(this.turno).getLugar().getNombre() + " \"CANTIDAD\"");
+                                consola.imprimir("continuar ");
+                                consola.imprimir("comprar " + this.avatares.get(this.turno).getLugar().getNombre());
+                                consola.imprimir("hipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
+                                consola.imprimir("deshipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
+                                consola.imprimir("edificar \"TIPOEDIFICIO\"");
+                                consola.imprimir("vender \"TIPOEDIFICIO\"" + this.avatares.get(this.turno).getLugar().getNombre() + " \"CANTIDAD\"");
 
                                 String comando = this.scanner.nextLine();
                                 while (comando.isEmpty()) {comando = this.scanner.nextLine();}
@@ -657,7 +657,7 @@ public class Juego implements Comando {
                         if (doblesContador == 3) {
                             this.tirado = true;
                             this.avatares.get(this.turno).getJugador().encarcelar(this.tablero.getPosiciones());
-                            System.out.println("El avatar ha sacado dobles tres veces seguidas y va a la cárcel.");
+                            consola.imprimir("El avatar ha sacado dobles tres veces seguidas y va a la cárcel.");
                             //acabarTurno();
                             return;
                         } else{
@@ -681,7 +681,7 @@ public class Juego implements Comando {
                         int oint = this.avatares.get(this.turno).getLugar().getPosicion();
                         int dint = this.tablero.encontrar_casilla(mov).getPosicion();
 
-                        System.out.println("El avatar " + this.avatares.get(this.turno).getID() + " retrocede " + desp + " posiciones, desde " + origen + " hasta " + destino);
+                        consola.imprimir("El avatar " + this.avatares.get(this.turno).getID() + " retrocede " + desp + " posiciones, desde " + origen + " hasta " + destino);
                         this.lanzamientostotales.set(this.turno, this.lanzamientostotales.get(this.turno) + 1);
                     
                         actualizar(mov,origen,destino,oint,dint,d1,d2,((-desp % 40) + 40) % 40);
@@ -699,18 +699,18 @@ public class Juego implements Comando {
                                 int oint = this.avatares.get(this.turno).getLugar().getPosicion();
                                 int dint = this.tablero.encontrar_casilla(mov).getPosicion();
                         
-                                System.out.println("El avatar " + this.avatares.get(this.turno).getID() + " avanza " + desp + " posiciones, desde " + origen + " hasta " + destino);
+                                consola.imprimir("El avatar " + this.avatares.get(this.turno).getID() + " avanza " + desp + " posiciones, desde " + origen + " hasta " + destino);
                                 this.lanzamientostotales.set(this.turno, this.lanzamientostotales.get(this.turno) + 1);
                         
                                 actualizar(mov, origen, destino, oint, dint, d1, d2, desp);
                         
                                 if((this.avatares.get(this.turno).getLugar() instanceof Propiedad) && !compraRealizada) {
-                                    System.out.println("continuar ");
-                                    System.out.println("comprar " + this.avatares.get(this.turno).getLugar().getNombre());
-                                    System.out.println("hipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
-                                    System.out.println("deshipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
-                                    System.out.println("edificar \"TIPOEDIFICIO\"");
-                                    System.out.println("vender \"TIPOEDIFICIO\"" + this.avatares.get(this.turno).getLugar().getNombre() + " \"CANTIDAD\"");
+                                    consola.imprimir("continuar ");
+                                    consola.imprimir("comprar " + this.avatares.get(this.turno).getLugar().getNombre());
+                                    consola.imprimir("hipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
+                                    consola.imprimir("deshipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
+                                    consola.imprimir("edificar \"TIPOEDIFICIO\"");
+                                    consola.imprimir("vender \"TIPOEDIFICIO\"" + this.avatares.get(this.turno).getLugar().getNombre() + " \"CANTIDAD\"");
                         
                                     String comando = this.scanner.nextLine();
                                     String[] partes = comando.split(" ");
@@ -719,11 +719,11 @@ public class Juego implements Comando {
                                     if(partes[0].equals("comprar")) compraRealizada = true;
                         
                                 } else if(this.avatares.get(this.turno).getLugar() instanceof Solar){
-                                    System.out.println("continuar ");
-                                    System.out.println("hipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
-                                    System.out.println("deshipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
-                                    System.out.println("edificar \"TIPOEDIFICIO\"");
-                                    System.out.println("vender \"TIPOEDIFICIO\"" + this.avatares.get(this.turno).getLugar().getNombre() + " \"CANTIDAD\"");
+                                    consola.imprimir("continuar ");
+                                    consola.imprimir("hipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
+                                    consola.imprimir("deshipotecar " + this.avatares.get(this.turno).getLugar().getNombre());
+                                    consola.imprimir("edificar \"TIPOEDIFICIO\"");
+                                    consola.imprimir("vender \"TIPOEDIFICIO\"" + this.avatares.get(this.turno).getLugar().getNombre() + " \"CANTIDAD\"");
                                     String comando = this.scanner.nextLine();
                                     while (comando.isEmpty()) {comando = this.scanner.nextLine();}
                                     analizarComando(comando);
@@ -798,14 +798,14 @@ public class Juego implements Comando {
                 parking.sumarBote(imp.getImpuesto());
             }
         verTablero();
-        } else{ System.out.println("El jugador " + this.jugadores.get(this.turno).getNombre() + " está encarcelado. No se desplaza.");}
+        } else{ consola.imprimir("El jugador " + this.jugadores.get(this.turno).getNombre() + " está encarcelado. No se desplaza.");}
         
         if(this.tablero.encontrar_casilla(oint).getPosicion()>this.tablero.encontrar_casilla(dint).getPosicion() && d1+d2>4){
             this.avatares.get(this.turno).getJugador().setVueltas(this.avatares.get(this.turno).getJugador().getVueltas()+1);
             this.avatares.get(this.turno).getJugador().sumarFortuna(Valor.SUMA_VUELTA);
             this.avatares.get(this.turno).getJugador().getEstadisticas().set(4, this.avatares.get(this.turno).getJugador().getEstadisticas().get(4) + Valor.SUMA_VUELTA);
 
-            System.out.println("El jugador " + this.jugadores.get(this.turno).getNombre() + " ha cruzado la casilla de Salida. Recibe " + Valor.SUMA_VUELTA + "€.");
+            consola.imprimir("El jugador " + this.jugadores.get(this.turno).getNombre() + " ha cruzado la casilla de Salida. Recibe " + Valor.SUMA_VUELTA + "€.");
             int ultimo = 1;
             if(this.avatares.get(this.turno).getJugador().getVueltas() != 0 && this.avatares.get(this.turno).getJugador().getVueltas()%4 == 0){
                 for(Jugador j:this.jugadores){
@@ -844,7 +844,7 @@ public class Juego implements Comando {
         if(this.tablero.encontrar_casilla(nombre) instanceof Propiedad){
             Propiedad prop = (Propiedad) this.tablero.encontrar_casilla(nombre);
             prop.deshipotecar(this.jugadores.get(this.turno));
-        } else{System.out.println("Esta casilla no se puede deshipotecar");}
+        } else{consola.imprimir("Esta casilla no se puede deshipotecar");}
     }
 
     public void bancarrota(Jugador solicitante, Jugador demandante){
@@ -882,12 +882,12 @@ public class Juego implements Comando {
         demandante.sumarFortuna(deuda);
         solicitante.sumarGastos(deuda);
         if (demandante.getNombre().equals("banca")){
-            System.out.println("El jugador " + solicitante.getNombre() + " se ha declarado en bancarrota. Sus propiedades pasan a estar de nuevo en venta al precio al que estaban.");
+            consola.imprimir("El jugador " + solicitante.getNombre() + " se ha declarado en bancarrota. Sus propiedades pasan a estar de nuevo en venta al precio al que estaban.");
         } else{
-            System.out.println("El jugador " + solicitante.getNombre() + " se ha declarado en bancarrota. Sus propiedades y fortuna pasan al jugador " + demandante.getNombre());
+            consola.imprimir("El jugador " + solicitante.getNombre() + " se ha declarado en bancarrota. Sus propiedades y fortuna pasan al jugador " + demandante.getNombre());
         }
         
-        System.out.println("El jugador " + solicitante.getNombre() + " sale de la partida.");
+        consola.imprimir("El jugador " + solicitante.getNombre() + " sale de la partida.");
         solicitante.getAvatar().getLugar().eliminarAvatar(solicitante.getAvatar()); 
         this.avatares.remove(this.turno);
         this.jugadores.remove(this.turno);
@@ -898,7 +898,7 @@ public class Juego implements Comando {
         if(this.turno>=this.jugadores.size()) this.turno = 0;
         this.fin =!((this.jugadores.size() == 1) || (this.jugadores.size() == 0));
         if (this.fin){
-            System.out.println("\nEl jugador actual es " + this.avatares.get(this.turno).getJugador().getNombre());
+            consola.imprimir("\nEl jugador actual es " + this.avatares.get(this.turno).getJugador().getNombre());
         } else{
             System.out.print("La partida ha terminado. ");
             if(this.jugadores.size()==0){System.out.print("Todos los jugadores han perdido\n");
@@ -910,14 +910,14 @@ public class Juego implements Comando {
     public void salirCarcel() throws Exception {
         if (this.avatares.get(this.turno).getJugador().getEncarcelado()){
             if(this.avatares.get(this.turno).getJugador().getFortuna() >= (0.25f*Valor.SUMA_VUELTA)){  
-                System.out.println(this.avatares.get(this.turno).getJugador().getNombre() + " paga " + (0.25f*Valor.SUMA_VUELTA) + "€ y sale de la cárcel."); 
+                consola.imprimir(this.avatares.get(this.turno).getJugador().getNombre() + " paga " + (0.25f*Valor.SUMA_VUELTA) + "€ y sale de la cárcel."); 
                 this.jugadores.get(this.turno).getEstadisticas().set(1, this.jugadores.get(this.turno).getEstadisticas().get(1) + (0.25f*Valor.SUMA_VUELTA));
                 this.avatares.get(this.turno).getJugador().setEncarcelado(false);
             } else{
                 throw new SaldoInsuficienteException(this.avatares.get(this.turno).getJugador().getNombre() + " no tiene el dinero suficiente para salir de la cárcel.");
             }  
         } else{
-            System.out.println("El jugador no se encuentra en la cárcel");
+            consola.imprimir("El jugador no se encuentra en la cárcel");
         }
     }
 
@@ -936,22 +936,22 @@ public class Juego implements Comando {
         
         else{
             for(Propiedad cas : lista){
-                System.out.println(cas.getNombre() + "{");
+                consola.imprimir(cas.getNombre() + "{");
                 if(cas instanceof Solar){
                     Solar sol = (Solar) cas;
-                    System.out.println("Tipo: Solar");
-                    System.out.println("Grupo: " + sol.getGrupo().colorGrupo());
-                } else if(cas instanceof Servicio){System.out.println("Tipo: Servicio");
-                } else if(cas instanceof Transporte){System.out.println("Tipo: Transporte");}
+                    consola.imprimir("Tipo: Solar");
+                    consola.imprimir("Grupo: " + sol.getGrupo().colorGrupo());
+                } else if(cas instanceof Servicio){consola.imprimir("Tipo: Servicio");
+                } else if(cas instanceof Transporte){consola.imprimir("Tipo: Transporte");}
     
-                System.out.println("Valor: " + cas.getValor());
-                System.out.println((lista.indexOf(cas) == (lista.size()-1) ? "}\n" : "},\n"));
+                consola.imprimir("Valor: " + cas.getValor());
+                consola.imprimir((lista.indexOf(cas) == (lista.size()-1) ? "}\n" : "},\n"));
             }
         }
     }
     
     public void edificarCasilla(String edificio) throws Exception{
-        if(!edificio.equals("casa") && !edificio.equals("hotel") && !edificio.equals("piscina") && !edificio.equals("pista")){System.out.println("Comando inválido\n");}
+        if(!edificio.equals("casa") && !edificio.equals("hotel") && !edificio.equals("piscina") && !edificio.equals("pista")){consola.imprimir("Comando inválido\n");}
         else{
             Solar sol = (Solar) avatares.get(this.turno).getLugar();
             if(!(avatares.get(this.turno).getLugar() instanceof Solar)){
@@ -968,16 +968,16 @@ public class Juego implements Comando {
 
     private void descEdificio(int numero) {
         Edificio dEdificio = this.edificiosConstruidos.get(numero);
-        System.out.println(dEdificio.toString()); 
+        consola.imprimir(dEdificio.toString()); 
     }
 
     public void listarEdificios(){
-        if(this.edificiosConstruidos.isEmpty()){System.out.println("No hay edificios construídos.\n");}
+        if(this.edificiosConstruidos.isEmpty()){consola.imprimir("No hay edificios construídos.\n");}
         else{
         for(int i=0; i<this.edificiosConstruidos.size(); i++){
-            System.out.println("{");
+            consola.imprimir("{");
             descEdificio(i);
-            System.out.println((i == (this.edificiosConstruidos.size()-1) ? "}\n" : "},\n"));
+            consola.imprimir((i == (this.edificiosConstruidos.size()-1) ? "}\n" : "},\n"));
         }}
     }
 
@@ -1009,7 +1009,7 @@ public class Juego implements Comando {
                 key = Valor.WHITE;
                 break;
             default:
-                System.out.println("Color de grupo no válido.");
+                consola.imprimir("Color de grupo no válido.");
                 return;
         }
     
@@ -1018,33 +1018,33 @@ public class Juego implements Comando {
         ArrayList<Integer> contadorEdificios = new ArrayList<>(Arrays.asList(0, 0, 0, 0)); 
     
         for (Solar casilla : casillasGrupo) {
-            System.out.println("{");
-            System.out.println("propiedad: " + casilla.getNombre() + ",");
+            consola.imprimir("{");
+            consola.imprimir("propiedad: " + casilla.getNombre() + ",");
             contadorEdificios.set(0, contadorEdificios.get(0) + listarEdificiosPorTipo(casilla, "casa"));
             contadorEdificios.set(1, contadorEdificios.get(1) + listarEdificiosPorTipo(casilla, "hotel"));
             contadorEdificios.set(2, contadorEdificios.get(2) + listarEdificiosPorTipo(casilla, "piscina"));
             contadorEdificios.set(3, contadorEdificios.get(3) + listarEdificiosPorTipo(casilla, "pista de deporte"));
-            System.out.println("alquiler: " + casilla.getAlquiler());
-            System.out.println("}\n");
+            consola.imprimir("alquiler: " + casilla.getAlquiler());
+            consola.imprimir("}\n");
         }
     
-        System.out.println("\nEdificios que aún se pueden construir en este grupo:");
+        consola.imprimir("\nEdificios que aún se pueden construir en este grupo:");
         
         if (contadorEdificios.get(0) < grupoActual.getNumCasillas()) {
-            System.out.println("\tCasas: " + (grupoActual.getNumCasillas() - contadorEdificios.get(0)));
+            consola.imprimir("\tCasas: " + (grupoActual.getNumCasillas() - contadorEdificios.get(0)));
         } if (contadorEdificios.get(1) < grupoActual.getNumCasillas()) {
-            System.out.println("\tHoteles: " + (grupoActual.getNumCasillas() - contadorEdificios.get(1)));
+            consola.imprimir("\tHoteles: " + (grupoActual.getNumCasillas() - contadorEdificios.get(1)));
         } if (contadorEdificios.get(2) < grupoActual.getNumCasillas()) {
-            System.out.println("\tPiscinas: " + (grupoActual.getNumCasillas() - contadorEdificios.get(2)));
+            consola.imprimir("\tPiscinas: " + (grupoActual.getNumCasillas() - contadorEdificios.get(2)));
         } if (contadorEdificios.get(3) < grupoActual.getNumCasillas()) {
-            System.out.println("\tPistas de deporte: " + (grupoActual.getNumCasillas() - contadorEdificios.get(3)));
+            consola.imprimir("\tPistas de deporte: " + (grupoActual.getNumCasillas() - contadorEdificios.get(3)));
         }
     
         if (contadorEdificios.get(0) >= grupoActual.getNumCasillas() && 
             contadorEdificios.get(1) == grupoActual.getNumCasillas() &&
             contadorEdificios.get(2) == grupoActual.getNumCasillas() &&
             contadorEdificios.get(3) == grupoActual.getNumCasillas()) {
-            System.out.println("No se pueden construir más edificios en este grupo.");
+            consola.imprimir("No se pueden construir más edificios en este grupo.");
         }
     }
     
@@ -1079,7 +1079,7 @@ public class Juego implements Comando {
         for (Edificio edificio : edificios) {
             System.out.print("[" + edificio.getID() + "]");
         }
-        System.out.println();
+        consola.imprimir("\n");
         return edificios.size();
     }
     
@@ -1087,7 +1087,7 @@ public class Juego implements Comando {
         if(this.tablero.encontrar_casilla(nombre) instanceof Solar){
             Solar solar = (Solar) this.avatares.get(this.turno).getLugar();
             solar.venderEdificios(this.jugadores.get(this.turno), tipoedificio, cantidad, edificiosConstruidos);
-        } else{System.out.println("Esta casilla no puede tener edificios");}
+        } else{consola.imprimir("Esta casilla no puede tener edificios");}
     }
 
     private void casillaMasRentable(){
@@ -1110,7 +1110,7 @@ public class Juego implements Comando {
                 }
             }
         }
-        System.out.println();
+        consola.imprimir("\n");
     }
 
     private void grupoMasRentable(){
@@ -1168,7 +1168,7 @@ public class Juego implements Comando {
                 else if(i==7){ System.out.print("Blanco, ");}
             } 
         }
-        System.out.println();
+        consola.imprimir("\n");
     }
 
     private void casillaMasFrecuentada(){
@@ -1186,7 +1186,7 @@ public class Juego implements Comando {
                 int suma = cas.frecuenciaVisita();
                 if(suma==maximo){System.out.print(cas.getNombre() + ", ");}
             }
-        } System.out.println();
+        } consola.imprimir("\n");
     }
 
     private void jugadorMasVueltas(){
@@ -1194,7 +1194,7 @@ public class Juego implements Comando {
 
         for(int i=0;i<this.vueltastotales.size();i++){if(i>maximo) maximo = this.vueltastotales.get(i);}
         for(int i=0;i<this.vueltastotales.size();i++){if(this.vueltastotales.get(i)==maximo) System.out.print(this.jugadores.get(i).getNombre() + ", ");}
-        System.out.println();
+        consola.imprimir("\n");
     }
 
     private void MasVecesDados(){
@@ -1204,7 +1204,7 @@ public class Juego implements Comando {
             if(i>maximo) maximo = this.lanzamientostotales.get(i);
         } for(int i=0;i<this.lanzamientostotales.size();i++){
             if(this.lanzamientostotales.get(i)==maximo) System.out.print(this.jugadores.get(i).getNombre() + ", ");
-        } System.out.println();
+        } consola.imprimir("\n");
    }
 
    private void EnCabeza(){
@@ -1228,7 +1228,7 @@ public class Juego implements Comando {
 
         for(int i=0;i<fortuna.size();i++){if(max<fortuna.get(i)) max=fortuna.get(i);}
         for(int i=0;i<fortuna.size();i++){if(max==fortuna.get(i)) System.out.print(this.jugadores.get(i).getNombre() + ", ");}
-        System.out.println();
+        consola.imprimir("\n");
 
 }
     
@@ -1246,7 +1246,7 @@ public class Juego implements Comando {
     public void estadisticasjugador(String nombre) throws Exception{
         for (Jugador i : this.jugadores) {
             if (i.getNombre().equals(nombre)) {
-                System.out.println(i.toStringestadisticas());
+                consola.imprimir(i.toStringestadisticas());
                 return;
             }
         } 
@@ -1254,12 +1254,12 @@ public class Juego implements Comando {
     }
 
     public void infotratos(){
-        System.out.println("Modalidades de trato disponibles");
-        System.out.println("cambiar (propiedad_1, propiedad_2)");
-        System.out.println("cambiar (propiedad_1, cantidad_dinero)");
-        System.out.println("cambiar (cantidad_dinero, propiedad_1)");
-        System.out.println("cambiar (propiedad_1, propiedad_2 y cantidad_dinero)");
-        System.out.println("cambiar (propiedad_1 y cantidad_dinero, propiedad_2)");
+        consola.imprimir("Modalidades de trato disponibles");
+        consola.imprimir("cambiar (propiedad_1, propiedad_2)");
+        consola.imprimir("cambiar (propiedad_1, cantidad_dinero)");
+        consola.imprimir("cambiar (cantidad_dinero, propiedad_1)");
+        consola.imprimir("cambiar (propiedad_1, propiedad_2 y cantidad_dinero)");
+        consola.imprimir("cambiar (propiedad_1 y cantidad_dinero, propiedad_2)");
     }
 
     private static boolean esNumerico(String str) {
@@ -1279,27 +1279,27 @@ public class Juego implements Comando {
         Propiedad prop1 = (Propiedad) this.tablero.encontrar_casilla(inter1), prop2 = (Propiedad) this.tablero.encontrar_casilla(inter2);
         if(esNumerico(inter1)){
             if(prop2.getPropietario().equals(jug)){
-                System.out.println(jugador + ", ¿te doy " + inter1 + "€ y tú me das " + inter2 + "?");
+                consola.imprimir(jugador + ", ¿te doy " + inter1 + "€ y tú me das " + inter2 + "?");
                 Trato trato = new Trato(this.jugadores.get(this.turno),jug,inter1,inter2);
                 tratos.get(this.jugadores.indexOf(jug)).add(trato);
             }
-            else System.out.println("No se puede proponer el trato: " + inter2 + " no pertenece a " + jugador);
+            else consola.imprimir("No se puede proponer el trato: " + inter2 + " no pertenece a " + jugador);
         }
         else if(esNumerico(inter2)){
             if(prop1.getPropietario().equals(this.jugadores.get(this.turno))){
-                System.out.println(jugador + ", ¿te doy " + inter1 + " y tú me das " + inter2 + " €?");
+                consola.imprimir(jugador + ", ¿te doy " + inter1 + " y tú me das " + inter2 + " €?");
                 Trato trato = new Trato(this.jugadores.get(this.turno),jug,inter1,inter2);
                 tratos.get(this.jugadores.indexOf(jug)).add(trato);
             }
-            else System.out.println("No se puede proponer el trato: " + inter1 + " no pertenece a " + this.jugadores.get(this.turno).getNombre());
+            else consola.imprimir("No se puede proponer el trato: " + inter1 + " no pertenece a " + this.jugadores.get(this.turno).getNombre());
         }
         else{
             if(prop1.getPropietario().equals(this.jugadores.get(this.turno)) && prop2.getPropietario().equals(jug)){
-                System.out.println(jugador + ", ¿te doy " + inter1 + " y tú me das " + inter2 + "?");
+                consola.imprimir(jugador + ", ¿te doy " + inter1 + " y tú me das " + inter2 + "?");
                 Trato trato = new Trato(this.jugadores.get(this.turno),jug,inter1,inter2);
                 tratos.get(this.jugadores.indexOf(jug)).add(trato);
             }
-            else System.out.println("No se puede proponer el trato: Las dos propiedades deben pertenecer a ambos jugadores");
+            else consola.imprimir("No se puede proponer el trato: Las dos propiedades deben pertenecer a ambos jugadores");
         }
 
         } 
@@ -1310,18 +1310,18 @@ public class Juego implements Comando {
         if(inter2.equals("y")){
             
             if(prop4.getPropietario().equals(jug) && prop1.getPropietario().equals(this.jugadores.get(this.turno))){
-                System.out.println(jugador + ", ¿te doy " + inter1 + " y " + inter3 + " € y tú me das " + inter4 + "?");
+                consola.imprimir(jugador + ", ¿te doy " + inter1 + " y " + inter3 + " € y tú me das " + inter4 + "?");
                 Trato trato = new Trato(this.jugadores.get(this.turno),jug,inter1 + " " + inter3,inter4);
                 tratos.get(this.jugadores.indexOf(jug)).add(trato);
             }
-            else System.out.println("No se puede proponer el trato: Las dos propiedades deben pertenecer a ambos jugadores");}
+            else consola.imprimir("No se puede proponer el trato: Las dos propiedades deben pertenecer a ambos jugadores");}
         else {
             if(prop2.getPropietario().equals(jug) && prop1.getPropietario().equals(this.jugadores.get(this.turno))){
-                System.out.println(jugador + ", ¿te doy " + inter1 + " y tú me das " + inter2 + " y " + inter4 + " €?");
+                consola.imprimir(jugador + ", ¿te doy " + inter1 + " y tú me das " + inter2 + " y " + inter4 + " €?");
                 Trato trato = new Trato(this.jugadores.get(this.turno),jug,inter1,inter2 + " "+ inter4);
                 tratos.get(this.jugadores.indexOf(jug)).add(trato);
             }
-            else System.out.println("No se puede proponer el trato: Las dos propiedades deben pertenecer a ambos jugadores");
+            else consola.imprimir("No se puede proponer el trato: Las dos propiedades deben pertenecer a ambos jugadores");
         }
         }
 
@@ -1333,7 +1333,7 @@ public class Juego implements Comando {
             }
         }
         String respuesta = "si";
-        if(tratoaceptar == null) System.out.println("No se ha podido encontrar el trato introducido"); 
+        if(tratoaceptar == null) consola.imprimir("No se ha podido encontrar el trato introducido"); 
         else{
             String oferta[] = tratoaceptar.getOferta().split(" "), demanda[] = tratoaceptar.getDemanda().split(" ");
             if(oferta.length == 2){
@@ -1341,7 +1341,7 @@ public class Juego implements Comando {
                 if(tratoaceptar.getPropositor().getFortuna()>=Integer.parseInt(oferta[1])){
                     Propiedad pro1 = (Propiedad) this.tablero.encontrar_casilla(oferta[0]), pro2 = (Propiedad) this.tablero.encontrar_casilla(demanda[0]);
                     if(pro1.isHipotecada()){
-                        System.out.println(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
+                        consola.imprimir(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
                         respuesta = scanner.nextLine();}
                     if(respuesta.equals("si")){
                         pro1.setPropietario(tratoaceptar.getDestinatario());
@@ -1353,7 +1353,7 @@ public class Juego implements Comando {
                         tratoaceptar.getPropositor().sumarGastos(Float.parseFloat(oferta[1]));
                         tratoaceptar.getDestinatario().sumarFortuna(Float.parseFloat(oferta[1]));
                         tratos.get(this.turno).remove(tratoaceptar);
-                        System.out.println("Se ha aceptado el siguiente trato con " + tratoaceptar.getPropositor().getNombre() + ": le doy " + demanda[0] + " y " + tratoaceptar.getPropositor().getNombre() + " me da " + oferta[1] + " € y " + oferta[0]);       
+                        consola.imprimir("Se ha aceptado el siguiente trato con " + tratoaceptar.getPropositor().getNombre() + ": le doy " + demanda[0] + " y " + tratoaceptar.getPropositor().getNombre() + " me da " + oferta[1] + " € y " + oferta[0]);       
                 }
                 }
                 else throw new SaldoInsuficienteException("El trato no puede ser aceptado: " + tratoaceptar.getPropositor().getNombre() + " no tiene " + oferta[1]+ " €");
@@ -1363,7 +1363,7 @@ public class Juego implements Comando {
                 if(tratoaceptar.getDestinatario().getFortuna()>=Integer.parseInt(demanda[1])){
                     Propiedad pro1 = (Propiedad) this.tablero.encontrar_casilla(oferta[0]),pro2 = (Propiedad) this.tablero.encontrar_casilla(demanda[0]);
                     if(pro1.isHipotecada()){
-                        System.out.println(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
+                        consola.imprimir(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
                         respuesta = scanner.nextLine();}
                         if(respuesta.equals("si")){
                             pro1.setPropietario(tratoaceptar.getDestinatario());
@@ -1375,7 +1375,7 @@ public class Juego implements Comando {
                             tratoaceptar.getDestinatario().sumarGastos(Float.parseFloat(demanda[1]));
                             tratoaceptar.getPropositor().sumarFortuna(Float.parseFloat(demanda[1]));
                             tratos.get(this.turno).remove(tratoaceptar);
-                            System.out.println("Se ha aceptado el siguiente trato con " + tratoaceptar.getPropositor().getNombre() + ": le doy " + demanda[0] + " y " + demanda[1]+ " € y " + tratoaceptar.getPropositor().getNombre() + " me da " + oferta[0]);
+                            consola.imprimir("Se ha aceptado el siguiente trato con " + tratoaceptar.getPropositor().getNombre() + ": le doy " + demanda[0] + " y " + demanda[1]+ " € y " + tratoaceptar.getPropositor().getNombre() + " me da " + oferta[0]);
                         }
                 }
                 else throw new SaldoInsuficienteException("El trato no puede ser aceptado: " + tratoaceptar.getDestinatario().getNombre() + " no tiene " + demanda[1] + " €");
@@ -1390,7 +1390,7 @@ public class Juego implements Comando {
                         tratoaceptar.getPropositor().sumarGastos(Float.parseFloat(oferta[0]));
                         tratoaceptar.getDestinatario().sumarFortuna(Float.parseFloat(oferta[0]));
                         tratos.get(this.turno).remove(tratoaceptar);
-                        System.out.println("Se ha aceptado el siguiente trato con " + tratoaceptar.getPropositor().getNombre() + ": le doy " + demanda[0] + " y " + tratoaceptar.getPropositor().getNombre() + " me da " + oferta[0] + " €");
+                        consola.imprimir("Se ha aceptado el siguiente trato con " + tratoaceptar.getPropositor().getNombre() + ": le doy " + demanda[0] + " y " + tratoaceptar.getPropositor().getNombre() + " me da " + oferta[0] + " €");
                     }
                     else throw new SaldoInsuficienteException("El trato no puede ser aceptado: " + tratoaceptar.getPropositor().getNombre() + " no tiene " + oferta[0]+ " €");
                 }
@@ -1399,7 +1399,7 @@ public class Juego implements Comando {
                     if(tratoaceptar.getDestinatario().getFortuna()>=Integer.parseInt(demanda[0])){
                         Propiedad pro1 = (Propiedad) this.tablero.encontrar_casilla(oferta[0]);
                         if(pro1.isHipotecada()){
-                            System.out.println(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
+                            consola.imprimir(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
                             respuesta = scanner.nextLine();}
                         if(respuesta.equals("si")){
                             pro1.setPropietario(tratoaceptar.getDestinatario());
@@ -1408,14 +1408,14 @@ public class Juego implements Comando {
                             tratoaceptar.getDestinatario().sumarGastos(Float.parseFloat(demanda[0]));
                             tratoaceptar.getPropositor().sumarFortuna(Float.parseFloat(demanda[0]));
                             tratos.get(this.turno).remove(tratoaceptar);
-                            System.out.println("Se ha aceptado el siguiente trato con " + tratoaceptar.getPropositor().getNombre() + ": le doy " + demanda[0] + " € y " + tratoaceptar.getPropositor().getNombre() + " me da " + oferta[0]);
+                            consola.imprimir("Se ha aceptado el siguiente trato con " + tratoaceptar.getPropositor().getNombre() + ": le doy " + demanda[0] + " € y " + tratoaceptar.getPropositor().getNombre() + " me da " + oferta[0]);
                         }
                     else throw new SaldoInsuficienteException("El trato no puede ser aceptado: " + tratoaceptar.getDestinatario().getNombre() + " no tiene " + demanda[0]+ " €");
                 }}
                 else{
                     Propiedad pro1 = (Propiedad) this.tablero.encontrar_casilla(oferta[0]), pro2 = (Propiedad) this.tablero.encontrar_casilla(demanda[0]);
                     if(pro1.isHipotecada()){
-                        System.out.println(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
+                        consola.imprimir(pro1.getNombre() + " está hipotecada ¿Quieres continuar aceptando el trato? (si/no)");
                         respuesta = scanner.nextLine();}
                     if(respuesta.equals("si")){
                         pro1.setPropietario(tratoaceptar.getDestinatario());
@@ -1425,7 +1425,7 @@ public class Juego implements Comando {
                         tratoaceptar.getPropositor().anhadirPropiedad(pro2);
                         tratoaceptar.getDestinatario().eliminarPropiedad(pro2);
                         tratos.get(this.turno).remove(tratoaceptar);
-                        System.out.println("Se ha aceptado el siguiente trato con " + tratoaceptar.getPropositor().getNombre() + ": le doy " + demanda[0] + " y " + tratoaceptar.getPropositor().getNombre() + " me da " + oferta[0]);
+                        consola.imprimir("Se ha aceptado el siguiente trato con " + tratoaceptar.getPropositor().getNombre() + ": le doy " + demanda[0] + " y " + tratoaceptar.getPropositor().getNombre() + " me da " + oferta[0]);
                     }
         }}
     }
