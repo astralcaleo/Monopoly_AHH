@@ -45,7 +45,7 @@ public class Pelota extends Avatar {
     
     private void avanzarPelota(int desplazamiento, int posicionActual, Tablero tablero, Jugador banca) {
         int j = 5; // Primer paso es a la 5ª casilla impar
-        for (int i = 5; i <= desplazamiento; i += j) {
+        for (int i = 5; i <= desplazamiento; i += 2) {
             int nuevaPosicion = (posicionActual + j) % 40;
             Casilla destino = tablero.encontrar_casilla(nuevaPosicion);
     
